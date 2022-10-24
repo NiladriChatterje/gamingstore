@@ -52,10 +52,10 @@ const About = () => {
             <motion.div
                 id={'about-sec3'}
                 initial={{y:100}}
-                animate={{y:0}}>
+                whileInView={{y:0}}>
                     <motion.img
                         initial={{x:600}}
-                        animate={{x:0}}
+                        whileInView={{x:0}}
                         src={Xbox2} alt='' />
                         <motion.div
                         initial={{ opacity: 0,transform:'scale(0,0)' }}
@@ -63,7 +63,7 @@ const About = () => {
                         style={{...style,left:'10%',top:130}}/>
                 <motion.p
                     initial={{x:400}}
-                    animate={{x:0}}>
+                    whileInView={{x:0}}>
                 <h2>We hate complains</h2><br/>
                 That is why, Our Products are Tested before delivery<br />
                 We take care of the fact that interruption is often disappointing<br />
