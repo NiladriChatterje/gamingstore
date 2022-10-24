@@ -1,0 +1,180 @@
+import React from 'react'
+import './Products.css';
+import { motion } from 'framer-motion';
+import {FixedSizeList} from 'react-window'
+const ProductDetails = React.lazy(()=>import('../ProductDetails/ProductDetails'));
+
+const data=[
+    {   id:1,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:2,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:3,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:4,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:1,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:2,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:3,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:4,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:1,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:2,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:3,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:4,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:1,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:2,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:3,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:4,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:1,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:2,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:3,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:4,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:1,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:2,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:3,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+    {   id:4,
+        name:'Controller',
+        price:'660',
+        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
+        desc:'Wonderful socket with stunning look',
+    },
+];
+const Products = () => {
+    const Row = ({index,style})=>{
+        console.log(style);
+        return <div style={{...style,left:'50%',
+        width:'300px',position:'absolute',transform:'translateX(-50%)'}}>
+            <React.Suspense fallback={<>Loading...</>}>
+        <ProductDetails style={style} item={data[index]} /></React.Suspense>
+        </div> }
+  return (
+    <motion.div
+        id={'Product-container'}
+        initial={{x:300}}
+        animate={{x:0}}>
+        <FixedSizeList
+            height={window.innerHeight-70}
+            width={window.innerWidth}
+            itemCount={data.length}
+            itemSize={480}
+           
+        >
+        {Row}
+        </FixedSizeList>
+        
+    </motion.div>
+  )
+}
+
+export default Products
