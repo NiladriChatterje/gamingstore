@@ -155,7 +155,7 @@ const Products = () => {
         console.log(style);
         return <div style={{...style,left:'50%',
         width:'300px',position:'absolute',transform:'translateX(-50%)'}}>
-            <React.Suspense fallback={<>Loading...</>}>
+            <React.Suspense fallback={<div className="loader"></div>}>
         <ProductDetails style={style} item={data[index]} /></React.Suspense>
         </div> }
   return (

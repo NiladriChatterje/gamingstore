@@ -5,11 +5,11 @@ nav{
     height:50px;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-evenly;
 }
 #heading{
     position: fixed;
-    left:10px;
+    left:100px;
 }
 span{
     font-size: 1.5em;

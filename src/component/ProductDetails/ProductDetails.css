@@ -4,7 +4,7 @@
     height:380px;
     position: relative;
     border-radius: 10px;
-    box-shadow: 10px 10px 15px -8px;
+    box-shadow: 10px 10px 15px -13px;
     backdrop-filter:blur(15px);
     display: flex;
     margin: 40px 20px;
