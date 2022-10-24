@@ -19,8 +19,8 @@ const About = () => {
             <div
               id='about-sec1'>
             <motion.div
-                initial={{x:400}}
-                animate={{x:0}}>
+                initial={{x:-400}}
+                whileInView={{x:0}}>
             <h1>
             The Reason why<br />you are Here.
             </h1>
@@ -34,36 +34,36 @@ const About = () => {
             <React.Suspense fallback={<div>Loading..</div>}>
             <motion.img
                 initial={{x:600}}
-                animate={{x:0}}
+                whileInView={{x:0}}
                 src={Xbox} />
             </React.Suspense>
             <motion.div
                 initial={{ opacity: 0,transform:'scale(0,0)' }}
-                animate={{ opacity: 1,transform:'scale(1,1)' }}
+                whileInView={{ opacity: 1,transform:'scale(1,1)' }}
                 style={{...style,right:'15%',top:130}}/>
             </div>
             </div>
             <motion.div
                 id={'about-sec2'}
                 initial={{y:200}}
-                animate={{y:0}}>
+                whileInView={{y:0}}>
 
             </motion.div>
             <motion.div
                 id={'about-sec3'}
                 initial={{y:100}}
-                animate={{y:0}}>
+                whileInView={{y:0}}>
                     <motion.img
-                        initial={{x:600}}
-                        animate={{x:0}}
+                        initial={{x:-50}}
+                        whileInView={{x:0}}
                         src={Xbox2} alt='' />
                         <motion.div
                         initial={{ opacity: 0,transform:'scale(0,0)' }}
-                        animate={{ opacity: 1,transform:'scale(1,1)' }}
+                        whileInView={{ opacity: 1,transform:'scale(1,1)' }}
                         style={{...style,left:'10%',top:130}}/>
                 <motion.p
                     initial={{x:400}}
-                    animate={{x:0}}>
+                    whileInView={{x:0}}>
                 <h2>We hate complains</h2><br/>
                 That is why, Our Products are Tested before delivery<br />
                 We take care of the fact that interruption is often disappointing<br />

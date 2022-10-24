@@ -23,6 +23,7 @@
 #about-sec3{
     position: relative;
     width: 100%;
+    padding-right: 10px;
     text-align: right;
     display: flex;
     justify-content: space-around;
