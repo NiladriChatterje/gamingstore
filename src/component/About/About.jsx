@@ -10,10 +10,9 @@ const style={
     backgroundImage:'linear-gradient(to right,rgb(120,150,185),rgb(105,148,255))'
   }
 const About = () => {
-const dref=React.useRef(null);
+
   return (
     <motion.div
-        ref={dref}
         id='about-container'
         initial={{x:-300}}
         animate={{x:0}}>
@@ -21,8 +20,7 @@ const dref=React.useRef(null);
               id='about-sec1'>
             <motion.div
                 initial={{x:400}}
-                animate={{x:0}}
-                viewport={{root:dref}}>
+                animate={{x:0}}>
             <h1>
             The Reason why<br />you are Here.
             </h1>
@@ -37,13 +35,11 @@ const dref=React.useRef(null);
             <motion.img
                 initial={{x:600}}
                 animate={{x:0}}
-                viewport={{root:dref}}
                 src={Xbox} />
             </React.Suspense>
             <motion.div
                 initial={{ opacity: 0,transform:'scale(0,0)' }}
                 animate={{ opacity: 1,transform:'scale(1,1)' }}
-                viewport={{root:dref}}
                 style={{...style,right:'15%',top:130}}/>
             </div>
             </div>
@@ -59,7 +55,6 @@ const dref=React.useRef(null);
                 animate={{y:0}}>
                     <motion.img
                         initial={{x:600}}
-                        viewport={{root:dref}}
                         animate={{x:0}}
                         src={Xbox2} alt='' />
                         <motion.div
@@ -68,7 +63,6 @@ const dref=React.useRef(null);
                         style={{...style,left:'10%',top:130}}/>
                 <motion.p
                     initial={{x:400}}
-                    viewport={{root:dref}}
                     animate={{x:0}}>
                 <h2>We hate complains</h2><br/>
                 That is why, Our Products are Tested before delivery<br />
