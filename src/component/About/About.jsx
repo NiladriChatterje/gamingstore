@@ -62,7 +62,7 @@ const About = () => {
                         whileInView={{ opacity: 1,transform:'scale(1,1)' }}
                         style={{...style,left:'10%',top:130}}/>
                 <motion.p
-                    initial={{x:400}}
+                    initial={{x:40}}
                     whileInView={{x:0}}>
                 <h2>We hate complains</h2><br/>
                 That is why, Our Products are Tested before delivery<br />
