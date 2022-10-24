@@ -18,7 +18,9 @@ const About = () => {
         animate={{x:0}}>
             <div
               id='about-sec1'>
-            <motion.div>
+            <motion.div
+                initial={{x:400}}
+                animate={{x:0}}>
             <h1>
             The Reason why<br />you are Here.
             </h1>
@@ -59,11 +61,13 @@ const About = () => {
                         initial={{ opacity: 0,transform:'scale(0,0)' }}
                         whileInView={{ opacity: 1,transform:'scale(1,1)' }}
                         style={{...style,left:'10%',top:130}}/>
-                <p>
+                <motion.p
+                    initial={{x:400}}
+                    animate={{x:0}}>
                 <h2>We hate complains</h2><br/>
                 That is why, Our Products are Tested before delivery<br />
                 We take care of the fact that interruption is often disappointing<br />
-                </p>
+                </motion.p>
             
             
             </motion.div> 
