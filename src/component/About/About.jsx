@@ -55,6 +55,10 @@ const About = () => {
                         initial={{x:600}}
                         animate={{x:0}}
                         src={Xbox2} alt='' />
+                        <motion.div
+                        initial={{ opacity: 0,transform:'scale(0,0)' }}
+                        whileInView={{ opacity: 1,transform:'scale(1,1)' }}
+                        style={{...style,left:'10%',top:130}}/>
                 <p>
                 <h2>We hate complains</h2><br/>
                 That is why, Our Products are Tested before delivery<br />

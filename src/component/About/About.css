@@ -21,6 +21,7 @@
     background-color: aliceblue;
 }
 #about-sec3{
+    position: relative;
     width: 100%;
     text-align: right;
     display: flex;
