@@ -1,13 +1,17 @@
 import React from 'react'
 import './Navbar.css'
 import {GiHamburgerMenu} from 'react-icons/gi'
+import { motion } from 'framer-motion';
+import {Link} from 'react-router-dom';
 
-const navItems=['Product','Trending','Popular','About'];
+const navItems=['Home','Product','Trending','Popular','About'];
 
 const Navbar = () => {
     const [navActive,setNavActive] = React.useState(()=>false)
   return (
-    <nav>
+    <motion.nav
+    initial={{scale:0}}
+    animate={{scale:1}}>
         <text id={'heading'}>
             <span>
                 XV
@@ -25,9 +29,9 @@ const Navbar = () => {
                 height:'20px',
                 width:'20px',
                 right:10,top:10}} />}
-        {navItems?.map((item,i)=><text id='text' key={i}>{item}</text>)}
+        {navItems?.map((item,i)=><Link to={`/${item==="Home"?'':item}`} id='text' key={i}>{item}</Link>)}
         </div>
-    </nav>
+    </motion.nav>
   )
 }
 

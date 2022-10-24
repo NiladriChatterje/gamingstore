@@ -4,8 +4,8 @@
 
 #first-container{
     width: 50%; 
-    padding: 0 0 0 10px;   
-    height: 90vh;
+    padding: 0 0 0 100px;   
+    height: 80vh;
     display: flex;
     align-items: center;
 }
@@ -20,7 +20,7 @@ button:hover{
     transform: scale(1.02,1.02);
 }
 h1{
-    font-size: 2.5em;
+    font-size: 2.8em;
     color: white;
     word-wrap: break-word;
 }
@@ -48,5 +48,6 @@ p{
     }
     #second-container,#first-container{
         width: 100%;
-    }#first-container{height:max-content;margin-bottom: 10px;}
+    }#first-container{height:max-content;margin-bottom: 10px;
+    padding-left:10px;}
 }

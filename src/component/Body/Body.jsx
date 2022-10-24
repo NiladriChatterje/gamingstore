@@ -12,7 +12,9 @@ const style={
 const Body = () => {
   const secondContRef = React.useRef(null);
   return (
-    <div id={'container'}>
+    <motion.div id={'container'}
+      initial={{x:150}}
+      animate={{x:0}}>
       <motion.div id='first-container' 
        initial={{ opacity: 0,transform:'scale(0,0)' }}
        whileInView={{ opacity: 1,transform:'scale(1,1)' }}>
@@ -46,7 +48,7 @@ const Body = () => {
                 style={{position:'absolute',zIndex:1,filter:'drop-shadow(4px 10px 20px)'}} />
       </motion.div>
       
-    </div>
+    </motion.div>
   )
 }
 

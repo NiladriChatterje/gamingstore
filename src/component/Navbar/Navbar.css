@@ -17,12 +17,16 @@ span{
     color: aqua;
 }
 text{
-    cursor: pointer;
     color: white;
     font-size: large;
     font-weight: 700;
 }
 #text{
+    text-decoration: none;
+    cursor: pointer;
+    color: white;
+    font-size: large;
+    font-weight: 700;
     margin-left: 3em;
 }
 @media all and (max-width:1200px){
