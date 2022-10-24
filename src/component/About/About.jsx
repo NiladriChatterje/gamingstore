@@ -21,7 +21,7 @@ const dref=React.useRef(null);
               id='about-sec1'>
             <motion.div
                 initial={{x:400}}
-                whileInView={{x:0}}
+                animate={{x:0}}
                 viewport={{root:dref}}>
             <h1>
             The Reason why<br />you are Here.
@@ -36,13 +36,13 @@ const dref=React.useRef(null);
             <React.Suspense fallback={<div>Loading..</div>}>
             <motion.img
                 initial={{x:600}}
-                whileInView={{x:0}}
+                animate={{x:0}}
                 viewport={{root:dref}}
                 src={Xbox} />
             </React.Suspense>
             <motion.div
                 initial={{ opacity: 0,transform:'scale(0,0)' }}
-                whileInView={{ opacity: 1,transform:'scale(1,1)' }}
+                animate={{ opacity: 1,transform:'scale(1,1)' }}
                 viewport={{root:dref}}
                 style={{...style,right:'15%',top:130}}/>
             </div>
@@ -50,7 +50,6 @@ const dref=React.useRef(null);
             <motion.div
                 id={'about-sec2'}
                 initial={{y:200}}
-                viewport={{root:dref}}
                 animate={{y:0}}>
 
             </motion.div>
@@ -61,16 +60,16 @@ const dref=React.useRef(null);
                     <motion.img
                         initial={{x:600}}
                         viewport={{root:dref}}
-                        whileInView={{x:0}}
+                        animate={{x:0}}
                         src={Xbox2} alt='' />
                         <motion.div
                         initial={{ opacity: 0,transform:'scale(0,0)' }}
-                        whileInView={{ opacity: 1,transform:'scale(1,1)' }}
+                        animate={{ opacity: 1,transform:'scale(1,1)' }}
                         style={{...style,left:'10%',top:130}}/>
                 <motion.p
                     initial={{x:400}}
                     viewport={{root:dref}}
-                    whileInView={{x:0}}>
+                    animate={{x:0}}>
                 <h2>We hate complains</h2><br/>
                 That is why, Our Products are Tested before delivery<br />
                 We take care of the fact that interruption is often disappointing<br />
