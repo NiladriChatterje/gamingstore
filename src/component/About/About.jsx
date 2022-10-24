@@ -34,7 +34,7 @@ const About = () => {
             <React.Suspense fallback={<div>Loading..</div>}>
             <motion.img
                 initial={{x:600}}
-                whileInView={{x:0}}
+                animate={{x:0}}
                 src={Xbox} />
             </React.Suspense>
             <motion.div
