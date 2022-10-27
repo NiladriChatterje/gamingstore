@@ -56,6 +56,9 @@ text{
         height:35px;
         border-radius: 50%;
     }
+    .slider{
+        width: 60vw;
+    }
     #navitems-active{
         backdrop-filter: blur(10px);
         display: flex;
