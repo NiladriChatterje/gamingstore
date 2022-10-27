@@ -1,20 +1,21 @@
 #card{
     background-image: linear-gradient(to top right,rgba(99, 174, 176, 0.596),rgba(1, 255, 170, 0.6));
     width:300px;
-    height:380px;
+    height:400px;
     position: relative;
     border-radius: 10px;
     box-shadow: 10px 10px 15px -13px;
     backdrop-filter:blur(15px);
     display: flex;
-    margin: 40px 20px;
+    margin: 45px 20px;
     flex-direction: column;
     align-items: center;
 }
 #card img{
     object-fit: contain;
+    filter: drop-shadow(5px 10px 10px);
     height: 200px;
     width: 200px;
     position: relative;
-    transform: translateY(-45px);
+    transform: translateY(-60px);
 }

@@ -3,11 +3,14 @@ import './Navbar.css'
 import {GiHamburgerMenu} from 'react-icons/gi'
 import { motion } from 'framer-motion';
 import {Link} from 'react-router-dom';
+import {BsFillBagPlusFill} from 'react-icons/bs'
 
 const navItems=['Home','Product','Trending','Popular','About'];
 
 const Navbar = () => {
     const [navActive,setNavActive] = React.useState(()=>false)
+    const [slide,setSlide] = React.useState(()=>false)
+
   return (
     <motion.nav
     initial={{scale:0}}
@@ -18,6 +21,7 @@ const Navbar = () => {
             </span>
             Shop  
         </text>
+        
         <div
          onClick={()=>setNavActive(prev=>!prev)}
          id={navActive?'navitems-active':'navitems-inactive'}>
@@ -26,11 +30,20 @@ const Navbar = () => {
                 color:'white',
                 zIndex:10,
                 position:'absolute',
-                height:'20px',
-                width:'20px',
-                right:10,top:10}} />}
+                height:'25px',
+                width:'25px',
+                right:10,top:4}} />}
         {navItems?.map((item,i)=><Link to={`/${item==="Home"?'':item}`} id='text' key={i}>{item}</Link>)}
         </div>
+        <BsFillBagPlusFill
+          onClick={()=>setSlide(prev=>!prev)}
+          style={{color:'white',height:20,width:20,cursor:'pointer',
+                  zIndex:5,position:'fixed',right:90}} />
+
+          <div
+            className= {`slider ${slide?'':'hide-slider'}`} >
+
+          </div>
     </motion.nav>
   )
 }

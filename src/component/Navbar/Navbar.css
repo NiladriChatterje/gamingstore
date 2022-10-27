@@ -7,6 +7,22 @@ nav{
     align-items: center;
     justify-content: space-evenly;
 }
+.slider{
+    bottom: 0;
+    width: 400px;
+    height: 100vh;
+    background-image: linear-gradient(to top right,rgba(45, 73, 78, 0.9),rgba(90, 246, 227, 0.8));
+    backdrop-filter: blur(5px);
+    border-radius: 20px ;
+    position: fixed;
+    right:0;
+    z-index: 3;
+    transition: all;
+    transition-duration: 200ms;
+}
+.hide-slider{
+    transform: translateX(800px);
+}
 #heading{
     position: fixed;
     left:100px;
@@ -49,12 +65,19 @@ text{
         right:10px;
         top:10px;
         flex-direction: column;
-        height: 95%;
+        height: 100%;
         width:50%;
         justify-content: space-around;
         border-radius: 10px;
     }
     text{
         font-size: 0.8em;
+    }
+    #text:hover{
+        color: black;
+        border-radius: 10px;
+        padding: 1px 0;
+        background-color: azure;
+        font-size: 1em;
     }
 }
