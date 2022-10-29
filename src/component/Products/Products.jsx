@@ -151,6 +151,8 @@ const data=[
     },
 ];
 const Products = () => {
+    
+
     const Row = ({index,style})=>{
         console.log(style);
         return <div style={{...style,left:'50%',
@@ -158,6 +160,8 @@ const Products = () => {
             <React.Suspense fallback={<div className="loader"></div>}>
         <ProductDetails style={style} item={data[index]} /></React.Suspense>
         </div> }
+
+
   return (
     <motion.div
         id={'Product-container'}
