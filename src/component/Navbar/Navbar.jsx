@@ -45,7 +45,7 @@ const Navbar = () => {
 
           <div
             className= {`slider ${slide?'':'hide-slider'}`} >
-              {data?.map((item,i)=><OrderList image={item.image} price={item.price} />)}
+              {data?.map((item,i)=><OrderList key={i} image={item.image} price={item.price} />)}
           </div>
     </motion.nav>
   )

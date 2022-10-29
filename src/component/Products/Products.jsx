@@ -154,7 +154,6 @@ const Products = () => {
     
 
     const Row = ({index,style})=>{
-        console.log(style);
         return <div style={{...style,left:'50%',
         width:'300px',position:'absolute',transform:'translateX(-50%)'}}>
             <React.Suspense fallback={<div className="loader"></div>}>

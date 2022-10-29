@@ -18,12 +18,13 @@
     align-items: center;
 }
 #orderList-container img{
-    
+
         object-fit: contain;
         filter: drop-shadow(5px 10px 10px);
         height: 150px;
         width: 150px;
         position: relative;
+        
 }
 hr{
     width: 100%;
