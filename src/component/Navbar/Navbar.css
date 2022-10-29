@@ -15,6 +15,7 @@ nav{
     backdrop-filter: blur(5px);
     border-radius: 20px ;
     position: fixed;
+    overflow-y: auto;
     right:0;
     z-index: 3;
     transition: all;
