@@ -4,17 +4,20 @@ import {AiFillCloseCircle} from 'react-icons/ai'
 import { useContext } from 'react';
 import { ProductContext } from '../../App';
 
-export default function OrderList({item,image,price}){
+export default function OrderList({index,image,price}){
     const [counter,setCounter] = React.useState(()=> 1)
     const {data,setData} = useContext(ProductContext);
 
-  
+  React.useEffect(()=>{
+    localStorage.setItem('orders',JSON.stringify(data));
+  },[data]);
 
     return  <div
-                id={'orderList-container'}>
+                className={'orderList-container'}>
                     <AiFillCloseCircle
                         onClick={()=>{
-                             return null;
+                          data.splice(index,1);
+                            setData([...data]);
                         }}
                         style={{color:'white',position:'absolute',top:10,right:10,cursor:'pointer'}} />
                     <img src={image} alt = '' />

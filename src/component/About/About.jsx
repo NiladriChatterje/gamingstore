@@ -3,6 +3,7 @@ import './About.css';
 import {motion} from 'framer-motion'
 import Xbox from './xbox.png'
 import Xbox2 from './xbox2.webp'
+import {AiFillGithub, AiFillInstagram, AiFillMail} from 'react-icons/ai'
 
 const style={
     height:'180px',width:'180px',
@@ -11,6 +12,7 @@ const style={
   }
 const About = () => {
 
+
   return (
     <motion.div
         id='about-container'
@@ -18,7 +20,7 @@ const About = () => {
         animate={{x:0}}>
             <div
               id='about-sec1'>
-            <motion.div
+            <motion.section
                 initial={{x:-400}}
                 whileInView={{x:0}}>
             <h1>
@@ -29,7 +31,7 @@ const About = () => {
                 evolved. So that you can GAME <br />
                 with no risk of breakage.
             </p>
-            </motion.div>
+            </motion.section>
             <div>
             <React.Suspense fallback={<div>Loading..</div>}>
             <motion.img
@@ -43,13 +45,13 @@ const About = () => {
                 style={{...style,right:'15%',top:130}}/>
             </div>
             </div>
-            <motion.div
+            <motion.section
                 id={'about-sec2'}
                 initial={{y:200}}
                 whileInView={{y:0}}>
 
-            </motion.div>
-            <motion.div
+            </motion.section>
+            <motion.section
                 id={'about-sec3'}
                 initial={{y:100}}
                 whileInView={{y:0}}>
@@ -70,8 +72,24 @@ const About = () => {
                 </motion.p>
             
             
-            </motion.div> 
-            
+            </motion.section> 
+            <motion.footer
+                initial={{y:50}}
+                whileInView={{y:0}}
+                >
+                    <AiFillInstagram
+                        onClick={()=>window.open('https://www.instagram.com/clerk_maxw/?hl=en','_blank')}
+                        style={{color:'white',cursor:'pointer',height:'45px',width:'45px'}} />
+
+                    <AiFillGithub
+                        onClick={()=>window.open('https://github.com/NiladriChatterje','_blank')}
+                        style={{color:'white',cursor:'pointer',height:'45px',width:'45px'}} />
+
+                    <AiFillMail
+                        onClick={()=>window.open('https://mail.google.com/mail/u/0/#inbox?compose=new','_blank')}
+                        style={{color:'white',cursor:'pointer',height:'45px',width:'45px'}} />
+
+            </motion.footer>
     </motion.div>
   )
 }

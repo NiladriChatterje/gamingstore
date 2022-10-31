@@ -45,8 +45,11 @@ const Navbar = () => {
 
           <div
             className= {`slider ${slide?'':'hide-slider'}`} >
-              {data?.map((item,i)=><OrderList key={i} image={item.image} price={item.price} />)}
+              {data?.map((item,i)=><OrderList key={i} index={i} image={item.image} price={item.price} />)}
               <motion.button
+                onClick={()=>{
+                  
+                }}
                 initial={{y:60}}
                 animate={{y:0}}
                 id={'payment'}>

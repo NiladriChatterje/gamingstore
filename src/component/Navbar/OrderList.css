@@ -10,14 +10,14 @@
     outline: none;
     border-radius: 10px;
 }
-#orderList-container{
+.orderList-container{
     position:relative;
     margin-top: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-#orderList-container img{
+.orderList-container img{
 
         object-fit: contain;
         filter: drop-shadow(5px 10px 10px);
@@ -35,7 +35,7 @@ hr{
 }
 
 @media all and (max-width:800px){
-    #orderList-container{
-        margin-top: 50px;
+    .orderList-container{
+        margin-top: 10px;
     }
 }

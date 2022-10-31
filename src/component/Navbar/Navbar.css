@@ -16,6 +16,7 @@ nav{
     border-radius: 20px ;
     position: fixed;
     overflow-y: auto;
+    overflow-x: clip;
     right:0;
     z-index: 3;
     transition: all;
@@ -65,7 +66,8 @@ text{
         border-radius: 50%;
     }
     .slider{
-        overflow-x: clip;
+        bottom: 0;
+        height: 100%;
         width: 65vw;
     }
     #navitems-active{
