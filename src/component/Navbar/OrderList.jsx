@@ -14,12 +14,13 @@ export default function OrderList({index,image,price}){
 
     return  <div
                 className={'orderList-container'}>
+                   
                     <AiFillCloseCircle
                         onClick={()=>{
                           data.splice(index,1);
                             setData([...data]);
                         }}
-                        style={{color:'white',position:'absolute',top:10,right:10,cursor:'pointer'}} />
+                        style={{color:'white',position:'absolute',top:40,right:10,cursor:'pointer'}} />
                     <img src={image} alt = '' />
                     <span>Rs. {price}</span>
                     <div

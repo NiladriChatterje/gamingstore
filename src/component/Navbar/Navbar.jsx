@@ -4,14 +4,15 @@ import {GiHamburgerMenu} from 'react-icons/gi'
 import { motion } from 'framer-motion';
 import {Link} from 'react-router-dom';
 import {BsFillBagPlusFill} from 'react-icons/bs'
+import {AiOutlineClose} from 'react-icons/ai';
 import OrderList from './OrderList';
 import { ProductContext } from '../../App';
 
 const navItems=['Home','Product','Trending','Popular','About'];
 
 const Navbar = () => {
-    const [navActive,setNavActive] = React.useState(()=>false)
-    const [slide,setSlide] = React.useState(()=>false)
+    const [navActive,setNavActive] = React.useState(()=>false);
+    const [slide,setSlide] = React.useState(()=>false);
     const {data} = React.useContext(ProductContext);
 
   return (
@@ -39,12 +40,18 @@ const Navbar = () => {
         {navItems?.map((item,i)=><Link to={`/${item==="Home"?'':item}`} id='text' key={i}>{item}</Link>)}
         </div>
         <BsFillBagPlusFill
-          onClick={()=>setSlide(prev=>!prev)}
+          onClick={()=>setSlide(true)}
           style={{color:'white',height:20,width:20,cursor:'pointer',
-                  zIndex:5,position:'fixed',right:90}} />
+                position:'fixed',right:90}} />
 
           <div
             className= {`slider ${slide?'':'hide-slider'}`} >
+               <AiOutlineClose
+                        onClick={()=>setSlide(false)}
+                        style={{position:'absolute',
+                        right:8,top:5,color:'white',
+                        fontSize:25,cursor:'pointer',
+                        zIndex:10}} />
               {data?.map((item,i)=><OrderList key={i} index={i} image={item.image} price={item.price} />)}
               <motion.button
                 onClick={()=>{
