@@ -2,6 +2,7 @@ import React from 'react'
 import './Body.css'
 import Joystick from './joystick.png'
 import {motion} from 'framer-motion'
+import {IoIosCloseCircle} from 'react-icons/io'
 
 
 const style={
@@ -11,6 +12,8 @@ const style={
 }
 const Body = () => {
   const secondContRef = React.useRef(null);
+  const joyRef = React.useRef(null);
+  const [val,setVal]=React.useState(0);
   return (
     <motion.div id={'container'}
       initial={{x:150}}
@@ -27,7 +30,8 @@ const Body = () => {
           Controller concept Makes Gaming More <br />
           Comfortable
         </p>   
-        <button>
+        <button
+          onClick={()=>{setVal(600);joyRef.current.style.transform='scale(0.7)'}}>
           EXPLORE
         </button>      
         </div>
@@ -40,12 +44,30 @@ const Body = () => {
                 viewport={{root:secondContRef}}
                 style={{...style,left:120,top:130}}/>
 
-              <motion.div
+              <motion.div 
               initial={{ opacity: 0,transform:'scale(0,0)' }}
               whileInView={{ opacity: 1,transform:'scale(1,1)' }}
               style={{...style,right:120,bottom:140}}/>
-              <img src={Joystick} alt=''
-                style={{position:'absolute',zIndex:1,filter:'drop-shadow(4px 10px 20px)'}} />
+              <img src={Joystick} alt='' ref={joyRef}
+                style={{position:'absolute',zIndex:1,
+                filter:'drop-shadow(4px 10px 20px)',transition:'all',
+                  transitionDuration:'300ms'}} />
+        </motion.div>
+
+      <motion.div
+      id='modal'
+        style={{width:'100vw',zIndex:5,
+        opacity:0.86,
+        position:'fixed',bottom:0,
+        backgroundColor:'white',
+        height:'0px'}}
+        initial={{height:0}}
+        animate={{height:val}}
+       >
+        <IoIosCloseCircle 
+        onClick={()=>{setVal(0);joyRef.current.style.transform='scale(1)'}}
+        style={{position:'absolute',top:20,right:30,
+            transform:'scale(2)',cursor:'pointer'}}/>
       </motion.div>
       
     </motion.div>
