@@ -1,12 +1,42 @@
-import React from 'react'
-import { useLocation } from 'react-router'
+import React, { useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router';
+import { useStateContext } from '../../StateContext';
+import {data} from '../Products/data'
+import './Details.css';
 
-const Details = ({item}) => {
-  const {id} = useLocation();
-  console.log(id);
+const Details = () => {
+  const {id} = useParams();
+  
+  const [item,setItem]= useState(data?.find(i=>i.id==id))
+  const ImgRef=useRef();
+  const {addItemToOrderList,setItemIDCount} = useStateContext();
+
+
   return (
-    <div>
-      <img src={item?.img} alt={item?.name} />
+    <div id={'details__container'}>
+      <img 
+      ref={ImgRef}
+      onMouseMove={e=>{
+        ImgRef.current.style.transform=`translate(${e.movementX*5}px,${e.movementY*5}px)`;
+      }}
+      onMouseLeave={(e)=>{
+        ImgRef.current.style.transform=`translate(0px,0px)`;
+      }}
+      src={item?.image} alt={item?.name} />
+      <section>
+          <h1>{item?.name}</h1>
+          <section>
+          <article>{item?.desc}</article>
+          <button
+          onClick={(e)=>{
+            e.stopPropagation();
+            addItemToOrderList(item)
+            setItemIDCount({count:item.count,id:item.id})
+            }}
+          >ADD TO CART</button>
+          </section>
+          
+      </section>
     </div>
   )
 }

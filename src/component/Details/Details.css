@@ -1,0 +1,21 @@
+#details__container{
+ display: flex;
+ justify-content: center;
+}
+
+#details__container > img{
+    width:50vw;
+    transition: all;
+    transition-duration: 200ms;
+}
+section{
+    color: wheat;
+    font-size: large;
+    font-weight: 900;
+}
+@media all and (max-width:800px){
+    #details__container{
+        flex-direction: column;
+        align-items: center;
+    }
+}
