@@ -2,40 +2,12 @@ import React from 'react'
 import './ProductDetails.css'
 import { motion } from 'framer-motion'
 import {HiShoppingCart} from 'react-icons/hi'
-import { ProductContext } from '../../App'
+import { useStateContext } from '../../StateContext'
 
-var i =0;
+
 const ProductDetails = ({item}) => {
-  const {setData,data} = React.useContext(ProductContext);
-
-  React.useEffect(()=>{
-    localStorage.setItem('orders',JSON.stringify(data));
-  },[data])
-
-  function OrderList(){
-    let flag=0;
-              console.log(item.id)
-                if(i === 0)
-                  setData([...data,item]);
-
-                for(let i of data){
-                  console.log(i)
-                  if(i.id === item.id)
-                    {
-                    flag = 1;
-                      break;
-                    }
-                  }
-                  
-                  if(flag === 0)
-                    {
-                      setData([...data,item]);
-                      i=1;
-                    }
-                
-  }
-   
-  
+  const {addItemToOrderList,setItemIDCount} = useStateContext();
+ 
   return (
     <motion.div
         style={{position:'relative'}}
@@ -50,7 +22,8 @@ const ProductDetails = ({item}) => {
             <p>{item?.desc?.length>30?item.desc.slice(0,32)+'...':item.desc}</p>
             <button
               onClick={()=>{
-                OrderList();
+                addItemToOrderList(item)
+                setItemIDCount({count:item.count,id:item.id})
                 }}>
                   ADD TO CART <HiShoppingCart />
                 </button>

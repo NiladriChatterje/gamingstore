@@ -1,8 +1,13 @@
 import React from 'react'
+import { useLocation } from 'react-router'
 
-const Details = () => {
+const Details = ({item}) => {
+  const {id} = useLocation();
+  console.log(id);
   return (
-    <div>Details</div>
+    <div>
+      <img src={item?.img} alt={item?.name} />
+    </div>
   )
 }
 
