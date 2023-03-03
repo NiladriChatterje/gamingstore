@@ -42,6 +42,23 @@ p{
     transition-duration: 200ms;
     transform: scale(0,0);
 }
+#modal{
+    overflow-x:clip;
+    overflow-y:auto;
+    display:flex;
+    justify-content:space-evenly;
+    flex-wrap:wrap;
+}
+#modal > span{
+    position: fixed;
+    background-color: rgb(21, 11, 63);
+    margin-top: -20px;
+    border-radius: 10px;
+    padding: 1px 10px;
+    left:0;
+    z-index: 5;
+    color:white;
+}
 @media all and (max-width:1200px){
     #container{
         flex-direction: column-reverse;

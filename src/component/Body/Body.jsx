@@ -3,6 +3,8 @@ import './Body.css'
 import Joystick from './joystick.png'
 import {motion} from 'framer-motion'
 import {IoIosCloseCircle} from 'react-icons/io'
+import upcomingData from './upcomingData'
+import UpcomingDataMap from './UpcomingDataMap'
 
 
 const style={
@@ -64,6 +66,10 @@ const Body = () => {
         initial={{height:0}}
         animate={{height:val}}
        >
+        <span>
+          Upcoming Products:
+        </span>
+        {upcomingData?.map(item=><UpcomingDataMap key={item.id} image={item.image} price={item.price} name={item.name} desc={item.desc}  />)}
         <IoIosCloseCircle 
         onClick={()=>{setVal(0);joyRef.current.style.transform='scale(1)'}}
         style={{position:'absolute',top:20,right:30,
