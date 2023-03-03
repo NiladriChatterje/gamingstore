@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useParams } from 'react-router';
 import { useStateContext } from '../../StateContext';
 import {data} from '../Products/data'
@@ -7,7 +7,7 @@ import './Details.css';
 const Details = () => {
   const {id} = useParams();
   
-  const [item,setItem]= useState(data?.find(i=>i.id==id))
+  const [item]= useState(data?.find(i=>i.id===parseInt(id)))
   const ImgRef=useRef();
   const {addItemToOrderList,setItemIDCount} = useStateContext();
 

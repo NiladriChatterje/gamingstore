@@ -1,6 +1,6 @@
 .slider-container{
     width: 400px;
-    height: 99vh;
+    height: 95vh;
     background-image: linear-gradient(to top right,rgba(233, 233, 233, 0.9),rgba(255, 255, 255, 0.8));
     backdrop-filter: blur(5px);
     border-radius: 20px;
