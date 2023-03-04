@@ -16,7 +16,7 @@ return <div id={'modal-container'}>
         <FaEdit 
         onClick={()=>setModal2(false)}
         style={{position:'fixed',right:10,top:10,cursor:'pointer'}}/>
-    <span style={{color:'black'}}>Already an User <TiTick /></span>
+    <span style={{color:'black'}}>Now an User <TiTick /></span>
     <button onClick={()=>navigate('/')}>
         Redirect to Payment Page
     </button>
