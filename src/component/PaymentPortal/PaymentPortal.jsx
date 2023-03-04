@@ -9,7 +9,7 @@ const PaymentPortal = ()=>{
     const [user,setUser] = useState(JSON.parse(localStorage.getItem('user'))||{});
     const [modal,setModal] = useState(false);
     const [modal2,setModal2] = useState(false);
-    const [emailVerified,setEmailVerified] = useState(false);
+    const [emailVerified,setEmailVerified] = useState(JSON.parse(localStorage.getItem('verfiedEmail'))||false);
     const [email,setEmail]=useState('');
     const [confirmation,setConfirmation] = useState(()=>0);
     
@@ -19,7 +19,10 @@ const PaymentPortal = ()=>{
 
     useEffect(()=>{
             if(Object.getOwnPropertyNames(user).length!==0 && emailVerified)
-                setModal2(true);
+            {
+            localStorage.setItem('verfiedEmail',emailVerified);
+            setModal2(true);
+                }
         
     },[])
 
