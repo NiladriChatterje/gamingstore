@@ -51,13 +51,13 @@ p{
 }
 #modal > span{
     position: fixed;
-    background-color: rgb(21, 11, 63);
     margin-top: -20px;
+    background: rgb(255, 255, 255);
     border-radius: 10px;
     padding: 1px 10px;
     left:0;
     z-index: 5;
-    color:white;
+    color:rgb(34, 34, 47);
 }
 @media all and (max-width:1200px){
     #container{

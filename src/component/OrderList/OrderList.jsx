@@ -21,10 +21,7 @@ export default function OrderList({id,image,price,count}){
                 className={'orderList-container'}>
                    
                     <AiFillCloseCircle
-                        onClick={()=>{
-                            setData([...data.filter(i=>i.id!==id)]);
-                            setCounter(1);
-                        }}
+                        onClick={()=>setData([...data.filter(i=>i.id!==id)])}
                         style={{color:'black',position:'absolute',top:40,right:10,cursor:'pointer'}} />
                     <img src={image} alt = '' />
                     <span>Rs. {price}</span>

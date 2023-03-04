@@ -1,3 +1,4 @@
+import XBOXSERIES from './seriesXbox.png';
 export const data = [
     {   id:1,
         name:'Controller',
@@ -8,9 +9,9 @@ export const data = [
     },
     {   id:2,
         name:'XBOX 360',
-        price:'7000',
+        price:'28700',
         image:'https://pngimg.com/uploads/xbox/xbox_PNG17514.png',
-        desc:'Wonderful socket with stunning look',
+        desc:'Go all-digital and enjoy disc-free, next-gen gaming with the smallest Xbox console ever made\n Xbox game Pass ultimate includes over 100 high-quality games, online multiplayer, and an EA play membership for one low monthly price (membership sold separately)\n Play thousands of digital games from four generations of Xbox with backward compatibility, including optimized titles at launch\n Introducing the Xbox series S, the smallest, sleekest Xbox console ever. Experience the speed and performance of a next-gen all-digital console at an accessible price point\n Experience next-gen speed and performance with the Xbox velocity architecture, powered by a custom SSD and integrated software',
         count:5
     },
     {   id:3,
@@ -24,21 +25,21 @@ export const data = [
         name:'HARD 1457WF XBOX controller',
         price:'660',
         image:'https://pngimg.com/uploads/xbox/xbox_PNG101370.png',
-        desc:'Wonderful socket with stunning look',
+        desc:'Wonderful socket with stunning look\nExperience the modernized design of the Xbox wireless controller in robot white, featuring sculpted surfaces and refined Geometry for enhanced comfort and effortless control during gameplay\n Stay on target with textured grip on the triggers, bumpers, and back case and with a new hybrid D-pad for accurate, yet familiar input\n Make the controller your own by customizing button Mapping with the Xbox accessories app',
         count:8
     },
     {   id:5,
         name:'Freedom Fighters',
         price:'660',
-        image:'https://img.favpng.com/6/16/10/freedom-fighters-playstation-2-xbox-360-gamecube-video-game-png-favpng-cbSnVN7UZATcK4mpSSJpxGuGy.jpg',
-        desc:'Third Person shooter perspective game with super',
+        image:'https://m.media-amazon.com/images/I/51HD8P4Z2HL._SX258_BO1,204,203,200_.jpg',
+        desc:'Third Person shooter perspective game with super \nKick the Reds out of the Big Apple\n·Detailed walkthrough of entire campaign\n·Comprehensive strategies for urban guerilla warfare\n·How to earn a high Charisma rating\n·Multiplayer tips and tactics\n·Leadership strategies for recruiting and ordering your troops',
         count:3
     },
     {   id:6,
         name:'Assassin\'s Creed 2',
         price:'660',
         image:'https://www.dvd-covers.org/d/4852-5/Assassin_s_Creed.jpg',
-        desc:'Ubisoft\'s best game ever',
+        desc:'Ubisoft\'s best game ever \nExplore the deadly, shadowed world of the assassin with new assassin Ezio\nRoam freely through the lush and dangerous world of Renaissance-era Italy\nDo whatever it takes to complete your missions in the game\'s all-new open world and mission structure\nThrive in an environment rich with power, revenge and conspiracy\nPractice your assassin\'s art with all-new weapons and instruments created by Leonardo da Vinci',
         count:10
     },
     {   id:7,
@@ -92,17 +93,17 @@ export const data = [
          count:0
     },
     {   id:14,
-        name:'Controller',
+        name:'Call OF Duty MW II',
         price:'660',
-        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
-        desc:'Wonderful socket with stunning look',
+        image:'https://m.media-amazon.com/images/I/81ud463mcEL._SX385_.jpg',
+        desc:'This Product Is Offered By Game Tronics. Kindly Check Seller Name Before Purchase.\nThis Product Is Non-Returnable and Non-Refundable.\nPlayable on Xbox One, Xbox Series X|S\nCall of Duty: Modern Warfare II is the sequel to 2019’s blockbuster Modern Warfare\nFeaturing the return of the iconic, team leader Captain John Price, the fearless John "Soap" MacTavish, the seasoned Sergeant Kyle "Gaz” Garrick, and the lone wolf himself, fan favorite Simon “Ghost” Riley, players will witness what makes Task Force 141 the legendary squad it is today.',
          count:0
     },
     {   id:15,
-        name:'Controller',
-        price:'660',
-        image:'https://icons.iconarchive.com/icons/prepaidgamecards/gaming-gadgets/256/Xbox-One-Controller-icon.png',
-        desc:'Wonderful socket with stunning look',
+        name:'XBOX Series X',
+        price:'58799',
+        image:XBOXSERIES,
+        desc:'Introducing Xbox series X, the fastest, most powerful Xbox ever. Play thousands of titles from four generations of consoles—all games look and play best on Xbox series X\nExperience next-gen speed and performance with the Xbox velocity architecture, powered by a custom SSD and integrated software\n Play thousands of games from four generations of Xbox with backward compatibility, including optimized titles at launch\nXbox game Pass ultimate includes over 100 high-quality games, online multiplayer, and an EA play membership for one low monthly price (membership sold separately)\n Xbox Smart delivery ensures you play the best available version of your game no matter which console you\'re playing on\n',
          count:0
     },
     {   id:16,

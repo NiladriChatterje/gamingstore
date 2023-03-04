@@ -38,8 +38,7 @@ export const StateContext =({children})=>{
         let foundItemIndex=data?.findIndex(i=>i.id===id)
         
         data?.splice(foundItemIndex,1,{...foundItem,count:counter});
-        setData([...data])
-          
+        setData([...data])      
     }
 
     return <ProductContext.Provider

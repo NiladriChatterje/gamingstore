@@ -42,7 +42,7 @@ footer{
 }
 #about-sec3 img{
     z-index: 2;
-    filter:drop-shadow(2px 50px 40px);
+    filter:drop-shadow(2px 50px 40px black);
     position: relative;
     object-fit: contain;
     width:300px;

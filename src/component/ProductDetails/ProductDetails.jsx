@@ -6,7 +6,7 @@ import { useStateContext } from '../../StateContext'
 import { useNavigate } from 'react-router'
 
 
-const ProductDetails = ({item}) => {
+const ProductDetails = ({item,setToastText}) => {
   const {addItemToOrderList,setItemIDCount} = useStateContext();
   const navigate = useNavigate();
  
@@ -21,6 +21,7 @@ const ProductDetails = ({item}) => {
         initial={{y:80}}
         whileInView={{y:0}}>
           
+          
             {item.image && <img
                 src={item.image} alt='' />}
             <h3>{item?.name}</h3>
@@ -30,6 +31,7 @@ const ProductDetails = ({item}) => {
                 e.stopPropagation();
                 addItemToOrderList(item)
                 setItemIDCount({count:item.count,id:item.id})
+                setToastText(prev=>!prev);
                 }}>
                   ADD TO CART <HiShoppingCart />
                 </button>

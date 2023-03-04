@@ -16,6 +16,8 @@ const Body = () => {
   const secondContRef = React.useRef(null);
   const joyRef = React.useRef(null);
   const [val,setVal]=React.useState(0);
+
+
   return (
     <motion.div id={'container'}
       initial={{x:150}}
@@ -59,7 +61,7 @@ const Body = () => {
       <motion.div
       id='modal'
         style={{width:'100vw',zIndex:5,
-        opacity:0.86,
+        opacity:0.97,
         position:'fixed',bottom:0,
         backgroundColor:'white',
         height:'0px'}}
@@ -69,7 +71,7 @@ const Body = () => {
         <span>
           Upcoming Products:
         </span>
-        {upcomingData?.map(item=><UpcomingDataMap key={item.id} image={item.image} price={item.price} name={item.name} desc={item.desc}  />)}
+        {upcomingData?.map(item=><UpcomingDataMap key={item.id} id={item.id} image={item.image} price={item.price} name={item.name} desc={item.desc}  />)}
         <IoIosCloseCircle 
         onClick={()=>{setVal(0);joyRef.current.style.transform='scale(1)'}}
         style={{position:'absolute',top:20,right:30,

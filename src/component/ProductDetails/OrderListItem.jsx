@@ -5,11 +5,12 @@ import {AiOutlineArrowRight} from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import { OrderList } from '../components';
 import { useStateContext } from '../../StateContext';
+import {  useNavigate } from 'react-router';
 
 
 const OrderListItem=()=>{
     const {data,slide,setSlide,totalPrice} = useStateContext();
-   
+   const navigate = useNavigate();
     
     return <>
     <div className={`slider-container ${slide?'':'hide-slider'}`}>
@@ -22,15 +23,20 @@ const OrderListItem=()=>{
                         fontSize:25,cursor:'pointer',
                         zIndex:20}} />
               {data?.map((item,i)=><OrderList key={i} id={item.id} image={item.image} price={item.price} count={item.count} />)}
+              
               <motion.button
                 onClick={()=>{
-                 window.open('https://www.google.com');
+                 navigate('/Payment');
+                 setSlide(false)
                 }}
                 initial={{y:60}}
                 animate={{y:0}}
                 id={'payment'}>
                   <span>Place ORDER</span>
-                  <span>Rs. {totalPrice}</span> 
+                  <span
+              style={{textAlign:'right',backgroundColor:'white',color:'black',
+                    position:'fixed',bottom:15,right:10,borderRadius:'10px'}}
+              >₹ {totalPrice}</span> 
               </motion.button>
           </div>
         </div>
