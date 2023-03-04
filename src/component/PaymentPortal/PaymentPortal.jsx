@@ -24,7 +24,7 @@ const PaymentPortal = ()=>{
             setModal2(true);
                 }
         
-    },[])
+    },[emailVerified])
 
     useEffect(()=>{
         sendEmail(email,confirmation);
