@@ -9,6 +9,7 @@ const PaymentPortal = ()=>{
     const [user,setUser] = useState(JSON.parse(localStorage.getItem('user'))||{});
     const [modal,setModal] = useState(false);
     const [modal2,setModal2] = useState(false);
+    const [emailVerified,setEmailVerified] = useState(false);
     const [email,setEmail]=useState('');
     const [confirmation,setConfirmation] = useState(()=>0);
     
@@ -17,7 +18,7 @@ const PaymentPortal = ()=>{
     const numberRef=useRef();
 
     useEffect(()=>{
-            if(Object.getOwnPropertyNames(user).length!==0)
+            if(Object.getOwnPropertyNames(user).length!==0 && emailVerified)
                 setModal2(true);
         
     },[])
@@ -65,7 +66,7 @@ const PaymentPortal = ()=>{
 
     return <>
     <div id={'form_container'}>
-        {modal && <Modal confirmation={confirmation} setModal={setModal} />}
+        {modal && <Modal confirmation={confirmation} setModal={setModal} setEmailVerified={setEmailVerified} />}
         {modal2 && <Modal2 setModal2={setModal2}/>}
         <Toaster />
         <form method="POST" onSubmit={handleClient}>

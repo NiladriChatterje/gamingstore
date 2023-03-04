@@ -2,7 +2,7 @@ import React, {  useRef } from 'react';
 import './Modal.css';
 import toast, {Toaster} from 'react-hot-toast'
 
-const Modal = ({confirmation,setModal})=>{
+const Modal = ({confirmation,setModal,setEmailVerified})=>{
 const sixRef = useRef();
 
 function checkValidData(e){
@@ -10,6 +10,7 @@ function checkValidData(e){
     if(confirmation === parseInt(sixRef.current.value))
     {   console.log(confirmation)
         toast('Email Verified');
+        setEmailVerified(true);
         setModal(false);        
     }
     else{
