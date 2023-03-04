@@ -1,0 +1,35 @@
+#form_container{
+    display: flex;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    width:20vw;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+}
+input{
+    text-align: center;
+    outline: none;
+    color:white;
+    font-weight: 900;
+    background-color: transparent;
+    border-style: none;
+    border-bottom:5px solid rgb(27, 27, 44);
+    margin:5px 0px;
+    border-radius: 10px 1px 10px 1px;
+}
+input[name='name']{
+    text-transform:uppercase ;
+}
+input[type=submit]{
+    background-color: rgb(30, 30, 50);
+    font-size:x-large;
+    cursor:pointer;
+    border-radius: 10px;
+    text-align: center;
+    padding: 1px 5px;
+}
