@@ -1,35 +1,40 @@
-#container{
+#container {
     display: flex;
 }
 
-#first-container{
-    width: 50%; 
-    padding: 0 0 0 100px;   
+#first-container {
+    width: 50%;
+    padding: 0 0 0 100px;
     height: 80vh;
     display: flex;
     align-items: center;
 }
-button{
+
+button {
     border-style: none;
     border-radius: 50px;
     padding: 5px 10px;
     font-weight: 900;
     cursor: pointer;
 }
-button:hover{
-    transform: scale(1.02,1.02);
+
+button:hover {
+    transform: scale(1.02, 1.02);
 }
-h1{
+
+h1 {
     font-size: 2.8em;
     color: white;
     word-wrap: break-word;
 }
-p{
+
+p {
     word-wrap: break-word;
-    color:white;
+    color: white;
     font-weight: 500;
 }
-#second-container{
+
+#second-container {
     position: relative;
     width: 50%;
     height: 90vh;
@@ -37,34 +42,45 @@ p{
     align-items: center;
     justify-content: center;
 }
-#second-container > div{
+
+#second-container>div {
     transition: all;
     transition-duration: 200ms;
-    transform: scale(0,0);
+    transform: scale(0, 0);
 }
-#modal{
-    overflow-x:clip;
-    overflow-y:auto;
-    display:flex;
-    justify-content:space-evenly;
-    flex-wrap:wrap;
+
+#modal {
+    overflow-x: clip;
+    overflow-y: auto;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
 }
-#modal > span{
+
+#modal>span {
     position: fixed;
     margin-top: -20px;
     background: rgb(255, 255, 255);
     border-radius: 10px;
     padding: 1px 10px;
-    left:0;
+    left: 0;
     z-index: 5;
-    color:rgb(34, 34, 47);
+    color: rgb(34, 34, 47);
 }
-@media all and (max-width:1200px){
-    #container{
+
+@media all and (max-width:1200px) {
+    #container {
         flex-direction: column-reverse;
     }
-    #second-container,#first-container{
+
+    #second-container,
+    #first-container {
         width: 100%;
-    }#first-container{height:max-content;margin-bottom: 10px;
-    padding-left:10px;}
+    }
+
+    #first-container {
+        height: max-content;
+        margin-bottom: 10px;
+        padding-left: 10px;
+    }
 }

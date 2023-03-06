@@ -1,0 +1,33 @@
+body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: darkcyan;
+}
+
+.loader {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 8px;
+}
+
+div {
+    width: 60px;
+
+    height: {
+        @width position: relative display: flex justify-content: center align-items: center background-color: mediumaquamarine border-radius: 50% &:before,
+            &:after content: ''
+    }
+
+    width: 60px height: @width position: absolute border-radius: 50% &:before background-color: peachpuff animation: scale-1 2400ms linear infinite &:after background-color: mediumaquamarine animation: scale-2 2400ms linear infinite &:nth-child(2):before,
+    &:nth-child(2):after animation-delay: 300ms &:nth-child(3):before,
+    &:nth-child(3):after animation-delay: 600ms &:nth-child(4):before,
+    &:nth-child(4):after animation-delay: 900ms &:nth-child(5):before,
+    &:nth-child(5):after animation-delay: 1200ms &:nth-child(6):before,
+    &:nth-child(6):after animation-delay: 1500ms &:nth-child(7):before,
+    &:nth-child(7):after animation-delay: 1800ms &:nth-child(8):before,
+    &:nth-child(8):after animation-delay: 2100ms &:nth-child(9):before,
+    &:nth-child(9):after animation-delay: 2400ms @keyframes scale-1 0% transform: scale(0) z-index: 2 50%,
+    100% transform: scale(1) @keyframes scale-2 0%,
+    50% transform: scale(0) 100% transform: scale(1)

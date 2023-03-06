@@ -1,84 +1,81 @@
-import React, {  useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import './PaymentPortal.css';
-import toast,{Toaster} from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import Modal from './Modal';
 import Modal2 from './Modal2';
 import axios from 'axios';
 
-const PaymentPortal = ()=>{
-    const [user,setUser] = useState(JSON.parse(localStorage.getItem('user'))||{});
-    const [modal,setModal] = useState(false);
-    const [modal2,setModal2] = useState(false);
-    const [emailVerified,setEmailVerified] = useState(JSON.parse(localStorage.getItem('verfiedEmail'))||false);
-    const [email,setEmail]=useState('');
-    const [confirmation,setConfirmation] = useState(()=>0);
-    
-    const nameRef=useRef();
-    const emailRef=useRef();
-    const numberRef=useRef();
+const PaymentPortal = () => {
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || {});
+    const [modal, setModal] = useState(false);
+    const [modal2, setModal2] = useState(false);
+    const [emailVerified, setEmailVerified] = useState(JSON.parse(localStorage.getItem('verfiedEmail')) || false);
+    const [email, setEmail] = useState('');
+    const [confirmation, setConfirmation] = useState(() => 0);
 
-    useEffect(()=>{
-            if(Object.getOwnPropertyNames(user).length!==0 && emailVerified)
-            {
-            localStorage.setItem('verfiedEmail',emailVerified);
+    const nameRef = useRef();
+    const emailRef = useRef();
+    const numberRef = useRef();
+
+    useEffect(() => {
+        if (Object.getOwnPropertyNames(user).length !== 0 && emailVerified) {
             setModal2(true);
-                }
-        
-    },[emailVerified])
+            localStorage.setItem('verfiedEmail', emailVerified);
+        }
+        if (!emailVerified) localStorage.setItem('verfiedEmail', emailVerified);
+    }, [emailVerified]);
 
-    useEffect(()=>{
-        sendEmail(email,confirmation);
-    },[confirmation])
+    useEffect(() => {
+        sendEmail(email, confirmation);
+    }, [confirmation])
 
-    function sendEmail(recipient,confirmation){
+    function sendEmail(recipient, confirmation) {
         const stringifiedConfirmation = JSON.stringify(confirmation);
-        if(recipient&&confirmation){
-            axios.post('https://gamingstore-with-backend-niladri.onrender.com/send_email',{
+        if (recipient && confirmation) {
+            axios.post('https://gamingstore-with-backend-niladri.onrender.com/send_email', {
                 recipient: recipient,
-                confirmation:  stringifiedConfirmation
-            }).then(()=>toast('Email Sent')).catch(()=>toast("Something Went Wrong"));
+                confirmation: stringifiedConfirmation
+            }).then(() => toast('Email Sent')).catch(() => toast("Something Went Wrong"));
             return;
         }
     }
 
-    useMemo(()=>{
-        localStorage.setItem('user',JSON.stringify(user));
-    },[user?.phone,user?.email]);
+    useMemo(() => {
+        localStorage.setItem('user', JSON.stringify(user));
+    }, [user.email]);
 
-    function handleClient(e){
+
+    function handleClient(e) {
         e.preventDefault();
         toast(emailRef.current.value);
         toast(numberRef.current.value);
         toast(nameRef.current.value);
         setEmail(emailRef.current.value);
 
-        setUser({name:nameRef.current.value,phone:numberRef.current.value,email:emailRef.current.value});
-        const random = parseInt(Math.random()*1000000);
-        
-        console.log(random)
+        setUser({ name: nameRef.current.value, phone: numberRef.current.value, email: emailRef.current.value });
+        let random;
+        while (true) {
+            random = parseInt(Math.random() * 1000000);
+            if (random.toString().length === 6)
+                break;
+        }
         setModal(true);
+        console.log(random)
         setConfirmation(random);
     }
 
-    function emailRegex(){
-        return "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
-    }
-    function numberRegex(){
-        return '^([0|+[0-9]{1,5})?([7-9][0-9]{9})$';
-    }
-
     return <>
-    <div id={'form_container'}>
-        {modal && <Modal confirmation={confirmation} setModal={setModal} setEmailVerified={setEmailVerified} />}
-        {modal2 && <Modal2 setModal2={setModal2}/>}
-        <Toaster />
-        <form method="POST" onSubmit={handleClient}>
-            <input ref={nameRef} name='name' type='text' maxLength={90} placeholder={'NAME'} required/>
-            <input ref={numberRef} name='telephone' type='tel' maxLength={10} placeholder='MOBILE' required pattern={numberRegex} />
-            <input ref={emailRef} name='email' type='email' placeholder='EMAIL' required pattern={emailRegex}/>
-            <input type='submit' />
-        </form>
-    </div>
-            </>
+        <div id={'form_container'}>
+            {modal && <Modal confirmation={confirmation} setModal={setModal} setEmailVerified={setEmailVerified} />}
+            {modal2 && <Modal2 setModal2={setModal2} setEmailVerified={setEmailVerified} />}
+            <Toaster />
+            <form method="POST" onSubmit={handleClient}>
+                <input ref={nameRef} name='name' type='text' maxLength={90} placeholder={'NAME'} required />
+                <input ref={numberRef} name='telephone' type='tel' maxLength={10} minLength={10} placeholder='MOBILE' required />
+                <input ref={emailRef} name='email' type='email' placeholder='EMAIL' required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
+                <input type='submit' />
+            </form>
+        </div>
+    </>
 }
 export default PaymentPortal;

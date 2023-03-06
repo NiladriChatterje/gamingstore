@@ -1,41 +1,46 @@
-#count{
+#count {
     display: flex;
-    gap:5px;
+    gap: 5px;
     width: 100%;
     align-items: center;
     justify-content: center;
 }
-#count > button{
+
+#count>button {
     border-style: none;
     outline: none;
     border-radius: 10px;
 }
-.orderList-container{
-    position:relative;
+
+.orderList-container {
+    position: relative;
     margin-top: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.orderList-container img{
 
-        object-fit: contain;
-        filter: drop-shadow(5px 10px 10px);
-        height: 150px;
-        width: 150px;
-        position: relative;
-        
+.orderList-container img {
+
+    object-fit: contain;
+    filter: drop-shadow(5px 10px 10px);
+    height: 150px;
+    width: 150px;
+    position: relative;
+
 }
-hr{
+
+hr {
     width: 100%;
 }
-#count > button:hover{
+
+#count>button:hover {
     background-color: rgb(58, 58, 116);
-    color:white;
+    color: white;
 }
 
-@media all and (max-width:800px){
-    .orderList-container{
+@media all and (max-width:800px) {
+    .orderList-container {
         margin-top: 10px;
     }
 }

@@ -1,35 +1,58 @@
-#form_container{
+#form_container {
     display: flex;
 }
 
-form{
+#form_container>form {
+    backdrop-filter: blur(5px);
+    background-image: linear-gradient(to bottom right, rgb(26, 26, 46), rgb(61, 61, 97));
     display: flex;
+    gap: 20px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
-    width:20vw;
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
+    box-shadow: 1px 3px 25px -8px;
+    width: 30vw;
+    height: 35vh;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
-input{
+
+input {
     text-align: center;
     outline: none;
-    color:white;
+    color: white;
     font-weight: 900;
     background-color: transparent;
     border-style: none;
-    border-bottom:5px solid rgb(27, 27, 44);
-    margin:5px 0px;
+    border-bottom: 2px solid rgb(27, 27, 44);
+    margin: 5px 0px;
     border-radius: 10px 1px 10px 1px;
 }
-input[name='name']{
-    text-transform:uppercase ;
+
+input[name='name'] {
+    text-transform: uppercase;
 }
-input[type=submit]{
+
+input[type=submit] {
     background-color: rgb(30, 30, 50);
-    font-size:x-large;
-    cursor:pointer;
+    font-size: x-large;
+    cursor: pointer;
     border-radius: 10px;
     text-align: center;
     padding: 1px 5px;
+}
+
+input[type=submit]:hover {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+}
+
+@media all and (max-width:1200px) {
+    form {
+        width: 75vw;
+        height: 32vh;
+    }
 }

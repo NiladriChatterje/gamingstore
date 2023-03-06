@@ -1,22 +1,24 @@
-#card{
-    background-image: linear-gradient(to top right,rgba(99, 174, 176, 0.596),rgba(1, 255, 170, 0.6));
-    width:280px;
+#card {
+    background-image: linear-gradient(to top right, rgba(99, 174, 176, 0.596), rgba(1, 255, 170, 0.6));
+    width: 280px;
     text-align: center;
-    height:400px;
+    height: 400px;
     position: relative;
     border-radius: 10px;
     box-shadow: 10px 10px 15px -13px;
-    backdrop-filter:blur(15px);
+    backdrop-filter: blur(15px);
     display: flex;
     margin: 45px 20px;
     flex-direction: column;
     align-items: center;
     object-fit: contain;
 }
-#card button{
+
+#card button {
     z-index: 5;
 }
-#card img{
+
+#card img {
     object-fit: contain;
     filter: drop-shadow(5px 10px 10px);
     height: 200px;

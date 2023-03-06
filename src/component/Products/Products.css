@@ -1,24 +1,32 @@
-#Product-container{
-    width: 100%;
-    margin-top: 2.05vh;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-   
+#Product-container {
+  width: 100%;
+  margin-top: 2.05vh;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
 }
+
 .loader {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 16px solid transparent; /* Light grey */
-    border-top: 16px solid #53f2f2; /* Blue */
-    border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    animation: spin 2s linear infinite;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 16px solid transparent;
+  /* Light grey */
+  border-top: 16px solid #53f2f2;
+  /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+
+  100% {
+    transform: rotate(360deg);
   }
+}
