@@ -3,7 +3,7 @@
 #h1 {
     color: white;
     font-size: 2em;
-    margin-top: 20%;
+
     font-family: 'Blanka', sans-serif;
 }
 
@@ -72,6 +72,10 @@ td:nth-child(2) {
     td:first-child {
         padding-left: 0;
         text-align: left;
+    }
+
+    #h1 {
+        margin-top: 20%;
     }
 
     table th:last-child,
