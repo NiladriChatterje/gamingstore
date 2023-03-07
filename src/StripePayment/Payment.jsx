@@ -18,7 +18,7 @@ function Payment() {
 
     useEffect(() => {
         (async function () {
-            const { data: { publishableKey } } = await axios.get('http://localhost:4242/config')
+            const { data: { publishableKey } } = await axios.get('https://game-store-stripe.onrender.com/config')
             setStripePromise(loadStripe(publishableKey));
         })()
     }, []);
@@ -29,7 +29,7 @@ function Payment() {
 
     useEffect(() => {
         (async function () {
-            const { data } = await axios.post("http://localhost:4242/create-payment-intent", {
+            const { data } = await axios.post("https://game-store-stripe.onrender.com/create-payment-intent", {
                 price: oneItem ? oneProduct.price : totalPrice
             })
             setClientSecret(data?.clientSecret)
