@@ -38,7 +38,7 @@
     background-color: rgb(18, 36, 66);
     width: 100%;
     box-shadow: 1px 1px 12px -10px black;
-    height: 40px;
+    height: 45px;
     position: absolute;
     z-index: 6;
     bottom: 0px;
@@ -47,6 +47,7 @@
 @media all and (max-width:1200px) {
     .slider-container {
         width: 85vw;
+        height: 100%;
     }
 
     #BsFillBagPlusFill {
