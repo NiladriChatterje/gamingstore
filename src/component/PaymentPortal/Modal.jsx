@@ -1,10 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './Modal.css';
 import toast, { Toaster } from 'react-hot-toast'
 
 const Modal = ({ confirmation, setModal, setEmailVerified }) => {
     const sixRef = useRef();
-
+    useEffect(() => { toast('OTP sent to your specified Email') })
     function checkValidData(e) {
         e.preventDefault();
         if (confirmation === parseInt(sixRef.current.value)) {
