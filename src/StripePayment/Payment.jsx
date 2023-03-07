@@ -44,6 +44,7 @@ function Payment() {
                 <div>
                     {oneItem ? <div id='nam_price' style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>{oneProduct?.name}</span>
+                        <span>{oneProduct?.qty}</span>
                         <span>₹ {oneProduct?.price}</span>
                     </div> :
                         <table cellPadding={10} width={'100%'} style={{ color: 'white', fontWeight: 900 }} >
@@ -56,7 +57,7 @@ function Payment() {
                     <div id='nam_price' style={{ height: '1px', position: 'relative', left: 0, backgroundColor: 'white' }} />
                     <div id='nam_price' style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>Amount : </span>
-                        <span>₹ {oneItem ? oneProduct?.price : totalPrice}</span>
+                        <span>₹ {oneItem ? oneProduct?.price * oneProduct?.qty : totalPrice}</span>
                     </div>
                 </div>
                 <span id='barrier'></span>

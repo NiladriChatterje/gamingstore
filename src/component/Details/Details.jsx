@@ -7,6 +7,7 @@ import UpcomingData from '../Body/upcomingData';
 import toast, { Toaster } from 'react-hot-toast';
 
 const Details = () => {
+  const [counter, setCounter] = useState(() => 1)
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -33,6 +34,13 @@ const Details = () => {
           <article>{item?.desc}</article>
           <span>₹ {item?.price}</span>
           <div>
+            {id < 100 && <section>
+              <button
+                onClick={() => setCounter(prev => prev - 1)}>-</button>
+              <span>{counter}</span>
+              <button
+                onClick={() => setCounter(prev => prev + 1)}>+</button>
+            </section>}
             {id < 100 && <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -47,7 +55,7 @@ const Details = () => {
                 e.stopPropagation();
                 setOneItem(true);
                 const foundData = data?.find(item => item.id == id);
-                setOneProduct({ name: foundData?.name, price: foundData?.price });
+                setOneProduct({ name: foundData?.name, price: foundData?.price, qty: counter });
                 navigate('/Payment');
               }}
             >Buy NOW</button>}
