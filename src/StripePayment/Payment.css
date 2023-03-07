@@ -26,13 +26,17 @@
     height: 50vh;
     margin: 0 25px;
     width: 1px;
-    background-color: white;
+    background-color: rgb(0, 0, 0);
 }
 
 th,
 td {
     padding-left: 50px;
     width: 80px;
+}
+
+#nam_price span {
+    color: black;
 }
 
 #nam_price {
