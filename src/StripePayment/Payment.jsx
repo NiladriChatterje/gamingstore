@@ -24,7 +24,7 @@ function Payment() {
     }, []);
 
     useEffect(() => {
-        setTimeout(() => setLoader(false), 3000);
+        setTimeout(() => setLoader(false), 3050);
     });
 
     useEffect(() => {
