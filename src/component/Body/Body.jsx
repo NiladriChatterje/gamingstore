@@ -39,8 +39,8 @@ const Body = () => {
             EXPLORE
           </button>
         </div>
-
       </motion.div>
+
       <motion.div id='second-container' ref={secondContRef}>
         <motion.div
           initial={{ opacity: 0, transform: 'scale(0,0)' }}

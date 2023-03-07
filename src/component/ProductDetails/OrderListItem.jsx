@@ -48,9 +48,10 @@ const OrderListItem = () => {
     </motion.div>
     <BsFillBagPlusFill
       onClick={() => setSlide(true)}
+      id={'BsFillBagPlusFill'}
       style={{
-        color: 'white', zIndex: 6,
-        height: 20, width: 20, cursor: 'pointer', top: '10',
+        zIndex: 6,
+        height: 25, width: 25, cursor: 'pointer', top: 12,
         position: 'fixed', right: 90
       }} />
   </>

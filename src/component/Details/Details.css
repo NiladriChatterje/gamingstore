@@ -3,12 +3,22 @@
     justify-content: center;
 }
 
-section {
+#counter_container {
+    display: block;
+    align-items: flex-start;
+    margin-left: 0;
+}
+
+#counter_container>button {
+    margin: 30px 10px;
+}
+
+#details__container>section {
     width: 50vw;
     color: wheat;
     font-size: large;
     font-weight: 900;
-    word-wrap: break-word;
+
 }
 
 #details__container>img {
@@ -35,10 +45,36 @@ section button {
 @media all and (max-width:800px) {
     #details__container>img {
         width: 50vw;
+        margin-top: 20%;
+    }
+
+    #details__container>section>h1 {
+        font-size: 1em;
+    }
+
+    #details__container>section {
+        width: 90vw;
+    }
+
+    #details__container>section>section {
+        height: 90vh;
     }
 
     #details__container {
         flex-direction: column;
         align-items: center;
+        justify-content: space-between;
+    }
+
+    #details__container>section {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    #details__container>section>section {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
     }
 }

@@ -13,7 +13,7 @@
     align-items: center;
     color: black;
     font-weight: 900;
-    width: 400px;
+    width: 45vw;
     height: 150px;
     background-color: white;
     position: fixed;
@@ -27,9 +27,17 @@
 
 #modal-form>input[type=submit] {
     width: 50%;
+
 }
 
 #modal-form>input[type=number] {
     width: 60%;
     border-bottom: 2px solid black;
+    color: black;
+}
+
+@media all and (max-width:1200px) {
+    #modal-form {
+        width: 80vw;
+    }
 }

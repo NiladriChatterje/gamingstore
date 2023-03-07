@@ -20,10 +20,11 @@
     transform: translate(-50%, -50%);
 }
 
-input {
+#form_container input {
+    color: white;
+    width: 80%;
     text-align: center;
     outline: none;
-    color: white;
     font-weight: 900;
     background-color: transparent;
     border-style: none;
@@ -32,11 +33,11 @@ input {
     border-radius: 10px 1px 10px 1px;
 }
 
-input[name='name'] {
+#form_container input[name='name'] {
     text-transform: uppercase;
 }
 
-input[type=submit] {
+#form_container input[type=submit] {
     background-color: rgb(30, 30, 50);
     font-size: x-large;
     cursor: pointer;
@@ -45,13 +46,13 @@ input[type=submit] {
     padding: 1px 5px;
 }
 
-input[type=submit]:hover {
+#form_container input[type=submit]:hover {
     background-color: rgb(255, 255, 255);
     color: rgb(0, 0, 0);
 }
 
 @media all and (max-width:1200px) {
-    form {
+    #form_container>form {
         width: 75vw;
         height: 32vh;
     }

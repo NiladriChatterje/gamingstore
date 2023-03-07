@@ -47,6 +47,7 @@ export const StateContext = ({ children }) => {
         value={{
             navRef,
             totalPrice,
+            setTotalPrice,
             data,
             oneProduct,
             setOneProduct,

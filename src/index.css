@@ -4,6 +4,7 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
+  font-size: 0.8em;
   -moz-osx-font-smoothing: grayscale;
   background-size: cover;
   user-select: none;
@@ -23,4 +24,10 @@ body {
 *::-webkit-scrollbar-thumb {
   background-color: rgb(25, 25, 80);
   border-radius: 30px;
+}
+
+@media all and (max-width:1200px) {
+  * {
+    font-size: 1em;
+  }
 }

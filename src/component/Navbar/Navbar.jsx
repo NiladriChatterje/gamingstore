@@ -24,18 +24,18 @@ const Navbar = () => {
       </span>
 
       <div
-        onClick={() => setNavActive(prev => !prev)}
         id={navActive ? 'navitems-active' : 'navitems-inactive'}>
-        {window.innerWidth < 1200 && <GiHamburgerMenu
+        <GiHamburgerMenu
+          onClick={() => setNavActive(prev => !prev)}
+          id={'GiHamburgerMenu'}
           style={{
             cursor: 'pointer',
-            color: 'white',
             zIndex: 10,
             position: 'absolute',
             height: '25px',
             width: '25px',
             right: 10, top: 5
-          }} />}
+          }} />
         {navItems?.map((item, i) => <Link to={`/${item === "Home" ? '' : item}`} id='text' key={i}>{item}</Link>)}
       </div>
 

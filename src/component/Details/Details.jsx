@@ -34,9 +34,12 @@ const Details = () => {
           <article>{item?.desc}</article>
           <span>₹ {item?.price}</span>
           <div>
-            {id < 100 && <section>
+            {id < 100 && <section id={'counter_container'}>
               <button
-                onClick={() => setCounter(prev => prev - 1)}>-</button>
+                onClick={() => {
+                  if (counter <= 1) return 1;
+                  setCounter(prev => prev - 1)
+                }}>-</button>
               <span>{counter}</span>
               <button
                 onClick={() => setCounter(prev => prev + 1)}>+</button>

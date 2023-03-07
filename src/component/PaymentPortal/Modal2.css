@@ -7,7 +7,7 @@
 }
 
 #modal2 {
-    width: 400px;
+    width: 40vw;
     box-shadow: 2px 3px 10px -2px black;
     height: 200px;
     position: fixed;
@@ -25,4 +25,10 @@
 #modal2 button {
     color: white;
     background-color: rgb(13, 13, 22);
+}
+
+@media all and (max-width:1200px) {
+    #modal2 {
+        width: 80vw;
+    }
 }

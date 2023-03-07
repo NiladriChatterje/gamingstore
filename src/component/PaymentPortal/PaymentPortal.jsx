@@ -30,7 +30,6 @@ const PaymentPortal = () => {
     useEffect(() => {
         sendEmail(email, confirmation);
     }, [confirmation])
-
     function sendEmail(recipient, confirmation) {
         const stringifiedConfirmation = JSON.stringify(confirmation);
         if (recipient && confirmation) {
@@ -47,11 +46,11 @@ const PaymentPortal = () => {
     }, [user.email]);
 
     useEffect(() => {
-        if (modal)
+        if (modal && window.innerWidth > 1200)
             navRef.current.style.display = 'none'
         else
             navRef.current.style.display = 'flex'
-    }, [modal])
+    }, [modal]);
 
     function handleClient(e) {
         e.preventDefault();
@@ -67,7 +66,6 @@ const PaymentPortal = () => {
             if (random.toString().length === 6)
                 break;
         }
-
         setConfirmation(random);
         setModal(true);
     }
@@ -80,7 +78,7 @@ const PaymentPortal = () => {
             <form method="POST" onSubmit={handleClient}>
                 <input ref={nameRef} name='name' type='text' maxLength={90} placeholder={'NAME'} required />
                 <input ref={numberRef} name='telephone' type='tel' maxLength={10} minLength={10} placeholder='MOBILE' required />
-                <input ref={emailRef} name='email' type='email' placeholder='EMAIL' required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
+                <input ref={emailRef} name='email' type='email' placeholder='EMAIL' required />
                 <input type='submit' />
             </form>
         </div>

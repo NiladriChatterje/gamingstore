@@ -20,7 +20,10 @@ const Modal2 = ({ setModal2, setEmailVerified }) => {
                 }}
                 style={{ position: 'fixed', right: 10, top: 10, cursor: 'pointer' }} />
             <span style={{ color: 'black' }}>Now an User <TiTick /></span>
-            <button onClick={() => navigate(`/Checkout`)}>
+            <button onClick={() => {
+                setModal2(false);
+                navigate(`/Checkout`)
+            }}>
                 Redirect to Payment Page
             </button>
         </div>
