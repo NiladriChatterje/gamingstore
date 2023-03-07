@@ -1,10 +1,12 @@
 .success,
 .cancel {
-    width: 1000px;
-    margin: auto;
-    margin-top: 160px;
+    width: 50%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background-color: #dcdcdc;
-    padding: 50px;
+    padding: 20px;
     border-radius: 15px;
     display: flex;
     justify-content: center;
@@ -60,4 +62,14 @@
 
 .product-max-qty {
     margin-top: 10px;
+}
+
+@media all and (max-width:1200px) {
+
+    .success,
+    .cancel {
+        width: 70%;
+        font-size: 0.75em;
+        text-align: center;
+    }
 }
