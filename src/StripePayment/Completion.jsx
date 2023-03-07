@@ -9,7 +9,7 @@ function Completion(props) {
             };
         }
         function preventBack() { window.history.forward(); }
-        setTimeout("preventBack()", 0);
+        setTimeout(preventBack(), 0);
         window.onunload = null;
         preventBack();
     })

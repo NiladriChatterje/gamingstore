@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import './Payment.css'
+import Loader from "./Loader";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { loadStripe } from "@stripe/stripe-js";
@@ -11,6 +12,7 @@ import { useStateContext } from "../StateContext";
 function Payment() {
     const [stripePromise, setStripePromise] = useState(null);
     const [clientSecret, setClientSecret] = useState("");
+    const [loader, setLoader] = useState(() => true);
 
     const { oneItem, data, totalPrice, oneProduct } = useStateContext();
 
@@ -20,6 +22,10 @@ function Payment() {
             setStripePromise(loadStripe(publishableKey));
         }).catch(toast('Internal Server Problem'));
     }, []);
+
+    useEffect(() => {
+        setTimeout(() => setLoader(false), 3000);
+    });
 
     useEffect(() => {
         axios.post("http://localhost:4242/create-payment-intent", {
@@ -32,9 +38,9 @@ function Payment() {
 
     return (
         <>
-            <h1>PAYMENT GATEWAY</h1>
+            <h1 id={'h1'}>PAYMENT GATEWAY</h1>
             <Toaster />
-            <div id='whole_wrapper'>
+            {loader ? <Loader /> : <div id='whole_wrapper'>
                 <div>
                     {oneItem ? <div id='nam_price' style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>{oneProduct?.name}</span>
@@ -58,7 +64,7 @@ function Payment() {
                     <Elements stripe={stripePromise} options={{ clientSecret }}>
                         <CheckoutForm />
                     </Elements>)}
-            </div>
+            </div>}
         </>
     );
 }

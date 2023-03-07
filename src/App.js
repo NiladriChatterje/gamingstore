@@ -1,17 +1,19 @@
 import './App.css';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navbar, Body, About, Products, OrderListItem, Details, PaymentPortal } from './component/components';
 import Payment from './StripePayment/Payment';
 import Completion from './StripePayment/Completion'
 import { Routes, Route } from 'react-router-dom';
+import PreLoader from './PreLoader';
 import { StateContext } from './StateContext';
 
 function App() {
-
+  const [loading, setLoading] = useState(() => true);
+  useEffect(() => { setTimeout(() => setLoading(false), 3000) }, []);
 
   return (
     <div className="App">
-      <StateContext>
+      {loading ? <PreLoader /> : <StateContext>
         <OrderListItem />
         <Navbar />
         <Routes>
@@ -23,7 +25,7 @@ function App() {
           <Route path={'/Checkout'} element={<Payment />} />
           <Route path={'/completion'} element={<Completion />} />
         </Routes>
-      </StateContext>
+      </StateContext>}
     </div>
   );
 }

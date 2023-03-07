@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useState, useEffect } from 'react';
+import React, { useContext, createContext, useState, useEffect, useRef } from 'react';
 
 const ProductContext = createContext(null);
 export const StateContext = ({ children }) => {
@@ -12,7 +12,7 @@ export const StateContext = ({ children }) => {
     const [totalPrice, setTotalPrice] = useState(() => localStorage.getItem('totalPrice') || 0);
     const [data, setData] = useState(() => JSON.parse(localStorage.getItem('orders')) || []);
 
-
+    const navRef = useRef(null);
     useEffect(() => {
         let x = data?.reduce((acc, cur) => acc + cur.price * cur.count, 0)
         setTotalPrice(x);
@@ -45,6 +45,7 @@ export const StateContext = ({ children }) => {
 
     return <ProductContext.Provider
         value={{
+            navRef,
             totalPrice,
             data,
             oneProduct,

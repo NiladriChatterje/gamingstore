@@ -44,6 +44,11 @@ td:nth-child(2) {
     text-align: center;
 }
 
+#h1 {
+    position: relative;
+    left: 40px;
+}
+
 @media all and (max-width:1200px) {
     #whole_wrapper {
         flex-direction: column;

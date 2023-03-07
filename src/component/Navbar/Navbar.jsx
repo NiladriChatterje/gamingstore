@@ -3,15 +3,17 @@ import './Navbar.css'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useStateContext } from '../../StateContext';
 
 const navItems = ['Home', 'Product', 'About'];
 
 const Navbar = () => {
   const [navActive, setNavActive] = React.useState(() => false);
-
+  const { navRef } = useStateContext();
 
   return (
     <motion.nav
+      ref={navRef}
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}>
       <span id={'heading'}>

@@ -4,6 +4,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import Modal from './Modal';
 import Modal2 from './Modal2';
 import axios from 'axios';
+import { useStateContext } from '../../StateContext';
 
 const PaymentPortal = () => {
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || {});
@@ -12,6 +13,7 @@ const PaymentPortal = () => {
     const [emailVerified, setEmailVerified] = useState(JSON.parse(localStorage.getItem('verfiedEmail')) || false);
     const [email, setEmail] = useState('');
     const [confirmation, setConfirmation] = useState(() => 0);
+    const { navRef } = useStateContext();
 
     const nameRef = useRef();
     const emailRef = useRef();
@@ -44,6 +46,12 @@ const PaymentPortal = () => {
         localStorage.setItem('user', JSON.stringify(user));
     }, [user.email]);
 
+    useEffect(() => {
+        if (modal)
+            navRef.current.style.display = 'none'
+        else
+            navRef.current.style.display = 'flex'
+    }, [modal])
 
     function handleClient(e) {
         e.preventDefault();
@@ -59,9 +67,9 @@ const PaymentPortal = () => {
             if (random.toString().length === 6)
                 break;
         }
-        setModal(true);
-        console.log(random)
+
         setConfirmation(random);
+        setModal(true);
     }
 
     return <>

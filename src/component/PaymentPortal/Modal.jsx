@@ -8,7 +8,6 @@ const Modal = ({ confirmation, setModal, setEmailVerified }) => {
     function checkValidData(e) {
         e.preventDefault();
         if (confirmation === parseInt(sixRef.current.value)) {
-            console.log(confirmation)
             toast('Email Verified');
             setEmailVerified(true);
             setModal(false);
