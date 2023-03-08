@@ -26,7 +26,7 @@ const ProductDetails = ({ item, setToastText }) => {
       {item.image && <img
         src={item.image} alt='' />}
       <h3>{item?.name}</h3>
-      <p>{item?.desc?.length > 30 ? item.desc.slice(0, 32) + '...' : item.desc}</p>
+      <p>{item?.desc?.length > 30 ? item.desc.slice(0, 28) + '...' : item.desc}</p>
       <button
         onClick={(e) => {
           e.stopPropagation();

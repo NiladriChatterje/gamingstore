@@ -28,8 +28,18 @@
     transform: translateY(-60px);
 }
 
+#card h2 {
+    position: relative;
+
+}
+
+#card h3 {
+    margin: 0;
+}
+
 @media all and (max-width:1200px) {
     #card {
         font-size: 1em;
+        width: 250px;
     }
 }

@@ -10,7 +10,7 @@ function Completion() {
     const { oneItem, setData, setTotalPrice } = useStateContext();
     useEffect(() => {
         if (!oneItem) {
-            localStorage.clear();
+            localStorage.removeItem("orders");
             setTotalPrice(0);
             setData([]);
         }
