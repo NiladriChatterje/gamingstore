@@ -63,16 +63,28 @@ span {
     }
 
     #navitems-inactive {
+        padding: 20px 0;
+        backdrop-filter: blur(10px);
         transition: all;
         transition-duration: 200ms;
-        width: 35px;
+        font-family: 'Blanka';
+        font-weight: 900;
+        font-size: 1.20em;
+        box-shadow: -2px -1px 15px -8px rgb(22, 22, 97);
+        background-color: rgba(255, 255, 255, 0.485);
+        display: flex;
+        text-align: center;
         position: fixed;
-        z-index: 1;
-        right: 0;
-        top: 10px;
-        overflow: hidden;
-        height: 35px;
-        border-radius: 50%;
+        gap: 40px;
+        right: -400px;
+        align-items: center;
+        top: 55px;
+        flex-direction: column;
+        height: max-content;
+        width: 50%;
+        justify-content: space-around;
+        border-radius: 10px;
+        visibility: hidden;
     }
 
     #GiHamburgerMenu {
@@ -91,6 +103,7 @@ span {
     }
 
     #navitems-active {
+        padding: 20px 0;
         backdrop-filter: blur(10px);
         transition: all;
         transition-duration: 200ms;
@@ -102,12 +115,12 @@ span {
         display: flex;
         text-align: center;
         position: fixed;
-        z-index: 2;
+        gap: 40px;
         right: 0;
         align-items: center;
-        top: 10px;
+        top: 55px;
         flex-direction: column;
-        height: 100%;
+        height: max-content;
         width: 50%;
         justify-content: space-around;
         border-radius: 10px;
@@ -115,6 +128,7 @@ span {
 
     #text {
         font-size: 0.8em;
+        font-weight: 800;
         color: rgb(20, 20, 36);
     }
 

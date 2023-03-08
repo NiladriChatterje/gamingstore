@@ -22,20 +22,20 @@ const Navbar = () => {
         </span>
         Shop
       </span>
-
+      <GiHamburgerMenu
+        onClick={() => setNavActive(prev => !prev)}
+        id={'GiHamburgerMenu'}
+        style={{
+          cursor: 'pointer',
+          zIndex: 10,
+          position: 'fixed',
+          height: '25px',
+          width: '25px',
+          right: 10, top: 13.5
+        }} />
       <div
         id={navActive ? 'navitems-active' : 'navitems-inactive'}>
-        <GiHamburgerMenu
-          onClick={() => setNavActive(prev => !prev)}
-          id={'GiHamburgerMenu'}
-          style={{
-            cursor: 'pointer',
-            zIndex: 10,
-            position: 'absolute',
-            height: '25px',
-            width: '25px',
-            right: 10, top: 5
-          }} />
+
         {navItems?.map((item, i) => <Link to={`/${item === "Home" ? '' : item}`} id='text' key={i}>{item}</Link>)}
       </div>
 
