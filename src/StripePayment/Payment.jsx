@@ -20,21 +20,18 @@ function Payment() {
         (async function () {
             const { data: { publishableKey } } = await axios.get('https://game-store-stripe.onrender.com/config')
             setStripePromise(loadStripe(publishableKey));
-        })()
-    }, []);
-
-    useEffect(() => {
-        setTimeout(() => setLoader(false), 3050);
-    });
-
-    useEffect(() => {
-        (async function () {
+        })();
+         (async function () {
             const { data } = await axios.post("https://game-store-stripe.onrender.com/create-payment-intent", {
                 price: oneItem ? oneProduct.price : totalPrice
             })
             setClientSecret(data?.clientSecret)
         })();
     }, []);
+
+    useEffect(() => {
+        setTimeout(() => setLoader(false), 3050);
+    });
 
     return (
         <>

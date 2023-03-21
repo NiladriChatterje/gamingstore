@@ -1,20 +1,15 @@
-import React, { useMemo, useState } from 'react'
+import React, {useState} from 'react'
 import './Products.css';
 import { motion } from 'framer-motion';
 import { FixedSizeList } from 'react-window';
 import { data } from './data.js';
-import toast, { Toaster } from 'react-hot-toast'
+import toast , {Toaster} from 'react-hot-toast';
 const ProductDetails = React.lazy(() => import('../ProductDetails/ProductDetails'));
 
-let x = 0;
-const Products = () => {
-    const [toastText, setToastText] = useState(false);
 
-    useMemo(() => {
-        if (x === 0) x++;
-        else
-            toast(`Product added to cart Successfully ✔`);
-    }, [toastText])
+const Products = () => { 
+    const [toastMessage,setToastMessage] = React.useState(false);
+    useState(()=>{toast("Product added to cart successfully ✔")},[toastMessage]);
 
     const Row = ({ index, style }) => {
         return <div style={{
@@ -22,7 +17,7 @@ const Products = () => {
             width: '300px', position: 'absolute', transform: 'translateX(-50%)'
         }}>
             <React.Suspense fallback={<div className="loader"></div>}>
-                <ProductDetails style={style} item={data[index]} setToastText={setToastText} />
+                <ProductDetails style={style} item={data[index]} setToastMessage={setToastMessage} />
             </React.Suspense>
         </div>
     }
@@ -33,7 +28,7 @@ const Products = () => {
             id={'Product-container'}
             initial={{ x: 300 }}
             animate={{ x: 0 }}>
-            <Toaster containerStyle={{ fontWeight: 900 }} />
+            <Toaster containerStyle={{fontSize:'0.7em',fontWeight:'900'}} />
             <FixedSizeList
                 height={window.innerHeight - 70}
                 width={window.innerWidth}

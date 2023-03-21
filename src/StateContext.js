@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, createContext, useState, useRef,useMemo } from 'react';
 
 const ProductContext = createContext(null);
 export const StateContext = ({ children }) => {
@@ -13,12 +13,11 @@ export const StateContext = ({ children }) => {
     const [data, setData] = useState(() => JSON.parse(localStorage.getItem('orders')) || []);
 
     const navRef = useRef(null);
-    useEffect(() => {
+    useMemo(() => {
         let x = data?.reduce((acc, cur) => acc + cur.price * cur.count, 0)
         setTotalPrice(x);
         localStorage.setItem('totalPrice', totalPrice);
         localStorage.setItem('orders', JSON.stringify(data));
-        console.log(data);
     }, [data]);
 
 

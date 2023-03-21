@@ -18,7 +18,7 @@ const Details = () => {
 
   return (
     <div id={'details__container'}>
-      <Toaster />
+      <Toaster containerStyle={{fontSize:'0.7em',fontWeight:'900'}} />
       <img
         ref={ImgRef}
         onMouseMove={e => {
@@ -57,7 +57,7 @@ const Details = () => {
               onClick={(e) => {
                 e.stopPropagation();
                 setOneItem(true);
-                const foundData = data?.find(item => item.id == id);
+                const foundData = data?.find(item => parseInt(item.id) === parseInt(id));
                 setOneProduct({ name: foundData?.name, price: foundData?.price, qty: counter });
                 navigate('/Payment');
               }}

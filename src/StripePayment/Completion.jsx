@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect,useMemo } from "react";
 import { useStateContext } from "../StateContext";
 import { runFireworks } from './utils.jsx';
 import { BsBagCheckFill } from 'react-icons/bs'
@@ -8,19 +8,19 @@ import './Completion.css';
 function Completion() {
     const navigate = useNavigate();
     const { oneItem, setData, setTotalPrice } = useStateContext();
-    useEffect(() => {
+    useMemo(() => {
         if (!oneItem) {
             localStorage.removeItem("orders");
             setTotalPrice(0);
             setData([]);
         }
-    }, []);
+    }, [oneItem]);
     useEffect(() => {
-        window.onload = function () {
+        (function () {
             document.onkeydown = function (e) {
-                return (e.which || e.keyCode) != 116;
+                return (e.which || e.keyCode) !== parseInt(116);
             };
-        }
+        })();
         function preventBack() { window.history.forward(); }
         setTimeout(preventBack(), 0);
         window.onunload = null;
