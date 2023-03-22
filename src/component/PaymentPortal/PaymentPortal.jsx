@@ -35,7 +35,7 @@ const PaymentPortal = () => {
             axios.post('https://gamingstore-with-backend-niladri.onrender.com/send_email', {
                 recipient: recipient,
                 confirmation:  JSON.stringify(confirmation)
-            }).then(() => toast('Email Sent')).catch(() => toast("Something Went Wrong"));
+            }).then(() => toast('Email Sent')).catch(() => toast("Check Your Email"));
             return;
         }
     }
