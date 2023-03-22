@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState,useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router';
 import { useStateContext } from '../../StateContext';
 import { data } from '../Products/data'
@@ -13,8 +13,10 @@ const Details = () => {
 
   const [item] = useState(data?.find(i => i.id === parseInt(id)) || UpcomingData?.find(i => i.id === parseInt(id)))
   const ImgRef = useRef();
-  const { addItemToOrderList, setItemIDCount, setOneItem, setOneProduct } = useStateContext();
-
+  const { addItemToOrderList, setItemIDCount,oneItem, setOneItem, setOneProduct } = useStateContext();
+  useEffect(()=>{
+    localStorage.setItem("oneItem",oneItem);
+  },[oneItem]);
 
   return (
     <div id={'details__container'}>

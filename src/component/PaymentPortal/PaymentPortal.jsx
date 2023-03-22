@@ -31,11 +31,10 @@ const PaymentPortal = () => {
         sendEmail(email, confirmation);
     }, [confirmation])
     function sendEmail(recipient, confirmation) {
-        const stringifiedConfirmation = JSON.stringify(confirmation);
         if (recipient && confirmation) {
             axios.post('https://gamingstore-with-backend-niladri.onrender.com/send_email', {
                 recipient: recipient,
-                confirmation: stringifiedConfirmation
+                confirmation:  JSON.stringify(confirmation)
             }).then(() => toast('Email Sent')).catch(() => toast("Something Went Wrong"));
             return;
         }

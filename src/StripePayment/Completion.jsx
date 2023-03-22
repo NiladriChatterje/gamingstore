@@ -1,33 +1,24 @@
-import { useEffect,useMemo } from "react";
-import { useStateContext } from "../StateContext";
+import { useEffect } from "react";
 import { runFireworks } from './utils.jsx';
+import { useStateContext } from "../StateContext";
 import { BsBagCheckFill } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom';
 import './Completion.css';
 
 function Completion() {
     const navigate = useNavigate();
-    const { oneItem, setData, setTotalPrice } = useStateContext();
-    useMemo(() => {
-        if (!oneItem) {
+    const {setData, setTotalPrice } = useStateContext();
+
+    useEffect(() => {
+        console.log(JSON.parse(localStorage.getItem('oneItem')))
+        if (!JSON.parse(localStorage.getItem('oneItem'))) {
             localStorage.removeItem("orders");
             setTotalPrice(0);
             setData([]);
-        }
-    }, [oneItem]);
-    useEffect(() => {
-        (function () {
-            document.onkeydown = function (e) {
-                return (e.which || e.keyCode) !== parseInt(116);
-            };
-        })();
-        function preventBack() { window.history.forward(); }
-        setTimeout(preventBack(), 0);
-        window.onunload = null;
-        preventBack();
-        runFireworks();
-    })
-
+        };
+            runFireworks();
+// eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className="success-wrapper">

@@ -7,6 +7,7 @@ import CheckoutForm from "./CheckoutForm";
 import { loadStripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import { useStateContext } from "../StateContext";
+import PaymentLoader from "./PaymentLoader";
 
 
 function Payment() {
@@ -27,11 +28,19 @@ function Payment() {
             })
             setClientSecret(data?.clientSecret)
         })();
-    }, []);
 
-    useEffect(() => {
-        setTimeout(() => setLoader(false), 3050);
-    });
+         (function () {
+            document.onkeydown = function (e) {
+                return (e.which || e.keyCode) !== parseInt(116);
+            };
+        })();
+        function preventBack() { window.history.forward(); }
+        setTimeout(preventBack(),0);
+        window.onunload = null;
+        preventBack();
+        setTimeout(() => setLoader(false),200);
+//eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <>
@@ -68,10 +77,10 @@ function Payment() {
                         </table>}
                 </div>
                 <span id='barrier'></span>
-                {clientSecret && stripePromise && (
+                {clientSecret && stripePromise? (
                     <Elements stripe={stripePromise} options={{ clientSecret }}>
                         <CheckoutForm />
-                    </Elements>)}
+                    </Elements>):<PaymentLoader />}
             </div>}
         </>
     );

@@ -53,7 +53,6 @@ section button {
         width: 50vw;
         margin-top: 20%;
     }
-
     #details__container>section>h1 {
         font-size: 1em;
     }
@@ -63,7 +62,8 @@ section button {
     }
 
     #details__container>section>section {
-        height: 90vh;
+        padding-top: 5%;
+        height: 60vh;
     }
 
     #details__container {

@@ -1,10 +1,13 @@
 @import url("https://db.onlinewebfonts.com/c/8cdbb48678e4418f22a2f507c2b975bd?family=Blanka");
 
 #h1 {
-    color: white;
+    color: rgb(0, 0, 0);
     font-size: 2em;
-
-    font-family: 'Blanka', sans-serif;
+    width: max-content;
+    padding: 5px 30px;
+    background-color: white;
+    border-radius: 10px;
+    font-family: 'Blanka', sans-serif
 }
 
 #whole_wrapper {
@@ -14,26 +17,30 @@
     padding: 5px 10px;
     color: black;
     left: 50%;
+    background-image:linear-gradient(to top right,rgba(20, 25, 47, 0.8),rgba(77, 131, 165, 0.8));
     backdrop-filter: blur(5px);
     border-radius: 10px;
     box-shadow: -1px 5px 30px -15px black;
     transform: translate(-50%, -45%);
     justify-content: center;
     align-items: center;
-    width: 75vw;
+    width: 70vw
 }
 
 #barrier {
     height: 50vh;
     margin: 0 25px;
     width: 1px;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255)
 }
-
+th{background-color: white;
+    border-radius: 8px;
+    color: black;}
+tr{border:2px solid white;}
 th,
 td {
     padding-left: 50px;
-    width: 80px;
+    width: 80px
 }
 
 #nam_price {
@@ -41,31 +48,35 @@ td {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    justify-content: space-between;
+    justify-content: space-between
 }
-
+#nam_price > span:first-child{
+    color: black;
+    background-color: white;
+    border-radius: 10px
+}
 #nam_price>div:not(:first-child) {
     display: flex;
     font-size: 0.5em;
     font-weight: 100;
     width: 100%;
-    justify-content: space-between;
+    justify-content: space-between
 }
 
 table th:first-child,
 td:first-child {
     padding-left: 0;
-    text-align: left;
+    text-align: left
 }
 
 table th:last-child,
 td:last-child {
-    text-align: right;
+    text-align: right
 }
 
 table th:nth-child(2),
 td:nth-child(2) {
-    text-align: center;
+    text-align: center
 }
 
 @media all and (max-width:1200px) {
@@ -73,36 +84,36 @@ td:nth-child(2) {
         top: 54%;
         flex-direction: column;
         align-items: center;
-        width: 95vw;
+        width: 95vw
     }
 
     table th:first-child,
     td:first-child {
         padding-left: 0;
-        text-align: left;
+        text-align: left
     }
 
     #h1 {
-        margin-top: 20%;
+        margin-top: 20%
     }
 
     table th:last-child,
     td:last-child {
-        text-align: right;
+        text-align: right
     }
 
     table th:nth-child(2),
     td:nth-child(2) {
-        text-align: center;
+        text-align: center
     }
 
     #nam_price {
-        width: 90vw;
+        width: 90vw
     }
 
     #barrier {
         width: 100vw;
         margin: 25px 0;
-        height: 1px;
+        height: 1px
     }
 }

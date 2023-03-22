@@ -48,7 +48,7 @@ p {
     justify-content: center;
 }
 
-#second-container>div {
+#second-container > div {
     transition: all;
     transition-duration: 200ms;
     transform: scale(0, 0);
@@ -64,7 +64,7 @@ p {
 
 #modal>span {
     position: fixed;
-    margin-top: -20px;
+    margin-top: -10px;
     background: rgb(255, 255, 255);
     border-radius: 10px;
     padding: 1px 10px;
@@ -82,15 +82,16 @@ p {
     #first-container {
         width: 100%;
     }
-
+    #modal > span{
+        right:0
+    }
     #first-container>div {
         position: relative;
-        transform: translateY(-30%);
+        transform: translateY(-80%)
     }
 
     #first-container {
         height: max-content;
-        margin-bottom: 10px;
-        padding-left: 10px;
+        padding-left: 10px
     }
 }

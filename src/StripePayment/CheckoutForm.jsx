@@ -12,12 +12,8 @@ export default function CheckoutForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!stripe || !elements) {
-
+        if (!stripe || !elements)
             return;
-        }
-
         setIsProcessing(true);
 
         const { error } = await stripe.confirmPayment({
@@ -27,12 +23,10 @@ export default function CheckoutForm() {
             },
         });
 
-        if (error.type === "card_error" || error.type === "validation_error") {
+        if (error.type === "card_error" || error.type === "validation_error")
             setMessage(error.message);
-        } else {
-            setMessage("An unexpected error occured.");
-        }
-
+        else
+            setMessage("An unexpected error occurred.");
         setIsProcessing(false);
     };
 
@@ -44,7 +38,6 @@ export default function CheckoutForm() {
                     {isProcessing ? "Processing ... " : "Pay now"}
                 </span>
             </button>
-            {/* Show any error or success messages */}
             {message && <div id="payment-message">{message}</div>}
         </form>
     );

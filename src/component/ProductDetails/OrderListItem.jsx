@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './OrderListItem.css';
 import { BsFillBagPlusFill } from 'react-icons/bs'
 import { AiOutlineArrowRight } from 'react-icons/ai';
@@ -9,9 +9,11 @@ import { useNavigate } from 'react-router';
 
 
 const OrderListItem = () => {
-  const { data, slide, setSlide, totalPrice, setOneItem } = useStateContext();
+  const { data, slide, setSlide, totalPrice,oneItem, setOneItem } = useStateContext();
   const navigate = useNavigate();
-
+  useEffect(()=>{
+    localStorage.setItem('oneItem',oneItem);
+  },[oneItem]);
   return <>
     <motion.div
       className={`slider-container ${slide ? '' : 'hide-slider'}`}>
@@ -26,11 +28,11 @@ const OrderListItem = () => {
             zIndex: 20
           }} />
         {data?.map((item, i) => <OrderList key={i} id={item.id} image={item.image} price={item.price} count={item.count} />)}
-
         <motion.button
           onClick={() => {
-            navigate('/Payment');
-            setSlide(false);
+            if(totalPrice!==0)
+            {navigate('/Payment');
+            setSlide(false);}
             setOneItem(false);
           }}
           initial={{ y: 60 }}

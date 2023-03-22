@@ -1,27 +1,22 @@
 import React from 'react'
 import './ProductDetails.css';
-import { motion } from 'framer-motion';
 import { HiShoppingCart } from 'react-icons/hi';
 import { useStateContext } from '../../StateContext';
 import { useNavigate } from 'react-router';
 
-const ProductDetails = ({ item,setToastMessage }) => {
+const ProductDetails = ({ item }) => {
   const { addItemToOrderList, setItemIDCount } = useStateContext();
   const navigate = useNavigate();
 
   return (
-    <motion.div
-      onClick={(e) => {
+    <div
+      onClick={e => {
         e.stopPropagation();
         navigate(`/Product/Details/${item.id}`)
       }}
       style={{ position: 'relative', cursor: 'pointer' }}
       key={item.id}
-      id={'card'}
-      initial={{ y: 80 }}
-      whileInView={{ y: 0 }}>
-
-
+      id={'card'}>
       {item.image && <img
         src={item.image} alt='' />}
       <h3>{item?.name}</h3>
@@ -30,14 +25,12 @@ const ProductDetails = ({ item,setToastMessage }) => {
         onClick={(e) => {
           e.stopPropagation();
           addItemToOrderList(item)
-          setItemIDCount({ count: item.count, id: item.id });
-          setToastMessage(prev=>!prev);
-          
+          setItemIDCount({ count: item.count, id: item.id });          
         }}>
         ADD TO CART <HiShoppingCart />
       </button>
       <h2>₹{item?.price}</h2>
-    </motion.div>
+    </div>
   );
 };
 

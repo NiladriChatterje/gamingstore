@@ -1,12 +1,3 @@
-#Product-container {
-  width: 100%;
-  margin-top: 2.05vh;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-
-}
-
 .loader {
   position: relative;
   left: 50%;
