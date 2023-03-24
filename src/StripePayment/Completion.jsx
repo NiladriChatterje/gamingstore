@@ -25,7 +25,6 @@ function Completion() {
         setTimeout(preventBack(), 0);
         window.onunload = null;
         preventBack();
-        setTimeout(() => setLoader(false), 200);
         runFireworks();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

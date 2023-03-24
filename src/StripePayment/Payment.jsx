@@ -28,7 +28,7 @@ function Payment() {
             })
             setClientSecret(data?.clientSecret)
         })();
-
+        setTimeout(() => setLoader(false), 200);
 
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
