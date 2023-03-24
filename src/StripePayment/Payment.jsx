@@ -22,24 +22,15 @@ function Payment() {
             const { data: { publishableKey } } = await axios.get('https://game-store-stripe.onrender.com/config')
             setStripePromise(loadStripe(publishableKey));
         })();
-         (async function () {
+        (async function () {
             const { data } = await axios.post("https://game-store-stripe.onrender.com/create-payment-intent", {
                 price: oneItem ? oneProduct.price : totalPrice
             })
             setClientSecret(data?.clientSecret)
         })();
 
-         (function () {
-            document.onkeydown = function (e) {
-                return (e.which || e.keyCode) !== parseInt(116);
-            };
-        })();
-        function preventBack() { window.history.forward(); }
-        setTimeout(preventBack(),0);
-        window.onunload = null;
-        preventBack();
-        setTimeout(() => setLoader(false),200);
-//eslint-disable-next-line react-hooks/exhaustive-deps
+
+        //eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -77,10 +68,10 @@ function Payment() {
                         </table>}
                 </div>
                 <span id='barrier'></span>
-                {clientSecret && stripePromise? (
+                {clientSecret && stripePromise ? (
                     <Elements stripe={stripePromise} options={{ clientSecret }}>
                         <CheckoutForm />
-                    </Elements>):<PaymentLoader />}
+                    </Elements>) : <PaymentLoader />}
             </div>}
         </>
     );

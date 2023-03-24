@@ -7,7 +7,7 @@ import './Completion.css';
 
 function Completion() {
     const navigate = useNavigate();
-    const {setData, setTotalPrice } = useStateContext();
+    const { setData, setTotalPrice } = useStateContext();
 
     useEffect(() => {
         console.log(JSON.parse(localStorage.getItem('oneItem')))
@@ -16,8 +16,18 @@ function Completion() {
             setTotalPrice(0);
             setData([]);
         };
-            runFireworks();
-// eslint-disable-next-line react-hooks/exhaustive-deps
+        (function () {
+            document.onkeydown = function (e) {
+                return (e.which || e.keyCode) !== parseInt(116);
+            };
+        })();
+        function preventBack() { window.history.forward(); }
+        setTimeout(preventBack(), 0);
+        window.onunload = null;
+        preventBack();
+        setTimeout(() => setLoader(false), 200);
+        runFireworks();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
