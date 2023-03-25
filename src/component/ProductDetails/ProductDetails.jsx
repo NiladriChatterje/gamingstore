@@ -3,6 +3,7 @@ import './ProductDetails.css';
 import { HiShoppingCart } from 'react-icons/hi';
 import { useStateContext } from '../../StateContext';
 import { useNavigate } from 'react-router';
+import { toast } from 'react-hot-toast';
 
 const ProductDetails = ({ item }) => {
   const { addItemToOrderList, setItemIDCount } = useStateContext();
@@ -25,7 +26,8 @@ const ProductDetails = ({ item }) => {
         onClick={(e) => {
           e.stopPropagation();
           addItemToOrderList(item)
-          setItemIDCount({ count: item.count, id: item.id });          
+          setItemIDCount({ count: item.count, id: item.id });
+          toast("Item added to Cart 🛒")
         }}>
         ADD TO CART <HiShoppingCart />
       </button>

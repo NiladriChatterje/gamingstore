@@ -1,7 +1,7 @@
 #modal-container {
     backdrop-filter: blur(10px);
     position: fixed;
-    z-index: 25;
+    z-index: 15;
     width: 100vw;
     height: 100vh;
 }
@@ -26,7 +26,13 @@
 }
 
 #modal-form>input[type=submit] {
-    width: 50%;
+    width: 40%;
+
+}
+
+#modal-form>input[type=submit]:hover {
+    color: white;
+    background-color: rgba(18, 11, 45, 0.821);
 
 }
 

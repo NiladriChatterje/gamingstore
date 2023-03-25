@@ -24,7 +24,7 @@ function Payment() {
         })();
         (async function () {
             const { data } = await axios.post("https://game-store-stripe.onrender.com/create-payment-intent", {
-                price: oneItem ? oneProduct.price : totalPrice
+                price: oneItem.current ? oneProduct.price : totalPrice
             })
             setClientSecret(data?.clientSecret)
         })();
@@ -39,7 +39,7 @@ function Payment() {
             <Toaster />
             {loader ? <Loader /> : <div id='whole_wrapper'>
                 <div>
-                    {oneItem ? <div id='nam_price'>
+                    {oneItem.current ? <div id='nam_price'>
                         <span>{oneProduct?.name}</span>
                         <div><span>Quantity: </span><span>{oneProduct?.qty}</span></div>
                         <div><span>Unit Price: </span><span>₹ {oneProduct?.price}</span></div>
@@ -62,7 +62,7 @@ function Payment() {
                             <tfoot><tr>
                                 <td><span>Amount: </span></td>
                                 <td></td>
-                                <td><span>₹{oneItem ? oneProduct?.price * oneProduct?.qty : totalPrice}</span></td>
+                                <td><span>₹{oneItem.current ? oneProduct?.price * oneProduct?.qty : totalPrice}</span></td>
                             </tr>
                             </tfoot>
                         </table>}

@@ -1,6 +1,9 @@
 @import url('https://db.onlinewebfonts.com/c/8cdbb48678e4418f22a2f507c2b975bd?family=Blanka');
 
 nav {
+    background-color: rgb(239, 248, 255);
+    box-shadow: 1px 2px 55px -20px black;
+    padding: 5px 0;
     position: relative;
     z-index: 5;
     top: 0;
@@ -13,7 +16,7 @@ nav {
 
 #GiHamburgerMenu {
     transform: scale(0, 0);
-    color: white;
+    color: rgb(6, 9, 38);
 }
 
 #heading {
@@ -28,13 +31,13 @@ nav {
 span {
     font-size: 1.5em;
     font-weight: 900;
-    color: rgb(255, 255, 255);
+    color: rgb(4, 2, 28);
 }
 
 #text {
     text-decoration: none;
     cursor: pointer;
-    color: white;
+    color: rgb(5, 3, 31);
     font-size: large;
     font-weight: 700;
     margin-left: 3em;
@@ -43,10 +46,11 @@ span {
 }
 
 #text:hover {
-    background-color: white;
-    color: rgb(35, 35, 47);
-    border-radius: 5px;
-    padding: 1px 3px;
+    font-size: 0.8em;
+    background-color: rgb(29, 5, 71);
+    color: rgb(255, 255, 255);
+    border-radius: 10px;
+    padding: 6px 8px;
 }
 
 @media all and (max-width:1200px) {

@@ -5,14 +5,16 @@ import Payment from './StripePayment/Payment';
 import Completion from './StripePayment/Completion'
 import { Routes, Route } from 'react-router-dom';
 import PreLoader from './PreLoader';
+import { Toaster } from 'react-hot-toast';
 import { StateContext } from './StateContext';
 
 function App() {
   const [loading, setLoading] = useState(() => true);
-  useEffect(() => { setTimeout(() => setLoading(false), 3000) }, []);
+  useEffect(() => { setTimeout(() => setLoading(false), 1200) }, []);
 
   return (
     <div className="App">
+      <Toaster containerStyle={{ fontSize: '0.65em', fontWeight: 900 }} />
       {loading ? <PreLoader /> : <StateContext>
         <OrderListItem />
         <Navbar />

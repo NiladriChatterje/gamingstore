@@ -1,20 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
+import { toast } from 'react-hot-toast';
 import './Modal.css';
-import toast, { Toaster } from 'react-hot-toast'
 
-const Modal = ({ confirmation, setModal, setEmailVerified }) => {
+const Modal = ({ confirmation, setModal, emailVerified }) => {
     const sixRef = useRef();
-    useEffect(() => { toast('OTP sent to your specified Email') })
+
     function checkValidData(e) {
         e.preventDefault();
-        if (confirmation === parseInt(sixRef.current.value)) {
-            toast('Email Verified');
-            setEmailVerified(true);
+        console.log(confirmation)
+        if (confirmation.current === parseInt(sixRef.current.value)) {
+
+            emailVerified.current = true;
             setModal(false);
-        }
-        else {
-            toast('Not Verified Email')
-        }
+        } else toast('Email Not verified ❌');
     }
 
     return <div id={'modal-container'}>
@@ -22,7 +20,6 @@ const Modal = ({ confirmation, setModal, setEmailVerified }) => {
             <input ref={sixRef} type='number' maxLength={6} />
             <input type={'submit'} />
         </form>
-        <Toaster />
     </div>
 }
 export default Modal;

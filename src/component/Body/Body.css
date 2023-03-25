@@ -48,7 +48,7 @@ p {
     justify-content: center;
 }
 
-#second-container > div {
+#second-container>div {
     transition: all;
     transition-duration: 200ms;
     transform: scale(0, 0);
@@ -82,9 +82,12 @@ p {
     #first-container {
         width: 100%;
     }
-    #modal > span{
-        right:0
+
+    #modal>span {
+        margin-top: 0;
+        right: 0
     }
+
     #first-container>div {
         position: relative;
         transform: translateY(-80%)

@@ -13,7 +13,19 @@
 }
 
 #BsFillBagPlusFill {
-    color: #ffffff;
+    transition: all 100ms;
+    color: #0a0421;
+    height: 25px;
+    width: 25px;
+}
+
+#BsFillBagPlusFill:hover {
+    width: 20px;
+    height: 20px;
+    color: white;
+    background-color: #0a0421;
+    border-radius: 10px;
+    padding: 5px;
 }
 
 .slider {

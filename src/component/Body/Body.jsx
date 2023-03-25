@@ -1,6 +1,6 @@
 import React from 'react'
 import './Body.css'
-import Joystick from './joystick.png'
+import Joystick from './JoyStick.webp'
 import { motion } from 'framer-motion'
 import { IoIosCloseCircle } from 'react-icons/io'
 import upcomingData from './upcomingData'
@@ -54,7 +54,7 @@ const Body = () => {
           style={{ ...style, right: 120, bottom: 140 }} />
         <img src={Joystick} alt='' ref={joyRef}
           style={{
-            position: 'absolute', zIndex: 1,
+            position: 'absolute', zIndex: 1, width: '60%', height: '60%',
             filter: 'drop-shadow(4px 10px 20px)', transition: 'all',
             transitionDuration: '300ms'
           }} />
@@ -83,7 +83,6 @@ const Body = () => {
             transform: 'scale(2)', cursor: 'pointer'
           }} />
       </motion.div>
-
     </motion.div>
   )
 }
