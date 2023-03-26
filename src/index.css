@@ -1,8 +1,9 @@
+@import url('https://db.onlinewebfonts.com/c/8cdbb48678e4418f22a2f507c2b975bd?family=Blanka');
+
 body {
   margin: 0;
   scroll-behavior: smooth;
   font-family: sans-serif;
-  -webkit-font-smoothing: antialiased;
   font-size: 0.72em;
   user-select: none;
   background-size: cover;
@@ -10,12 +11,15 @@ body {
   background-attachment: fixed;
   background-image: linear-gradient(to top right, rgb(22, 22, 34), rgb(131, 183, 252))
 }
+
 *::-webkit-scrollbar {
   width: 10px
 }
+
 *::-webkit-scrollbar-track {
   background-color: transparent
 }
+
 *::-webkit-scrollbar-thumb {
   background-color: rgb(25, 25, 80);
   border-radius: 30px

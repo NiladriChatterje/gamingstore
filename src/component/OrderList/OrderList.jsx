@@ -10,11 +10,13 @@ export default function OrderList({ id, image, price, count }) {
 
     React.useEffect(() => {
         incDecQty(counter, id)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [counter]);
 
     React.useEffect(() => {
         if (id === ItemIDCount?.id)
-            setCounter(count)
+            setCounter(count);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ItemIDCount])
 
     return <div
@@ -27,7 +29,6 @@ export default function OrderList({ id, image, price, count }) {
         <span>Rs. {price}</span>
         <div
             id='count'>
-
             <button
                 onClick={() => {
                     if (counter <= 1) return 1;

@@ -4,7 +4,6 @@ const ProductContext = createContext(null);
 export const StateContext = ({ children }) => {
 
     const [qty, setQty] = useState(() => 1);
-    const [toogleAddToCart, setToogleAddToCart] = useState(() => false);
     const [ItemIDCount, setItemIDCount] = useState(() => { });
     const [oneProduct, setOneProduct] = useState(() => { });
     const [totalPrice, setTotalPrice] = useState(localStorage.getItem('totalPrice') || 0);
@@ -20,8 +19,6 @@ export const StateContext = ({ children }) => {
         localStorage.setItem('orders', JSON.stringify(data));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
-
-
 
     function addItemToOrderList(item) {
         let DataFound = data?.find(i => i.id === item.id)
@@ -54,8 +51,6 @@ export const StateContext = ({ children }) => {
             setData,
             oneItem,
             qty,
-            toogleAddToCart,
-            setToogleAddToCart,
             setQty,
             ItemIDCount,
             setItemIDCount,

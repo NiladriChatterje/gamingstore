@@ -1,7 +1,5 @@
-@import url('https://db.onlinewebfonts.com/c/8cdbb48678e4418f22a2f507c2b975bd?family=Blanka');
-
 nav {
-    background-color: rgb(239, 248, 255);
+    background-color: rgba(239, 248, 255, 0.4);
     box-shadow: 1px 2px 55px -20px black;
     padding: 5px 0;
     position: relative;
