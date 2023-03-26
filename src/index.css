@@ -1,4 +1,8 @@
-@import url('https://db.onlinewebfonts.com/c/8cdbb48678e4418f22a2f507c2b975bd?family=Blanka');
+@font-face {
+  font-family: "Blanka Regular";
+  src: url("./Blanka-Regular.woff") format('woff');
+  font-weight: 900;
+}
 
 body {
   margin: 0;
