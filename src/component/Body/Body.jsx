@@ -56,7 +56,7 @@ const Body = () => {
           style={{objectFit:'contain',
             position: 'absolute', zIndex: 1, width: '75%',
             filter: 'drop-shadow(4px 10px 20px)', transition: 'all',
-            transitionDuration: '300ms'
+            transitionDuration: '300ms',objectFit:'contain'
           }} />
       </motion.div>
 

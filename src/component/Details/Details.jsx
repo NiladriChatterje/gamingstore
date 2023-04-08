@@ -7,13 +7,13 @@ import UpcomingData from '../Body/upcomingData';
 import toast from 'react-hot-toast';
 
 const Details = () => {
-  const [counter, setCounter] = useState(() => 1)
+  const [counter, setCounter] = useState(() => 1);
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [item] = useState(data?.find(i => i.id === parseInt(id)) || UpcomingData?.find(i => i.id === parseInt(id)))
   const ImgRef = useRef();
-  const { addItemToOrderList, setItemIDCount, oneItem, setOneProduct } = useStateContext();
+  const { addItemToOrderList, setItemIDCount, oneItem } = useStateContext();
 
   return (
     <div id={'details__container'}>
@@ -57,7 +57,8 @@ const Details = () => {
                 oneItem.current = true;
                 localStorage.setItem('oneItem', true);
                 const foundData = data?.find(item => parseInt(item.id) === parseInt(id));
-                setOneProduct({ name: foundData?.name, price: foundData?.price, qty: counter });
+                let oneProduct={ name: foundData?.name, price: foundData?.price, qty: counter }
+                localStorage.setItem('oneProduct',JSON.stringify(oneProduct));
                 navigate('/Payment');
               }}
             >Buy NOW</button>}

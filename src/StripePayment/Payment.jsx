@@ -14,8 +14,9 @@ function Payment() {
     const [stripePromise, setStripePromise] = useState(null);
     const [clientSecret, setClientSecret] = useState("");
     const [loader, setLoader] = useState(() => true);
-
-    const { oneItem, data, totalPrice, oneProduct } = useStateContext();
+    // eslint-disable-next-line
+    const [oneProduct,_] = useState(JSON.parse(localStorage.getItem('oneProduct'))||{});
+    const { oneItem, data, totalPrice } = useStateContext();
 
     useEffect(() => {
         (async function () {
@@ -24,7 +25,7 @@ function Payment() {
         })();
         (async function () {
             const { data } = await axios.post("https://game-store-stripe.onrender.com/create-payment-intent", {
-                price: oneItem.current ? oneProduct.price : totalPrice
+                price: oneItem.current ? oneProduct?.price?oneProduct.price:0 : totalPrice
             })
             setClientSecret(data?.clientSecret)
         })();

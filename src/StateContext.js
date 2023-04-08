@@ -5,7 +5,6 @@ export const StateContext = ({ children }) => {
 
     const [qty, setQty] = useState(() => 1);
     const [ItemIDCount, setItemIDCount] = useState(() => { });
-    const [oneProduct, setOneProduct] = useState(() => { });
     const [totalPrice, setTotalPrice] = useState(localStorage.getItem('totalPrice') || 0);
     const [data, setData] = useState(() => JSON.parse(localStorage.getItem('orders')) || []);
 
@@ -46,8 +45,6 @@ export const StateContext = ({ children }) => {
             totalPrice,
             setTotalPrice,
             data,
-            oneProduct,
-            setOneProduct,
             setData,
             oneItem,
             qty,
