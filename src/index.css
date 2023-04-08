@@ -1,9 +1,3 @@
-@font-face {
-  font-family: "Blanka Regular";
-  src: url("./Blanka-Regular.woff") format('woff');
-  font-weight: 900;
-}
-
 body {
   margin: 0;
   scroll-behavior: smooth;

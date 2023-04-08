@@ -117,14 +117,14 @@ span {
         display: flex;
         text-align: center;
         position: fixed;
-        gap: 40px;
+        gap: 60px;
         right: 0;
         align-items: center;
         top: 55px;
         flex-direction: column;
         height: max-content;
         width: 50%;
-        justify-content: space-around;
+        justify-content: space-between;
         border-radius: 10px;
     }
 

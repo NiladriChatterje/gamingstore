@@ -53,8 +53,8 @@ const Body = () => {
           whileInView={{ opacity: 1, transform: 'scale(1,1)' }}
           style={{ ...style, right: 120, bottom: 140 }} />
         <img src={Joystick} alt='' ref={joyRef}
-          style={{
-            position: 'absolute', zIndex: 1, width: '60%', height: '60%',
+          style={{objectFit:'contain',
+            position: 'absolute', zIndex: 1, width: '75%',
             filter: 'drop-shadow(4px 10px 20px)', transition: 'all',
             transitionDuration: '300ms'
           }} />
