@@ -1,13 +1,16 @@
 import './Products.css';
 import { FixedSizeList } from 'react-window';
 import { data } from './data.js';
-import ProductDetails from '../ProductDetails/ProductDetails';
+import ProductDetails from '../ProductDetails/ProductDetails.tsx';
 
 const Products = () => {
 
-    const Row = ({ index, style }) => {
+    const Row = ({ index, style }: {
+        index: number;
+        style: any;
+    }) => {
         return <div style={{ ...style, left: '50%', width: '300px', transform: 'translateX(-50%)' }}>
-            <ProductDetails style={style} item={data[index]} />
+            <ProductDetails item={data[index]} />
         </div>
     };
     return (

@@ -1,29 +1,29 @@
 import { useEffect } from "react";
-import { runFireworks } from './utils.jsx';
-import { useStateContext } from "../StateContext";
+import { runFireworks } from './utils.tsx';
+import { useStateContext } from "../StateContext.tsx";
 import { BsBagCheckFill } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom';
 import './Completion.css';
+import { OrderType } from "../ProductContextType";
 
 function Completion() {
     const navigate = useNavigate();
     const { setData, setTotalPrice } = useStateContext();
 
     useEffect(() => {
-        console.log(JSON.parse(localStorage.getItem('oneItem')))
-        if (!JSON.parse(localStorage.getItem('oneItem'))) {
+        console.log(JSON.parse(localStorage.getItem('oneItem') ?? ''))
+        if (!JSON.parse(localStorage.getItem('oneItem') ?? '')) {
             localStorage.removeItem("orders");
-            setTotalPrice(0);
-            setData([]);
+            setTotalPrice?.(0);
+            setData?.([] as OrderType[]);
         };
         (function () {
-            document.onkeydown = function (e) {
-                return (e.which || e.keyCode) !== parseInt(116);
+            document.onkeydown = function (e: KeyboardEvent) {
+                return (e.which || e.keyCode) !== 116;
             };
         })();
         function preventBack() { window.history.forward(); }
-        setTimeout(preventBack(), 0);
-        window.onunload = null;
+        preventBack()
         preventBack();
         runFireworks();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,7 +45,7 @@ function Completion() {
 
                 <button
                     onClick={() => navigate('/')}
-                    type="button" width="300px" className="btn">
+                    type="button" style={{ width: "300px" }} className="btn">
                     Continue Shopping
                 </button>
             </div>

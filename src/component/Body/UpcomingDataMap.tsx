@@ -1,10 +1,10 @@
-import React from 'react'
 import '../ProductDetails/ProductDetails.css'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router'
 
+interface ItemType { id: number; image: string; desc: string; name: string; price: number }
 
-const UpcomingDataMap = (item) => {
+const UpcomingDataMap = (item: ItemType) => {
   const navigate = useNavigate();
 
   return (

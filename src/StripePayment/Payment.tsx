@@ -4,28 +4,28 @@ import axios from 'axios';
 import Loader from "./Loader";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe, Stripe } from "@stripe/stripe-js";
 import { Toaster } from "react-hot-toast";
 import { useStateContext } from "../StateContext";
-import PaymentLoader from "./PaymentLoader";
+import PaymentLoader from "./PaymentLoader.tsx";
 
 
 function Payment() {
-    const [stripePromise, setStripePromise] = useState(null);
+    const [stripePromise, setStripePromise] = useState<Promise<Stripe | null>>();
     const [clientSecret, setClientSecret] = useState("");
     const [loader, setLoader] = useState(() => true);
     // eslint-disable-next-line
-    const [oneProduct,_] = useState(JSON.parse(localStorage.getItem('oneProduct'))||{});
+    const [oneProduct, _] = useState<{ name: string; qty: number; price: number }>(JSON.parse(localStorage.getItem('oneProduct') ?? '{}'));
     const { oneItem, data, totalPrice } = useStateContext();
 
     useEffect(() => {
         (async function () {
-            const { data: { publishableKey } } = await axios.get('https://game-store-stripe.onrender.com/config')
-            setStripePromise(loadStripe(publishableKey));
+            const { data: { publishableKey } }: { data: { publishableKey: string } } = await axios.get('https://game-store-stripe.onrender.com/config')
+            setStripePromise(loadStripe(publishableKey as string));
         })();
         (async function () {
             const { data } = await axios.post("https://game-store-stripe.onrender.com/create-payment-intent", {
-                price: oneItem.current ? oneProduct?.price?oneProduct.price:0 : totalPrice
+                price: oneItem?.current ? (oneProduct?.price ? oneProduct.price : 0) : totalPrice
             })
             setClientSecret(data?.clientSecret)
         })();
@@ -40,7 +40,7 @@ function Payment() {
             <Toaster />
             {loader ? <Loader /> : <div id='whole_wrapper'>
                 <div>
-                    {oneItem.current ? <div id='nam_price'>
+                    {oneItem?.current ? <div id='nam_price'>
                         <span>{oneProduct?.name}</span>
                         <div><span>Quantity: </span><span>{oneProduct?.qty}</span></div>
                         <div><span>Unit Price: </span><span>₹ {oneProduct?.price}</span></div>
@@ -63,7 +63,7 @@ function Payment() {
                             <tfoot><tr>
                                 <td><span>Amount: </span></td>
                                 <td></td>
-                                <td><span>₹{oneItem.current ? oneProduct?.price * oneProduct?.qty : totalPrice}</span></td>
+                                <td><span>₹{oneItem?.current ? oneProduct?.price * oneProduct?.qty : totalPrice}</span></td>
                             </tr>
                             </tfoot>
                         </table>}

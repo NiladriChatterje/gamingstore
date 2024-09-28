@@ -1,10 +1,10 @@
 import './App.css';
-import React, { useEffect, useState } from 'react';
-import { Navbar, Body, About, Products, OrderListItem, Details, PaymentPortal } from './component/components';
+import { useEffect, useState } from 'react';
+import { Navbar, Body, About, Products, OrderListItem, Details, PaymentPortal } from './component/components.ts';
 import Payment from './StripePayment/Payment';
 import Completion from './StripePayment/Completion'
 import { Routes, Route } from 'react-router-dom';
-import PreLoader from './PreLoader';
+import PreLoader from './PreLoader.tsx';
 import { Toaster } from 'react-hot-toast';
 import { StateContext } from './StateContext';
 

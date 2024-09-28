@@ -1,20 +1,20 @@
 import React from 'react'
 import './Body.css'
 import Joystick from './JoyStick.webp'
-import { motion } from 'framer-motion'
+import { motion, MotionStyle } from 'framer-motion'
 import { IoIosCloseCircle } from 'react-icons/io'
-import upcomingData from './upcomingData'
-import UpcomingDataMap from './UpcomingDataMap'
+import upcomingData from './upcomingData.ts'
+import UpcomingDataMap from './UpcomingDataMap.tsx'
 
 
-const style = {
+const style: MotionStyle = {
   height: '180px', width: '180px',
   borderRadius: '50%', position: 'absolute',
   backgroundImage: 'linear-gradient(to right,rgb(120,150,185),rgb(105,148,255))'
 }
 const Body = () => {
-  const secondContRef = React.useRef(null);
-  const joyRef = React.useRef(null);
+  const secondContRef = React.useRef<any>();
+  const joyRef = React.useRef<any>();
   const [val, setVal] = React.useState(0);
 
 
@@ -35,7 +35,11 @@ const Body = () => {
             Comfortable
           </p>
           <button
-            onClick={() => { setVal(600); joyRef.current.style.transform = 'scale(0.7)' }}>
+            onClick={() => {
+              setVal(600);
+              if (joyRef)
+                joyRef.current.style.transform = 'scale(0.7)'
+            }}>
             EXPLORE
           </button>
         </div>
@@ -53,10 +57,11 @@ const Body = () => {
           whileInView={{ opacity: 1, transform: 'scale(1,1)' }}
           style={{ ...style, right: 120, bottom: 140 }} />
         <img src={Joystick} alt='' ref={joyRef}
-          style={{objectFit:'contain',
+          style={{
+            objectFit: 'contain',
             position: 'absolute', zIndex: 1, width: '75%',
             filter: 'drop-shadow(4px 10px 20px)', transition: 'all',
-            transitionDuration: '300ms',objectFit:'contain'
+            transitionDuration: '300ms'
           }} />
       </motion.div>
 

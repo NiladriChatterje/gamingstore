@@ -3,13 +3,12 @@ import './OrderList.css'
 import { AiFillCloseCircle } from 'react-icons/ai'
 import { useStateContext } from '../../StateContext';
 
-
-export default function OrderList({ id, image, price, count }) {
+export default function OrderList({ id, image, price, count }: { id: number; image: string; price: number; count: number }) {
     const { data, setData, incDecQty, ItemIDCount } = useStateContext();
     const [counter, setCounter] = React.useState(() => count)
 
     React.useEffect(() => {
-        incDecQty(counter, id)
+        incDecQty?.(counter, id)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [counter]);
 
@@ -23,7 +22,10 @@ export default function OrderList({ id, image, price, count }) {
         className={'orderList-container'}>
 
         <AiFillCloseCircle
-            onClick={() => setData([...data.filter(i => i.id !== id)])}
+            onClick={() => {
+                const temp = data?.filter(i => i.id !== id)
+                setData?.(temp ? [...temp] : [])
+            }}
             style={{ color: 'black', position: 'absolute', top: 40, right: 10, cursor: 'pointer' }} />
         <img src={image} alt='' />
         <span>Rs. {price}</span>

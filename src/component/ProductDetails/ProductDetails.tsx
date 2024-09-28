@@ -1,11 +1,13 @@
-import React from 'react'
 import './ProductDetails.css';
 import { HiShoppingCart } from 'react-icons/hi';
 import { useStateContext } from '../../StateContext';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-hot-toast';
+import { OrderType } from '../../ProductContextType';
 
-const ProductDetails = ({ item }) => {
+const ProductDetails = ({ item }: {
+  item: OrderType
+}) => {
   const { addItemToOrderList, setItemIDCount } = useStateContext();
   const navigate = useNavigate();
 
@@ -25,8 +27,8 @@ const ProductDetails = ({ item }) => {
       <button
         onClick={(e) => {
           e.stopPropagation();
-          addItemToOrderList(item)
-          setItemIDCount({ count: item.count, id: item.id });
+          addItemToOrderList?.(item)
+          setItemIDCount?.({ count: item.count, id: item.id });
           toast("Item added to Cart 🛒")
         }}>
         ADD TO CART <HiShoppingCart />

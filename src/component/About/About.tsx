@@ -1,11 +1,12 @@
 import React from 'react';
 import './About.css';
-import { motion } from 'framer-motion'
+import { motion, MotionStyle } from 'framer-motion'
 import Xbox from './xbox.png'
 import Xbox2 from './xbox2.webp'
 import { AiFillGithub, AiFillInstagram, AiFillMail } from 'react-icons/ai'
 
-const style = {
+
+const style: MotionStyle = {
     height: '180px', width: '180px',
     borderRadius: '50%', position: 'absolute',
     backgroundImage: 'linear-gradient(to right,rgb(120,150,185),rgb(105,148,255))'

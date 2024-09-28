@@ -1,5 +1,5 @@
 import { PaymentElement } from "@stripe/react-stripe-js";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import './CheckoutForm.css';
 
@@ -7,10 +7,10 @@ export default function CheckoutForm() {
     const stripe = useStripe();
     const elements = useElements();
 
-    const [message, setMessage] = useState(null);
+    const [message, setMessage] = useState<string>("");
     const [isProcessing, setIsProcessing] = useState(false);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         if (!stripe || !elements)
             return;
@@ -24,7 +24,7 @@ export default function CheckoutForm() {
         });
 
         if (error.type === "card_error" || error.type === "validation_error")
-            setMessage(error.message);
+            setMessage(error.message ?? "");
         else
             setMessage("An unexpected error occurred.");
         setIsProcessing(false);

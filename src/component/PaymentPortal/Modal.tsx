@@ -1,11 +1,14 @@
-import React, { useRef } from 'react';
+import React, { FormEvent, useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import './Modal.css';
 
-const Modal = ({ confirmation, setModal, emailVerified }) => {
-    const sixRef = useRef();
+const Modal = ({ confirmation, setModal, emailVerified }: {
+    confirmation: any; setModal: React.Dispatch<React.SetStateAction<boolean>>;
+    emailVerified: React.MutableRefObject<boolean>;
+}) => {
+    const sixRef = useRef<HTMLInputElement | any>();
 
-    function checkValidData(e) {
+    function checkValidData(e: FormEvent) {
         e.preventDefault();
         console.log(confirmation)
         if (confirmation.current === parseInt(sixRef.current.value)) {

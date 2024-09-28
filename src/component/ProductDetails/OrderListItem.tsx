@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './OrderListItem.css';
 import { BsFillBagPlusFill } from 'react-icons/bs'
 import { AiOutlineArrowRight } from 'react-icons/ai';
@@ -31,8 +31,9 @@ const OrderListItem = () => {
           onClick={() => {
             if (totalPrice !== 0) {
               navigate('/Payment');
-              oneItem.current = false;
-              localStorage.setItem('oneItem', false);
+              if (oneItem)
+                oneItem.current = false;
+              localStorage.setItem('oneItem', false.toString());
               setSlide(false);
             }
           }}
