@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router';
 import { useStateContext } from '../../StateContext';
 import { data } from '../Products/data.ts'
-import './Details.css';
+import styles from './Details.module.css';
 import UpcomingData from '../Body/upcomingData';
 import { OrderType } from '../../ProductContextType';
 import toast from 'react-hot-toast';
@@ -17,7 +17,7 @@ const Details = () => {
   const { addItemToOrderList, setItemIDCount, oneItem } = useStateContext();
 
   return (
-    <div id={'details__container'}>
+    <div id={styles.details__container}>
       <img
         ref={ImgRef}
         onMouseMove={e => {
@@ -33,7 +33,7 @@ const Details = () => {
           <article>{item?.desc}</article>
           <span>₹ {item?.price}</span>
           <div>
-            {id && parseInt(id) < 100 && <section id={'counter_container'}>
+            {id && parseInt(id) < 100 && <section id={styles.counter_container}>
               <button
                 onClick={() => {
                   if (counter <= 1) return 1;

@@ -4,15 +4,17 @@ import { useStateContext } from '../../StateContext';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-hot-toast';
 import { OrderType } from '../../ProductContextType';
+import { forwardRef, Ref } from 'react';
 
 const ProductDetails = ({ item }: {
-  item: OrderType
-}) => {
+  item: OrderType;
+}, ref: Ref<HTMLDivElement>) => {
   const { addItemToOrderList, setItemIDCount } = useStateContext();
   const navigate = useNavigate();
 
   return (
     <div
+      ref={ref}
       onClick={e => {
         e.stopPropagation();
         navigate(`/Product/Details/${item.id}`)
@@ -38,4 +40,4 @@ const ProductDetails = ({ item }: {
   );
 };
 
-export default ProductDetails;
+export default forwardRef(ProductDetails);
