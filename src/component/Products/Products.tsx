@@ -14,10 +14,13 @@ const Products = () => {
     return (
         <div
             style={{
-                width: '100%',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                width: '80%',
+                gap: 30,
                 display: 'flex', flexWrap: 'wrap',
                 justifyContent: 'center',
-                marginTop: window.innerWidth < 1200 ? '18%' : '5%'
+                marginTop: '7%'
             }}>
             {data.map((item: OrderType) => <ProductDetails
                 key={item.id}

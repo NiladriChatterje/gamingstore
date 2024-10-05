@@ -1,13 +1,13 @@
 body {
   margin: 0;
   scroll-behavior: smooth;
-  font-family: sans-serif;
+  font-family: "PT Sans", "DM Sans", sans-serif;
   font-size: 0.72em;
   user-select: none;
   background-size: cover;
   -webkit-tap-highlight-color: transparent;
   background-attachment: fixed;
-  background-image: linear-gradient(to top right, rgb(22, 22, 34), rgb(131, 183, 252))
+  background-color: rgb(226, 226, 226);
 }
 
 *::-webkit-scrollbar {
@@ -21,6 +21,18 @@ body {
 *::-webkit-scrollbar-thumb {
   background-color: rgb(25, 25, 80);
   border-radius: 30px
+}
+
+@media all and (prefers-color-scheme:dark) {
+  * {
+    color: white;
+  }
+}
+
+@media all and (prefers-color-scheme:light) {
+  * {
+    color: rgb(59, 59, 59);
+  }
 }
 
 @media all and (max-width:1200px) {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './OrderListItem.css';
+import styles from './OrderListItem.module.css';
 import { BsFillBagPlusFill } from 'react-icons/bs'
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import { motion } from 'framer-motion';
@@ -15,9 +15,9 @@ const OrderListItem = () => {
 
   return <>
     <motion.div
-      className={`slider-container ${slide ? '' : 'hide-slider'}`}>
+      className={`${styles['slider-container']} ${slide ? '' : styles['hide-slider']}`}>
       <div
-        className={`slider`} >
+        className={styles[`slider`]} >
         <AiOutlineArrowRight
           onClick={() => setSlide(false)}
           style={{
@@ -39,7 +39,7 @@ const OrderListItem = () => {
           }}
           initial={{ y: 60 }}
           animate={{ y: 0 }}
-          id={'payment'}>
+          id={styles['payment']}>
           <span>Place ORDER</span>
           <span
             style={{
@@ -52,7 +52,7 @@ const OrderListItem = () => {
     </motion.div>
     <BsFillBagPlusFill
       onClick={() => setSlide(true)}
-      id={'BsFillBagPlusFill'}
+      id={styles['BsFillBagPlusFill']}
       style={{
         zIndex: 6,
         cursor: 'pointer', top: 12,

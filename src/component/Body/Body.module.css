@@ -1,5 +1,6 @@
 #container {
     display: flex;
+    align-items: center;
 }
 
 #first-container {
@@ -10,37 +11,37 @@
     align-items: center;
 }
 
-button {
+#first-container button {
     border-style: none;
-    border-radius: 50px;
+    border-radius: 5px;
     padding: 5px 10px;
     font-weight: 900;
+    background-color: rgb(80, 78, 119);
     cursor: pointer;
 }
 
-button:hover {
-    transform: scale(1.02, 1.02);
+#first-container button:hover {
     color: rgb(255, 255, 255);
     background-color: rgb(15, 14, 35);
 }
 
-h1 {
+#first-container h1 {
     font-size: 2.8em;
     font-family: 'Blanka', sans-serif;
-    color: white;
+    color: rgb(80, 83, 119);
     word-wrap: break-word;
 }
 
-p {
+#first-container p {
     word-wrap: break-word;
-    color: white;
+    color: rgb(62, 69, 93);
     font-weight: 500;
 }
 
 #second-container {
     position: relative;
     width: 50%;
-    height: 90vh;
+    height: 90svh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,20 +54,20 @@ p {
 }
 
 #modal {
-    overflow-x: clip;
-    overflow-y: auto;
     display: flex;
+    position: fixed;
+    bottom: 0;
     justify-content: space-evenly;
     flex-wrap: wrap;
 }
 
 #modal>span {
-    position: fixed;
-    margin-top: -10px;
+    position: absolute;
     background: rgb(255, 255, 255);
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 1px 10px;
     left: 0;
+    top: 0;
     z-index: 5;
     color: rgb(34, 34, 47);
 }
@@ -92,6 +93,6 @@ p {
 
     #first-container {
         height: max-content;
-        padding-left: 10px
+        padding: 10px
     }
 }

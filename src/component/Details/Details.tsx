@@ -13,58 +13,66 @@ const Details = () => {
   const navigate = useNavigate();
 
   const [item] = useState(data?.find(i => id && i.id === parseInt(id)) || UpcomingData?.find(i => id && i.id === parseInt(id)))
-  const ImgRef = useRef<any>();
+  const ImgRef = useRef<HTMLImageElement>(null);
   const { addItemToOrderList, setItemIDCount, oneItem } = useStateContext();
 
   return (
     <div id={styles.details__container}>
       <img
+        style={{ objectFit: 'contain', width: 300 }}
         ref={ImgRef}
         onMouseMove={e => {
-          ImgRef.current.style.transform = `translate(${e.movementX * 5}px,${e.movementY * 5}px)`;
+          if (ImgRef.current)
+            ImgRef.current.style.transform = `translate(${e.movementX * 5}px,${e.movementY * 5}px)`;
         }}
         onMouseLeave={() => {
-          ImgRef.current.style.transform = `translate(0px,0px)`;
+          if (ImgRef.current)
+            ImgRef.current.style.transform = `translate(0px,0px)`;
         }}
         src={item?.image} alt={item?.name} />
-      <section>
+      <section id={styles['product-details']}>
         <h1>{item?.name}</h1>
         <section>
           <article>{item?.desc}</article>
           <span>₹ {item?.price}</span>
           <div>
             {id && parseInt(id) < 100 && <section id={styles.counter_container}>
-              <button
-                onClick={() => {
-                  if (counter <= 1) return 1;
-                  setCounter(prev => prev - 1)
-                }}>-</button>
-              <span>{counter}</span>
-              <button
-                onClick={() => setCounter(prev => prev + 1)}>+</button>
+              <div
+                style={{ display: 'flex', alignItems: 'center' }}>
+                <button
+                  onClick={() => {
+                    if (counter <= 1) return 1;
+                    setCounter(prev => prev - 1)
+                  }}>-</button>
+                <span>{counter}</span>
+                <button
+                  onClick={() => setCounter(prev => prev + 1)}>+</button>
+              </div>
             </section>}
-            {id && parseInt(id) < 100 && <button
-              onClick={(e) => {
-                e.stopPropagation();
-                addItemToOrderList?.(item as OrderType)
-                setItemIDCount?.({ count: item?.count, id: item?.id })
-                toast(`Product added to cart Successfully ✅`)
-              }}
-            >ADD TO CART</button>}
+            <section id={styles.counter_container}>
+              {id && parseInt(id) < 100 && <button
+                style={{ marginRight: 10 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addItemToOrderList?.(item as OrderType)
+                  setItemIDCount?.({ count: item?.count, id: item?.id })
+                  toast(`Product added to cart Successfully ✅`)
+                }}
+              >Add to cart</button>}
 
-            {id && parseInt(id) < 100 && <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (oneItem !== undefined)
-                  oneItem.current = true;
-                localStorage.setItem('oneItem', 'true');
-                const foundData = data?.find((item: OrderType) => item.id === parseInt(id));
-                let oneProduct = { name: foundData?.name, price: foundData?.price, qty: counter }
-                localStorage.setItem('oneProduct', JSON.stringify(oneProduct));
-                navigate('/Payment');
-              }}
-            >Buy NOW</button>}
-
+              {id && parseInt(id) < 100 && <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (oneItem !== undefined)
+                    oneItem.current = true;
+                  localStorage.setItem('oneItem', 'true');
+                  const foundData = data?.find((item: OrderType) => item.id === parseInt(id));
+                  let oneProduct = { name: foundData?.name, price: foundData?.price, qty: counter }
+                  localStorage.setItem('oneProduct', JSON.stringify(oneProduct));
+                  navigate('/Payment');
+                }}
+              >Buy now</button>}
+            </section>
           </div>
 
         </section>

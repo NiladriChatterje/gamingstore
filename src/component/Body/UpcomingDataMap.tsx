@@ -1,5 +1,4 @@
-import '../ProductDetails/ProductDetails.css'
-import { motion } from 'framer-motion'
+import styles from '../ProductDetails/ProductDetails.module.css'
 import { useNavigate } from 'react-router'
 
 interface ItemType { id: number; image: string; desc: string; name: string; price: number }
@@ -8,16 +7,15 @@ const UpcomingDataMap = (item: ItemType) => {
   const navigate = useNavigate();
 
   return (
-    <motion.div
+    <div
       onClick={(e) => {
         e.stopPropagation();
         navigate(`/Product/Details/${item.id}`)
       }}
       style={{ position: 'relative', cursor: 'pointer' }}
       key={item.id}
-      id={'card'}
-      initial={{ y: 80 }}
-      whileInView={{ y: 0 }}>
+      id={styles['card']}
+    >
 
       {item.image && <img
         src={item.image} alt='' />}
@@ -25,7 +23,7 @@ const UpcomingDataMap = (item: ItemType) => {
       <p>{item?.desc?.length > 30 ? item.desc.slice(0, 32) + '...' : item.desc}</p>
 
       <h2>₹{item?.price}</h2>
-    </motion.div>
+    </div>
   )
 }
 

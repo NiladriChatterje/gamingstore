@@ -1,5 +1,5 @@
 import React from 'react';
-import './About.css';
+import styles from './About.module.css';
 import { motion, MotionStyle } from 'framer-motion'
 import Xbox from './xbox.png'
 import Xbox2 from './xbox2.webp'
@@ -16,11 +16,11 @@ const About = () => {
 
     return (
         <motion.div
-            id='about-container'
+            id={styles['about-container']}
             initial={{ x: -300 }}
             animate={{ x: 0 }}>
             <div
-                id='about-sec1'>
+                id={styles['about-sec1']}>
                 <motion.section
                     initial={{ x: window.innerWidth > 1200 ? -400 : -90 }}
                     whileInView={{ x: 0 }}>
@@ -47,13 +47,13 @@ const About = () => {
                 </div>
             </div>
             <motion.section
-                id={'about-sec2'}
+                id={styles['about-sec2']}
                 initial={{ y: 200 }}
                 whileInView={{ y: 0 }}>
 
             </motion.section>
             <motion.section
-                id={'about-sec3'}
+                id={styles['about-sec3']}
                 initial={{ y: 100 }}
                 whileInView={{ y: 0 }}>
                 <motion.img
@@ -67,7 +67,7 @@ const About = () => {
                 <motion.p
                     initial={{ x: 40 }}
                     whileInView={{ x: 0 }}>
-                    <h2>We hate complains</h2><br />
+                    <h1>We hate complains</h1><br />
                     That is why, Our Products are Tested before delivery<br />
                     We take care of the fact that interruption is often disappointing<br />
                 </motion.p>

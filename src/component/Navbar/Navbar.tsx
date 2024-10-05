@@ -1,5 +1,5 @@
 import React from 'react'
-import './Navbar.css'
+import styles from './Navbar.module.css'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -16,7 +16,7 @@ const Navbar = () => {
       ref={navRef}
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}>
-      <span id={'heading'}>
+      <span id={styles['heading']}>
         <span>
           XV
         </span>
@@ -24,7 +24,7 @@ const Navbar = () => {
       </span>
       <GiHamburgerMenu
         onClick={() => setNavActive(prev => !prev)}
-        id={'GiHamburgerMenu'}
+        id={styles['GiHamburgerMenu']}
         style={{
           cursor: 'pointer',
           zIndex: 10,
@@ -34,9 +34,8 @@ const Navbar = () => {
           right: 10, top: 13.5
         }} />
       <div
-        id={navActive ? 'navitems-active' : 'navitems-inactive'}>
-
-        {navItems?.map((item, i) => <Link to={`/${item === "Home" ? '' : item}`} id='text' key={i}>{item}</Link>)}
+        id={navActive ? styles['navitems-active'] : styles['navitems-inactive']}>
+        {navItems?.map((item, i) => <Link to={`/${item === "Home" ? '' : item}`} id={styles['text']} key={i}>{item}</Link>)}
       </div>
 
     </motion.nav>

@@ -15,15 +15,33 @@
     object-fit: contain;
 }
 
+#card button:hover {
+    background-color: rgb(49, 49, 81);
+}
+
 #card button {
     z-index: 5;
+    background-color: rgb(75, 75, 112);
+    border-style: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#card:hover img {
+    transform: translateY(-80px);
 }
 
 #card img {
     object-fit: contain;
-    filter: drop-shadow(5px 10px 10px);
+    filter: drop-shadow(5px 5px 5px rgba(102, 93, 93, 0.497));
     height: 200px;
     width: 200px;
+    transition: all;
+    transition-duration: 120ms;
     position: relative;
     transform: translateY(-60px);
 }

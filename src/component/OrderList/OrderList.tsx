@@ -1,5 +1,5 @@
 import React from 'react';
-import './OrderList.css'
+import styles from './OrderList.module.css'
 import { AiFillCloseCircle } from 'react-icons/ai'
 import { useStateContext } from '../../StateContext';
 
@@ -19,7 +19,7 @@ export default function OrderList({ id, image, price, count }: { id: number; ima
     }, [ItemIDCount])
 
     return <div
-        className={'orderList-container'}>
+        className={styles['orderList-container']}>
 
         <AiFillCloseCircle
             onClick={() => {
@@ -30,7 +30,7 @@ export default function OrderList({ id, image, price, count }: { id: number; ima
         <img src={image} alt='' />
         <span>Rs. {price}</span>
         <div
-            id='count'>
+            id={styles['count']}>
             <button
                 onClick={() => {
                     if (counter <= 1) return 1;

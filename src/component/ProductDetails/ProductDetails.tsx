@@ -1,10 +1,10 @@
-import './ProductDetails.css';
 import { HiShoppingCart } from 'react-icons/hi';
 import { useStateContext } from '../../StateContext';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-hot-toast';
 import { OrderType } from '../../ProductContextType';
 import { forwardRef, Ref } from 'react';
+import styles from './ProductDetails.module.css';
 
 const ProductDetails = ({ item }: {
   item: OrderType;
@@ -21,7 +21,7 @@ const ProductDetails = ({ item }: {
       }}
       style={{ position: 'relative', cursor: 'pointer' }}
       key={item.id}
-      id={'card'}>
+      id={styles.card}>
       {item.image && <img
         src={item.image} alt='' />}
       <h3>{item?.name}</h3>
