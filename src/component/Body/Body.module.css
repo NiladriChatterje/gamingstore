@@ -6,7 +6,7 @@
 #first-container {
     width: 50%;
     padding: 0 0 0 100px;
-    height: 80vh;
+    height: 100vh;
     display: flex;
     align-items: center;
 }
@@ -16,6 +16,7 @@
     border-radius: 5px;
     padding: 5px 10px;
     font-weight: 900;
+    color: white;
     background-color: rgb(80, 78, 119);
     cursor: pointer;
 }
@@ -41,7 +42,7 @@
 #second-container {
     position: relative;
     width: 50%;
-    height: 90svh;
+    height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -49,7 +50,7 @@
 
 #second-container>div {
     transition: all;
-    transition-duration: 200ms;
+    transition-duration: 130ms;
     transform: scale(0, 0);
 }
 
@@ -93,6 +94,5 @@
 
     #first-container {
         height: max-content;
-        padding: 10px
     }
 }

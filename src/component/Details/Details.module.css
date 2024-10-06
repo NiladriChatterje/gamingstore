@@ -13,10 +13,13 @@
     color: rgb(57, 57, 100)
 }
 
+#product-infos {
+    height: max-content;
+}
+
 #counter_container {
     display: flex;
     align-items: flex-start;
-    margin-left: 0;
 }
 
 #counter_container button {
@@ -25,6 +28,8 @@
     border-style: none;
     border-radius: 5px;
     padding: 5px 10px;
+    color: white;
+    font-size: small;
     background-color: rgb(68, 68, 104);
     cursor: pointer;
 }
@@ -66,10 +71,6 @@
         border-left: none;
     }
 
-    #details__container>section>section {
-        padding-top: 5%;
-        height: 60vh;
-    }
 
     #details__container {
         flex-direction: column;
@@ -83,9 +84,13 @@
         gap: 25px;
     }
 
-    #details__container>section>section {
+    #product-infos {
         display: flex;
         flex-direction: column;
-        gap: 25px;
+        gap: 5px;
+    }
+
+    #counter_container {
+        height: max-content;
     }
 }

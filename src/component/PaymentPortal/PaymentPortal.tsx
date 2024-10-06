@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from 'react'
-import './PaymentPortal.css';
+import styles from './PaymentPortal.module.css';
 import toast from 'react-hot-toast';
 import Modal from './Modal';
 import Modal2 from './Modal2';
@@ -61,7 +61,7 @@ const PaymentPortal = () => {
     }
 
     return <>
-        <div id={'form_container'}>
+        <div id={styles['form_container']}>
             {modal && <Modal confirmation={confirmation} setModal={setModal} emailVerified={emailVerified} />}
             {modal2 && <Modal2 setModal2={setModal2} emailVerified={emailVerified} />}
 

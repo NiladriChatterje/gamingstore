@@ -1,4 +1,4 @@
-import './Modal2.css';
+import styles from './Modal2.module.css';
 import { TiTick } from 'react-icons/ti'
 import { FaEdit } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
@@ -11,8 +11,8 @@ const Modal2 = ({ setModal2, emailVerified }: {
     const navigate = useNavigate();
 
 
-    return <div id={'modal-container'}>
-        <div id={'modal2'}>
+    return <div id={styles['modal-container']}>
+        <div id={styles['modal2']}>
             <FaEdit
                 onClick={() => {
                     if (emailVerified !== null)

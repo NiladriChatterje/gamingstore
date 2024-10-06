@@ -1,7 +1,7 @@
 nav {
     background-color: rgb(85, 88, 117);
     box-shadow: 1px 2px 55px -20px black;
-    padding: 5px 0;
+    padding: 5px 15px;
     position: fixed;
     z-index: 5;
     top: 0;
@@ -12,90 +12,106 @@ nav {
     justify-content: space-evenly;
 }
 
+.nav-list-icons {
+    display: none;
+}
+
+.nav-routes {
+    display: flex;
+    gap: 50px;
+}
+
+#ham-cart-login-container {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    gap: 20px;
+}
+
+#ham-cart-login-container>button:hover {
+    background-color: rgb(255, 255, 255);
+    color: rgb(17, 19, 44) !important;
+}
+
+#ham-cart-login-container>button {
+    padding: 6px 15px;
+    transition: background-color 120ms ease;
+    cursor: pointer;
+    border-style: none;
+    border-radius: 5px;
+    color: rgb(47, 45, 79) !important;
+    background-color: rgba(255, 255, 255, 0.668);
+    font-weight: 600;
+    font-size: small;
+}
+
 #GiHamburgerMenu {
-    transform: scale(0, 0);
     color: rgb(6, 9, 38);
+    display: none;
 }
 
 #heading {
-    position: fixed;
-    left: 100px;
+    color: white;
 }
 
 #heading>span {
     font-family: 'Blanka';
 }
 
-span {
-    font-size: 1.5em;
-    font-weight: 900;
-    color: rgb(255, 255, 255);
-}
-
-#text {
+.text {
     text-decoration: none;
     cursor: pointer;
-    margin-left: 40px;
-    color: rgb(255, 255, 255);
+    color: rgba(228, 228, 228, 0.919);
     font-size: 0.8em;
     font-weight: 500;
-    border-radius: 5px;
-    transition: all;
+    transition: color;
     transition-duration: 100ms;
 }
 
-#text:hover {
-    background-color: rgb(255, 255, 255);
-    color: rgb(33, 33, 33);
+.text:hover {
+    color: rgb(255, 255, 255);
+}
 
-    padding: 6px 8px;
+#BsFillBagPlusFill {
+    transition: all 100ms;
+    color: #dcdcdc;
+    height: 25px;
+    width: 25px;
+}
+
+#BsFillBagPlusFill:hover {
+    color: white;
 }
 
 @media all and (max-width:1200px) {
     nav {
-        position: fixed;
-        justify-content: space-between;
-        background-color: rgb(61, 63, 107);
-        box-shadow: 0 2px 10px -10px black;
+        justify-content: space-around;
     }
 
-    nav>#heading {
+    .nav-list-icons {
+        display: inline-block;
+    }
+
+    #heading {
         left: 10px;
         color: rgb(246, 246, 246);
     }
 
-    #navitems-inactive {
-        padding: 20px 0;
-        backdrop-filter: blur(10px);
-        transition: all;
-        transition-duration: 200ms;
-        font-family: 'Blanka';
-        font-weight: 900;
-        font-size: 1.20em;
-        background-color: rgba(255, 255, 255, 0.485);
-        display: flex;
-        text-align: center;
-        position: fixed;
-        gap: 40px;
-        right: -400px;
-        align-items: center;
-        top: 80px;
-        flex-direction: column;
-        height: max-content;
-        width: 50%;
-        opacity: 0;
-        justify-content: space-around;
-        visibility: hidden;
+    #GiHamburgerMenu {
+        display: block;
+        color: rgba(255, 255, 255, 0.792);
+        transition: color 180ms ease-in
     }
 
-    #GiHamburgerMenu {
-        transform: scale(1, 1);
-        color: black;
+    #GiHamburgerMenu:hover {
+        color: rgb(255, 255, 255)
     }
 
     #heading>span {
         color: rgb(224, 224, 224);
     }
+
+
 
     .slider {
         bottom: 0;
@@ -103,42 +119,39 @@ span {
         width: 40vw;
     }
 
+    #navitems-inactive {
+        position: fixed;
+        display: none;
+    }
+
     #navitems-active {
-        padding: 20px 0;
+        padding: 5px 10px;
         backdrop-filter: blur(10px);
-        transition: all;
-        opacity: 1;
-        transition-duration: 200ms;
-        font-family: 'Blanka';
         font-weight: 900;
         font-size: 1.20em;
-        box-shadow: -2px -1px 15px -8px rgb(22, 22, 97);
+        box-shadow: -2px -1px 15px -8px rgb(129, 129, 131);
         background-color: rgba(255, 255, 255, 0.485);
-        display: flex;
-        text-align: center;
+        visibility: visible;
         position: fixed;
-        gap: 60px;
-        right: 0;
-        align-items: center;
-        top: 80px;
+        gap: 30px;
+        right: 35px;
+        top: 70px;
         flex-direction: column;
-        height: max-content;
-        width: 50%;
-        justify-content: space-between;
+        height: 80svh;
+        width: max-content;
         border-radius: 5px;
     }
 
-    #text {
+    .text {
         font-size: 0.8em;
         font-weight: 800;
         color: rgb(20, 20, 36);
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
-    #text:hover {
-        color: black;
-        border-radius: 10px;
-        padding: 5px 30px 8px 40px;
-        background-color: azure;
-        font-size: 0.9em;
+    .text:hover {
+        color: rgb(255, 255, 255);
     }
 }

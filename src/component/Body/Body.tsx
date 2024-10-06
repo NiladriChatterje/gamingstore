@@ -58,7 +58,7 @@ const Body = () => {
           <motion.div
             initial={{ opacity: 0, transform: 'scale(0,0)' }}
             whileInView={{ opacity: 1, transform: 'scale(1,1)' }}
-            style={{ ...style, right: 120, bottom: 140 }} />
+            style={{ ...style, right: 120, bottom: 120 }} />
           <img src={Joystick} alt='' ref={joyRef}
             style={{
               objectFit: 'contain',
@@ -67,8 +67,6 @@ const Body = () => {
               filter: 'drop-shadow(4px 10px 20px)',
             }} />
         </motion.div>
-
-
       </motion.div>
       <motion.div
         id={styles['modal']}
@@ -101,8 +99,9 @@ const Body = () => {
               if (joyRef.current)
                 joyRef.current.style.transform = 'scale(1)'
             }}
+            color={'rgb(40,48,102)'}
             style={{
-              position: 'absolute', top: 20, right: 30,
+              position: 'absolute', top: 20, right: 45,
               transform: 'scale(2)', cursor: 'pointer'
             }} />
         </section>

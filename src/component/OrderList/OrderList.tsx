@@ -5,7 +5,7 @@ import { useStateContext } from '../../StateContext';
 
 export default function OrderList({ id, image, price, count }: { id: number; image: string; price: number; count: number }) {
     const { data, setData, incDecQty, ItemIDCount } = useStateContext();
-    const [counter, setCounter] = React.useState(() => count)
+    const [counter, setCounter] = React.useState<number>(() => count)
 
     React.useEffect(() => {
         incDecQty?.(counter, id)

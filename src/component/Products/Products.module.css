@@ -1,3 +1,20 @@
+#pdt_container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  gap: 30;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 8%;
+}
+
+@media all and (max-width:1200px) {
+  #pdt_container {
+    margin-top: 15%;
+  }
+}
+
 .loader {
   position: relative;
   left: 50%;

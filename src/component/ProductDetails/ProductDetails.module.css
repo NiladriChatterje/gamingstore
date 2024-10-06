@@ -17,6 +17,7 @@
 
 #card button:hover {
     background-color: rgb(49, 49, 81);
+    color: white
 }
 
 #card button {
@@ -28,6 +29,7 @@
     cursor: pointer;
     display: flex;
     align-items: center;
+    color: rgba(255, 255, 255, 0.827);
     gap: 10px;
 }
 

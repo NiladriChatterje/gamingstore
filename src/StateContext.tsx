@@ -8,11 +8,12 @@ export type OrderType = {
 const ProductContext = createContext<Partial<ProductContextType>>({});
 
 export const StateContext = ({ children }: { children: ReactNode }) => {
-
+    const [userSession, setUserSession] = useState<string>(localStorage.getItem("userSession") ?? '');
     const [qty, setQty] = useState(() => 1);
     const [ItemIDCount, setItemIDCount] = useState<object & { id?: number }>(() => { });
     const [totalPrice, setTotalPrice] = useState<number>(Number(localStorage.getItem('totalPrice')) || 0);
     const [data, setData] = useState<OrderType[]>(() => JSON.parse(localStorage.getItem('orders') as string) || [] as OrderType[]);
+    const [slide, setSlide] = useState<boolean>(false);
 
     const oneItem = useRef<boolean>(Boolean(localStorage.getItem('oneItem')) || false);
     const navRef = useRef<HTMLElement | null>(null);
@@ -48,10 +49,14 @@ export const StateContext = ({ children }: { children: ReactNode }) => {
     return (<ProductContext.Provider
         value={
             {
+                userSession,
+                setUserSession,
                 navRef,
                 totalPrice,
                 setTotalPrice,
                 data,
+                setSlide,
+                slide,
                 setData,
                 oneItem,
                 qty,

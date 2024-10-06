@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import styles from './OrderListItem.module.css';
-import { BsFillBagPlusFill } from 'react-icons/bs'
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import { OrderList } from '../components';
@@ -9,8 +7,7 @@ import { useNavigate } from 'react-router';
 
 
 const OrderListItem = () => {
-  const [slide, setSlide] = useState(() => false);
-  const { data, totalPrice, oneItem } = useStateContext();
+  const { data, totalPrice, oneItem, slide, setSlide } = useStateContext();
   const navigate = useNavigate();
 
   return <>
@@ -19,7 +16,10 @@ const OrderListItem = () => {
       <div
         className={styles[`slider`]} >
         <AiOutlineArrowRight
-          onClick={() => setSlide(false)}
+          onClick={() => {
+            if (setSlide)
+              setSlide(false)
+          }}
           style={{
             position: 'fixed', fontWeight: "900",
             left: 8, top: 10, color: 'black',
@@ -34,30 +34,20 @@ const OrderListItem = () => {
               if (oneItem)
                 oneItem.current = false;
               localStorage.setItem('oneItem', false.toString());
-              setSlide(false);
+              if (setSlide)
+                setSlide(false);
             }
           }}
           initial={{ y: 60 }}
           animate={{ y: 0 }}
           id={styles['payment']}>
-          <span>Place ORDER</span>
+          <span>Place Order</span>
           <span
-            style={{
-              textAlign: 'right', backgroundColor: 'white', color: 'black',
-              position: 'fixed', bottom: 15, right: 10, borderRadius: '10px'
-            }}
+            id={styles['total-price']}
           >₹ {totalPrice}</span>
         </motion.button>
       </div>
     </motion.div>
-    <BsFillBagPlusFill
-      onClick={() => setSlide(true)}
-      id={styles['BsFillBagPlusFill']}
-      style={{
-        zIndex: 6,
-        cursor: 'pointer', top: 12,
-        position: 'fixed', right: 90
-      }} />
   </>
 }
 export default OrderListItem;

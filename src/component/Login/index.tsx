@@ -2,7 +2,7 @@ import { useState } from "react";
 import AdminLogin from "./AdminLogin"
 import CustomerLogin from "./CustomerLogin"
 
-const index = () => {
+const Index = () => {
     const [userToggle, _] = useState<boolean>(false);
     return (
         <div>
@@ -13,4 +13,4 @@ const index = () => {
     )
 }
 
-export default index;
+export default Index;

@@ -1,10 +1,11 @@
 .slider-container {
     width: 25vw;
     top: 0;
-    height: 100vh;
+    height: 90svh;
     background-color: rgba(205, 202, 222, 0.785);
     backdrop-filter: blur(5px);
-    border-radius: 20px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
     position: fixed;
     right: 0;
     z-index: 8;
@@ -12,20 +13,12 @@
     transition-duration: 150ms;
 }
 
-#BsFillBagPlusFill {
-    transition: all 100ms;
-    color: #0a0421;
-    height: 25px;
-    width: 25px;
-}
+#total-price {
+    text-align: right;
+    bottom: 15px;
+    right: 10px;
+    border-radius: 5px;
 
-#BsFillBagPlusFill:hover {
-    width: 20px;
-    height: 20px;
-    color: white;
-    background-color: #0a0421;
-    border-radius: 10px;
-    padding: 5px;
 }
 
 .slider {
@@ -42,28 +35,33 @@
 
 #payment>span {
     color: #ffffff;
+    font-weight: 600;
 }
 
 #payment {
+    transition: all 120ms ease-in-out;
     display: flex;
-    text-align: center;
-    border-radius: 10px 0 10px 0;
-    background-color: rgb(18, 36, 66);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-style: none;
+    border-radius: 10px 0 0 0;
+    background-color: rgba(28, 54, 101, 0.795);
     width: 100%;
-    box-shadow: 1px 1px 12px -10px black;
     height: 45px;
     position: absolute;
     z-index: 6;
     bottom: 0px;
 }
 
+#payment:hover {
+    background-color: rgb(29, 40, 68);
+}
+
 @media all and (max-width:1200px) {
     .slider-container {
-        width: 85vw;
+        width: 65vw;
         height: 100%;
-    }
-
-    #BsFillBagPlusFill {
-        color: rgb(10, 5, 23);
     }
 }

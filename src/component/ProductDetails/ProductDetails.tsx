@@ -33,7 +33,7 @@ const ProductDetails = ({ item }: {
           setItemIDCount?.({ count: item.count, id: item.id });
           toast("Item added to Cart 🛒")
         }}>
-        ADD TO CART <HiShoppingCart />
+        Add to Cart <HiShoppingCart />
       </button>
       <h2>₹{item?.price}</h2>
     </div>

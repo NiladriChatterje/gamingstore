@@ -32,7 +32,7 @@ const Details = () => {
         src={item?.image} alt={item?.name} />
       <section id={styles['product-details']}>
         <h1>{item?.name}</h1>
-        <section>
+        <section id={styles['product-infos']}>
           <article>{item?.desc}</article>
           <span>₹ {item?.price}</span>
           <div>
@@ -74,9 +74,7 @@ const Details = () => {
               >Buy now</button>}
             </section>
           </div>
-
         </section>
-
       </section>
     </div>
   )
