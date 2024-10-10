@@ -1,7 +1,7 @@
 .slider-container {
     width: 25vw;
     top: 0;
-    height: 90svh;
+    height: 100svh;
     background-color: rgba(205, 202, 222, 0.785);
     backdrop-filter: blur(5px);
     border-top-left-radius: 5px;

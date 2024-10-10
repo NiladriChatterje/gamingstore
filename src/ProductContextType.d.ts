@@ -5,10 +5,8 @@ type OrderType = {
 }
 
 export type ProductContextType = {
-    userSession: string,
     slide: boolean,
     setSlide: React.Dispatch<React.setStateAction<boolean>>,
-    setUserSession: React.Dispatch<React.SetStateAction<string>>,
     navRef: LegacyRef<HTMLElement>;
     totalPrice: number;
     setTotalPrice: React.Dispatch<React.SetStateAction<number>>;

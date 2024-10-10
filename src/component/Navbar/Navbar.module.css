@@ -72,6 +72,10 @@ nav {
     color: rgb(255, 255, 255);
 }
 
+.user-loggedIn-btn {
+    transform: scale(0.75);
+}
+
 #BsFillBagPlusFill {
     transition: all 100ms;
     color: #dcdcdc;

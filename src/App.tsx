@@ -1,6 +1,9 @@
 import './App.css';
 import { useEffect, useState } from 'react';
-import { Navbar, Body, About, Products, OrderListItem, Details, PaymentPortal, Index } from './component/components.ts';
+import {
+  Navbar, Body, About, Products, OrderListItem,
+  Details, PaymentPortal,
+} from './component/components.ts';
 import Payment from './StripePayment/Payment';
 import Completion from './StripePayment/Completion'
 import { Routes, Route } from 'react-router-dom';
@@ -26,7 +29,8 @@ function App() {
           <Route path={'/Product/Details/:id'} element={<Details />} />
           <Route path={'/Checkout'} element={<Payment />} />
           <Route path={'/completion'} element={<Completion />} />
-          <Route path={'/login'} element={<Index />} />
+          {/* <Route path={'/sign-in'} element={<Login />} />
+          <Route path={'/sign-up'} element={<SignUpPage />} /> */}
         </Routes>
       </StateContext>}
     </div>

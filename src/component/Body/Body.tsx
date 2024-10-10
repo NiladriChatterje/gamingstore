@@ -7,11 +7,31 @@ import upcomingData from './upcomingData.ts'
 import UpcomingDataMap from './UpcomingDataMap.tsx'
 
 
-const style: MotionStyle = {
-  height: '180px', width: '180px',
-  borderRadius: '50%', position: 'absolute',
-  backgroundImage: 'linear-gradient(to right,rgb(120,150,185),rgb(105,148,255))'
+const style1: MotionStyle = {
+  height: '250px', width: '250px',
+  borderTopLeftRadius: '50%',
+  borderTopRightRadius: '17%',
+  borderBottomLeftRadius: '10%',
+  borderBottomRightRadius: '60%',
+  filter: 'blur(50px)',
+  opacity: 0.6,
+  boxShadow: '-120px 5px 400px -5px rgb(120,150,185)',
+  position: 'absolute',
+  backgroundImage: 'linear-gradient(to right,rgb(85, 88, 117),rgb(105,148,255))'
 }
+const style2: MotionStyle = {
+  height: '240px', width: '260px',
+  borderTopLeftRadius: '50%',
+  borderTopRightRadius: '27%',
+  borderBottomLeftRadius: '40%',
+  borderBottomRightRadius: '60%',
+  filter: 'blur(60px)',
+  opacity: 0.6,
+  boxShadow: '80px 85px 75px -15px rgb(120,150,185)',
+  position: 'absolute',
+  backgroundImage: 'linear-gradient(to right,rgb(85, 88, 117),rgb(105,148,255))'
+}
+
 const Body = () => {
   const secondContRef = React.useRef<HTMLDivElement>(null);
   const joyRef = React.useRef<HTMLImageElement>(null);
@@ -53,18 +73,17 @@ const Body = () => {
             initial={{ opacity: 0, transform: 'scale(0,0)' }}
             whileInView={{ opacity: 1, transform: 'scale(1,1)' }}
             viewport={{ root: secondContRef }}
-            style={{ ...style, left: 120, top: 130 }} />
+            style={{ ...style1, left: 80, top: 140 }} />
 
           <motion.div
             initial={{ opacity: 0, transform: 'scale(0,0)' }}
             whileInView={{ opacity: 1, transform: 'scale(1,1)' }}
-            style={{ ...style, right: 120, bottom: 120 }} />
+            style={{ ...style2, right: 120, bottom: 180 }} />
           <img src={Joystick} alt='' ref={joyRef}
             style={{
               objectFit: 'contain',
-              transition: 'all', transitionDuration: '120ms',
               position: 'absolute', zIndex: 1, width: '75%',
-              filter: 'drop-shadow(4px 10px 20px)',
+              filter: 'drop-shadow(1px 1px 15px)',
             }} />
         </motion.div>
       </motion.div>

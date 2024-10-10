@@ -6,7 +6,7 @@ import React from 'react';
 
 const Modal2 = ({ setModal2, emailVerified }: {
     setModal2: (prev: boolean) => void;
-    emailVerified: React.LegacyRef<HTMLInputElement> | any
+    emailVerified: React.Ref<HTMLInputElement> | any
 }) => {
     const navigate = useNavigate();
 
@@ -15,8 +15,7 @@ const Modal2 = ({ setModal2, emailVerified }: {
         <div id={styles['modal2']}>
             <FaEdit
                 onClick={() => {
-                    if (emailVerified !== null)
-                        emailVerified.current = false;
+                    emailVerified.current = false;
                     setModal2(false);
                 }}
                 style={{ position: 'fixed', right: 10, top: 10, cursor: 'pointer' }} />

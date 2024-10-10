@@ -1,14 +1,15 @@
 import React from 'react'
 import styles from './Navbar.module.css'
+import './ClerkStyle.css'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { motion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useStateContext } from '../../StateContext';
 import { BsFillBagPlusFill } from 'react-icons/bs';
 import { FaHome } from "react-icons/fa";
 import { MdProductionQuantityLimits } from "react-icons/md";
 import { FcAbout } from "react-icons/fc";
-
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 
 
 const navItems = [{ Img: FaHome, name: 'Home' }, { Img: MdProductionQuantityLimits, name: 'Product' },
@@ -16,13 +17,12 @@ const navItems = [{ Img: FaHome, name: 'Home' }, { Img: MdProductionQuantityLimi
 
 const Navbar = () => {
   const [navActive, setNavActive] = React.useState(() => false);
-  const { navRef, userSession, setSlide } = useStateContext();
-  const navigate = useNavigate();
+  const { navRef, setSlide } = useStateContext();
 
   return (
     <motion.nav
       ref={navRef}
-      initial={{ scale: 0 }}
+      initial={{ scale: 0.5 }}
       animate={{ scale: 1 }}>
       <span id={styles['heading']}>
         <span>
@@ -41,21 +41,19 @@ const Navbar = () => {
         <BsFillBagPlusFill
           onClick={() => {
             if (setSlide)
-              setSlide(true)
+              setSlide(true);
           }}
           id={styles['BsFillBagPlusFill']}
           cursor={'pointer'} />
-        <button
-          onClick={() => {
-            if (!userSession)
-              navigate('/login');
-            else {
-              //enable logout modal logic
-            }
-          }}
-        >
-          <span>Login</span>
-        </button>
+        <SignedOut>
+          <SignInButton
+            mode={'modal'} />
+        </SignedOut>
+        <SignedIn>
+          <UserButton appearance={{
+            elements: [styles['user-loggedIn-btn']]
+          }} />
+        </SignedIn>
         <GiHamburgerMenu
           onClick={() => setNavActive(prev => !prev)}
           id={styles['GiHamburgerMenu']}

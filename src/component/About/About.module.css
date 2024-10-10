@@ -57,14 +57,9 @@ footer {
 }
 
 @media all and (max-width:1200px) {
-    #about-container>div {
-        margin-top: 40%;
-    }
 
     #about-sec1 {
         flex-direction: column-reverse;
-        align-items: center;
-        justify-content: center;
     }
 
     #about-sec1>div {

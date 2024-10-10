@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { OrderList } from '../components';
 import { useStateContext } from '../../StateContext';
 import { useNavigate } from 'react-router';
+import toast from 'react-hot-toast';
 
 
 const OrderListItem = () => {
@@ -37,6 +38,7 @@ const OrderListItem = () => {
               if (setSlide)
                 setSlide(false);
             }
+            else toast("Cart is empty!");
           }}
           initial={{ y: 60 }}
           animate={{ y: 0 }}

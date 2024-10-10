@@ -56,7 +56,7 @@ const Details = () => {
                   e.stopPropagation();
                   addItemToOrderList?.(item as OrderType)
                   setItemIDCount?.({ count: item?.count, id: item?.id })
-                  toast(`Product added to cart Successfully ✅`)
+                  toast.success(`Product added to cart Successfully`)
                 }}
               >Add to cart</button>}
 
