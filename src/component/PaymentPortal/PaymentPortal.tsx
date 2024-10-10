@@ -23,7 +23,8 @@ const PaymentPortal = () => {
 
     function sendEmail(recipient: string, confirmation: number) {
         if (recipient && confirmation) {
-            axios.post('https://gamingstore-with-backend-niladri.onrender.com/send_email', {
+            // https://gamingstore-with-backend-niladri.onrender.com/send_email
+            axios.post('http://localhost:5000/send-email', {
                 recipient: recipient,
                 confirmation: confirmation
             }).then(() => toast('OTP sent to your specified Email')).catch(() => toast("Check Your Email"));
