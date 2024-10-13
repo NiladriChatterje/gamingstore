@@ -1,14 +1,14 @@
 import { PaymentElement } from "@stripe/react-stripe-js";
 import { FormEvent, useState } from "react";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
-import './CheckoutForm.css';
+import styles from './CheckoutForm.module.css';
 
 export default function CheckoutForm() {
     const stripe = useStripe();
     const elements = useElements();
 
     const [message, setMessage] = useState<string>("");
-    const [isProcessing, setIsProcessing] = useState(false);
+    const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -31,14 +31,14 @@ export default function CheckoutForm() {
     };
 
     return (
-        <form id="payment-form" onSubmit={handleSubmit}>
-            <PaymentElement id="payment-element" />
+        <form id={styles["payment-form"]} onSubmit={handleSubmit}>
+            <PaymentElement id={styles["payment-element"]} />
             <button disabled={isProcessing || !stripe || !elements} id="submit">
-                <span id="button-text">
+                <span id={styles["button-text"]}>
                     {isProcessing ? "Processing ... " : "Pay now"}
                 </span>
             </button>
-            {message && <div id="payment-message">{message}</div>}
+            {message && <div id={styles["payment-message"]}>{message}</div>}
         </form>
     );
 }

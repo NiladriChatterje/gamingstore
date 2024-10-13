@@ -1,0 +1,179 @@
+#payment-container {
+    display: flex;
+    width: 100%;
+    height: 100dvh;
+    justify-content: center;
+    align-items: center;
+}
+
+#product-list {
+    width: 50%;
+    height: 100%;
+}
+
+#loader-payment-card-container {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#whole_wrapper {
+    display: flex;
+    padding: 10px;
+    color: black;
+    justify-content: space-between;
+    align-items: center;
+    height: 380px;
+    width: 70vw
+}
+
+#nam_price_container {
+    height: 90%;
+    padding: 5px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border-right: 1px solid black;
+}
+
+#nam_price {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: space-between
+}
+
+#nam_price>span:first-child {
+    color: black;
+    background-color: white;
+    border-radius: 5px;
+    padding: 3px 8px;
+}
+
+.pdt-details {
+    display: flex;
+    font-size: 0.95em;
+    font-weight: 100;
+    width: 100%;
+    justify-content: space-between
+}
+
+.single-pdt-total {
+    background-color: rgb(57, 60, 92);
+    color: white;
+    border-radius: 5px;
+
+}
+
+
+.first-column {
+    width: 250px;
+}
+
+.second-column {
+    width: 80px;
+}
+
+.third-column {
+    width: 100px;
+}
+
+.first-column,
+.second-column,
+.third-column {
+    margin-bottom: 8px;
+    display: inline-block;
+    text-align: left;
+}
+
+#table {
+    display: flex;
+    flex-direction: column;
+    padding: 2px 15px;
+    width: 100%;
+    height: 100%;
+    border-right: 1px solid black;
+}
+
+#table>header {
+    border-radius: 5px;
+    color: white;
+    background-color: rgb(93, 97, 131);
+    margin-bottom: 10px;
+}
+
+#table>div {
+    border-radius: 5px;
+    background-color: rgb(240, 240, 240);
+}
+
+#table>div>div {
+    border-bottom: 0.5px solid rgb(70, 73, 106);
+}
+
+#table>header,
+#table>div>div,
+#table>footer {
+    padding: 5px 10px;
+    gap: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#table>div {
+    height: 90%;
+    overflow: clip auto;
+}
+
+@media all and (max-width:868px) {
+    #nam_price_container {
+        border-right: 0px;
+        border-bottom: 1px solid black;
+        width: 100%;
+    }
+
+    #product-list {
+        width: 90%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #loader-payment-card-container {
+        width: 100%;
+    }
+
+    #whole_wrapper {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 85vw;
+        max-width: 400px;
+    }
+
+    #table th:first-child,
+    td:first-child {
+        padding-left: 0;
+        text-align: left
+    }
+
+    #table {
+        border-right: 0px;
+        border-bottom: 1px solid black;
+    }
+
+    #table th:last-child,
+    td:last-child {
+        text-align: right
+    }
+
+    #table th:nth-child(2),
+    td:nth-child(2) {
+        text-align: center
+    }
+
+}

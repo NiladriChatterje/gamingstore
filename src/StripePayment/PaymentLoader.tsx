@@ -1,8 +1,8 @@
-import './PaymentLoader.css';
+import styles from './PaymentLoader.module.css';
 
 const PaymentLoader = () => {
   return (
-    <div className="lds-grid">
+    <div className={styles["lds-grid"]}>
       <div></div>
       <div></div>
       <div></div>

@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import './Payment.css';
+import styles from './Payment.module.css';
 import axios from 'axios';
 import Loader from "./Loader";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
-import { Toaster } from "react-hot-toast";
 import { useStateContext } from "../StateContext";
 import PaymentLoader from "./PaymentLoader.tsx";
 
@@ -19,12 +18,11 @@ function Payment() {
     const { oneItem, data, totalPrice } = useStateContext();
 
     useEffect(() => {
+        setStripePromise(loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_API));
+
         (async function () {
-            const { data: { publishableKey } }: { data: { publishableKey: string } } = await axios.get('https://game-store-stripe.onrender.com/config')
-            setStripePromise(loadStripe(publishableKey as string));
-        })();
-        (async function () {
-            const { data } = await axios.post("https://game-store-stripe.onrender.com/create-payment-intent", {
+            // https://game-store-stripe.onrender.com
+            const { data } = await axios.post("http://localhost:5000/create-payment-intent", {
                 price: oneItem?.current ? (oneProduct?.price ? oneProduct.price : 0) : totalPrice
             })
             setClientSecret(data?.clientSecret)
@@ -35,46 +33,48 @@ function Payment() {
     }, []);
 
     return (
-        <>
-            <h1 id={'h1'}>PAYMENT GATEWAY</h1>
-            <Toaster />
-            {loader ? <Loader /> : <div id='whole_wrapper'>
-                <div>
-                    {oneItem?.current ? <div id='nam_price'>
-                        <span>{oneProduct?.name}</span>
-                        <div><span>Quantity: </span><span>{oneProduct?.qty}</span></div>
-                        <div><span>Unit Price: </span><span>₹ {oneProduct?.price}</span></div>
-                        <div><span>Total: </span><span>₹ {oneProduct?.price * oneProduct?.qty}</span></div>
-                    </div> :
-                        <table cellPadding={10} width={'100%'} style={{ color: 'white', fontWeight: 900 }} >
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>QTY</th>
-                                    <th>Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {data?.map(item => (
-                                    <tr key={item.id} >
-                                        <td >{item?.name}</td><td>{item?.count}</td><td>₹{item?.price * item?.count}</td>
-                                    </tr>))}
-                            </tbody>
-                            <tfoot><tr>
-                                <td><span>Amount: </span></td>
-                                <td></td>
-                                <td><span>₹{oneItem?.current ? oneProduct?.price * oneProduct?.qty : totalPrice}</span></td>
-                            </tr>
-                            </tfoot>
-                        </table>}
-                </div>
-                <span id='barrier'></span>
-                {clientSecret && stripePromise ? (
-                    <Elements stripe={stripePromise} options={{ clientSecret }}>
-                        <CheckoutForm />
-                    </Elements>) : <PaymentLoader />}
-            </div>}
-        </>
+        <div id={styles['payment-container']}>
+            {loader ? <Loader /> : (
+                <div id={styles['whole_wrapper']}>
+                    <div id={styles['product-list']}>
+                        {oneItem?.current ? <div id={styles['nam_price_container']}>
+                            <section id={styles['nam_price']}>
+                                <span>{oneProduct?.name}</span>
+                                <div className={styles['pdt-details']}><span>Quantity: </span><span>{oneProduct?.qty}</span></div>
+                                <div className={styles['pdt-details']}><span>Unit Price: </span><span>₹ {oneProduct?.price}</span></div>
+                            </section>
+                            <div className={`${styles['pdt-details']} ${styles['single-pdt-total']}`}><span>Total: </span><span>₹ {oneProduct?.price * oneProduct?.qty}</span></div>
+                        </div> :
+                            <section id={styles['table']}>
+                                <header>
+                                    <th className={styles['first-column']}>Product</th>
+                                    <th className={styles['second-column']}>QTY</th>
+                                    <th className={styles['third-column']}>Price</th>
+                                </header>
+                                <div>
+                                    {data?.map(item => (
+                                        <div key={item.id} >
+                                            <span className={styles['first-column']} >{item?.name}</span>
+                                            <span className={styles['second-column']}>{item?.count}</span>
+                                            <span className={styles['third-column']}>₹{item?.price * item?.count}</span>
+                                        </div>))}
+                                </div>
+                                <footer className={styles['single-pdt-total']}>
+                                    <span className={styles['first-column']}>Amount: </span>
+                                    <span className={styles['second-column']}></span>
+                                    <span className={styles['third-column']}>₹{oneItem?.current ? oneProduct?.price * oneProduct?.qty : totalPrice}</span>
+                                </footer>
+                            </section>}
+                    </div>
+                    <div id={styles['loader-payment-card-container']}>
+                        {clientSecret && stripePromise ? (
+                            <Elements
+                                stripe={stripePromise} options={{ clientSecret }}>
+                                <CheckoutForm />
+                            </Elements>) : <PaymentLoader />}
+                    </div>
+                </div>)}
+        </div>
     );
 }
 
