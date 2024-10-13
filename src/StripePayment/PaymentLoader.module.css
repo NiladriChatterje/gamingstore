@@ -10,7 +10,7 @@
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background: #1a1a1a;
+  background: rgb(70, 73, 101);
   animation: lds-grid 1.2s linear infinite;
 }
 
