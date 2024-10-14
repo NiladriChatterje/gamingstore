@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'Blanka';
+    src: url('/frontend/src/fonts/Blanka-Regular.otf');
+}
+
 nav {
     background-color: rgb(85, 88, 117);
     box-shadow: 1px 2px 55px -20px black;

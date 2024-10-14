@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'Blanka';
+    src: url('/frontend/src/fonts/Blanka-Regular.otf');
+}
+
 #container {
     display: flex;
     align-items: center;

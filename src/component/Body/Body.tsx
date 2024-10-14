@@ -78,12 +78,12 @@ const Body = () => {
           <motion.div
             initial={{ opacity: 0, transform: 'scale(0,0)' }}
             whileInView={{ opacity: 1, transform: 'scale(1,1)' }}
-            style={{ ...style2, right: 120, bottom: 180 }} />
+            style={{ ...style2, right: 220, bottom: 180 }} />
           <img src={Joystick} alt='' ref={joyRef}
             style={{
               objectFit: 'contain',
               position: 'absolute', zIndex: 1, width: '75%',
-              filter: 'drop-shadow(1px 1px 15px)',
+              filter: 'drop-shadow(grey 5px 8px 8px)',
             }} />
         </motion.div>
       </motion.div>

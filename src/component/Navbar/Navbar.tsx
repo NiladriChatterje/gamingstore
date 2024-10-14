@@ -47,7 +47,9 @@ const Navbar = () => {
           cursor={'pointer'} />
         <SignedOut>
           <SignInButton
-            mode={'modal'} />
+            mode={'modal'}>
+            Sign In
+          </SignInButton>
         </SignedOut>
         <SignedIn>
           <UserButton appearance={{
