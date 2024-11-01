@@ -1,0 +1,34 @@
+#aside-container {
+    height: 100%;
+    border-right: 1px solid rgb(47, 47, 83);
+    padding-right: 80px;
+}
+
+#aside-container div {
+    padding: 6px 10px;
+    width: 200px;
+    margin: 10px 0;
+    text-align: justify;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.403);
+    border-radius: 5px;
+    transition: all 160ms;
+}
+
+#aside-container div:hover {
+    background-color: rgba(255, 255, 255, 0.792);
+}
+
+#aside-container>a {
+    text-decoration: none;
+    color: rgb(70, 71, 108);
+}
+
+@media screen and (max-width:900px) {
+    #aside-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 5;
+    }
+}

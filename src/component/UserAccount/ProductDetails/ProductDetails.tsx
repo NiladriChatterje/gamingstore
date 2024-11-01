@@ -1,8 +1,8 @@
 import { HiShoppingCart } from 'react-icons/hi';
-import { useStateContext } from '../../StateContext';
-import { useNavigate } from 'react-router';
+import { useStateContext } from '../../../StateContext';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { OrderType } from '../../ProductContextType';
+import { OrderType } from '../../../ProductContextType';
 import { forwardRef, Ref } from 'react';
 import styles from './ProductDetails.module.css';
 
@@ -17,7 +17,7 @@ const ProductDetails = ({ item }: {
       ref={ref}
       onClick={e => {
         e.stopPropagation();
-        navigate(`/Product/Details/${item.id}`)
+        navigate(`/user/Product/Details/${item.id}`)
       }}
       style={{ position: 'relative', cursor: 'pointer' }}
       key={item.id}

@@ -5,6 +5,8 @@ type OrderType = {
 }
 
 export type ProductContextType = {
+    defaultLoginAdminOrUser: string = 'user' | 'admin';
+    setDefaultLoginAdminOrUser: React.Dispatch<React.SetStateAction<string>>;
     slide: boolean,
     setSlide: React.Dispatch<React.setStateAction<boolean>>,
     navRef: LegacyRef<HTMLElement>;
@@ -12,7 +14,8 @@ export type ProductContextType = {
     setTotalPrice: React.Dispatch<React.SetStateAction<number>>;
     data: OrderType[];
     setData: React.Dispatch<React.SetStateAction<OrderType[]>>;
-    oneItem: React.MutableRefObject<string | boolean>;
+    oneItem: boolean;
+    setOneItem: React.Dispatch<React.SetStateAction<boolean>>;
     qty: number;
     setQty: React.Dispatch<React.SetStateAction<number>>;
     ItemIDCount: object & { id?: number };

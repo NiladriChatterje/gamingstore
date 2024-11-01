@@ -23,7 +23,7 @@ function Payment() {
         (async function () {
             // https://game-store-stripe.onrender.com
             const { data } = await axios.post("http://localhost:5000/create-payment-intent", {
-                price: oneItem?.current ? (oneProduct?.price ? oneProduct.price : 0) : totalPrice
+                price: oneItem ? oneProduct.price : totalPrice
             })
             setClientSecret(data?.clientSecret)
         })();
@@ -37,7 +37,7 @@ function Payment() {
             {loader ? <Loader /> : (
                 <div id={styles['whole_wrapper']}>
                     <div id={styles['product-list']}>
-                        {oneItem?.current ? <div id={styles['nam_price_container']}>
+                        {oneItem ? <div id={styles['nam_price_container']}>
                             <section id={styles['nam_price']}>
                                 <span>{oneProduct?.name}</span>
                                 <div className={styles['pdt-details']}><span>Quantity: </span><span>{oneProduct?.qty}</span></div>
@@ -62,7 +62,7 @@ function Payment() {
                                 <footer className={styles['single-pdt-total']}>
                                     <span className={styles['first-column']}>Amount: </span>
                                     <span className={styles['second-column']}></span>
-                                    <span className={styles['third-column']}>₹{oneItem?.current ? oneProduct?.price * oneProduct?.qty : totalPrice}</span>
+                                    <span className={styles['third-column']}>₹{oneItem ? oneProduct?.price * oneProduct?.qty : totalPrice}</span>
                                 </footer>
                             </section>}
                     </div>

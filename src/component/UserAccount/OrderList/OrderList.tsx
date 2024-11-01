@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './OrderList.module.css'
 import { AiFillCloseCircle } from 'react-icons/ai'
-import { useStateContext } from '../../StateContext';
+import { useStateContext } from '../../../StateContext';
 
 export default function OrderList({ id, image, price, count }: { id: number; image: string; price: number; count: number }) {
     const { data, setData, incDecQty, ItemIDCount } = useStateContext();

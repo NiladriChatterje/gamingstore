@@ -1,5 +1,5 @@
 import styles from '../ProductDetails/ProductDetails.module.css'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 
 interface ItemType { id: number; image: string; desc: string; name: string; price: number }
 

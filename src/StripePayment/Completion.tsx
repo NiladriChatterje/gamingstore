@@ -1,18 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { runFireworks } from './utils.tsx';
 import { useStateContext } from "../StateContext.tsx";
 import { BsBagCheckFill } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom';
-import './Completion.css';
+import styles from './Completion.module.css';
 import { OrderType } from "../ProductContextType";
 
 function Completion() {
     const navigate = useNavigate();
-    const { setData, setTotalPrice } = useStateContext();
+    const { setData, setTotalPrice, oneItem } = useStateContext();
+
+    useLayoutEffect(() => {
+        window.history.forward();
+    });
 
     useEffect(() => {
-        console.log(JSON.parse(localStorage.getItem('oneItem') ?? ''))
-        if (!JSON.parse(localStorage.getItem('oneItem') ?? '')) {
+        if (!oneItem) {
             localStorage.removeItem("orders");
             setTotalPrice?.(0);
             setData?.([] as OrderType[]);
@@ -22,23 +25,20 @@ function Completion() {
                 return (e.which || e.keyCode) !== 116;
             };
         })();
-        function preventBack() { window.history.forward(); }
-        preventBack()
-        preventBack();
         runFireworks();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
-        <div className="success-wrapper">
-            <div className="success">
-                <p className="icon">
+        <div className={styles["success-wrapper"]}>
+            <div className={styles["success"]}>
+                <p className={styles["icon"]}>
                     <BsBagCheckFill />
                 </p>
                 <h2>Thank you for your order!</h2>
-                <p className="description">
+                <p className={styles["description"]}>
                     If you have any questions, please email
-                    <a className="email" href="mailto:cniladri415@gmail.com">
+                    <a className={styles["email"]} href="mailto:cniladri415@gmail.com">
                         cniladri415@gmail.com
                     </a>
                 </p>

@@ -44,7 +44,7 @@ nav {
     cursor: pointer;
     border-style: none;
     border-radius: 5px;
-    color: rgb(47, 45, 79) !important;
+    color: rgb(47, 45, 79);
     background-color: rgba(255, 255, 255, 0.668);
     font-weight: 600;
     font-size: small;
@@ -88,8 +88,45 @@ nav {
     width: 25px;
 }
 
+#user-admin-btn-group {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 65px;
+    width: 120px;
+    box-shadow: 0 0 28px -10px rgba(72, 70, 70, 0.793);
+    border-radius: 5px;
+    transition: all;
+    transition-duration: 90ms;
+}
+
+.login-btn {
+    outline: none;
+    padding: 8px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    border-style: none;
+}
+
+.user-admin-btn-group-hide {
+    transform: translateY(-20px);
+    opacity: 0;
+    visibility: hidden;
+}
+
+.user-admin-btn-group-show {
+    transform: translateY(5px);
+    opacity: 1;
+    visibility: visible;
+}
+
 #BsFillBagPlusFill:hover {
     color: white;
+}
+
+.selected-admin-user {
+    background-color: rgb(81, 81, 106) !important;
+    color: white !important;
 }
 
 @media all and (max-width:1200px) {

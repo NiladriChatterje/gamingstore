@@ -83,7 +83,7 @@ const Body = () => {
             style={{
               objectFit: 'contain',
               position: 'absolute', zIndex: 1, width: '75%',
-              filter: 'drop-shadow(grey 5px 8px 8px)',
+              filter: 'drop-shadow(#3c3c3c 5px 8px 8px)',
             }} />
         </motion.div>
       </motion.div>

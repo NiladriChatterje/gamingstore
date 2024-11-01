@@ -2,7 +2,7 @@ import styles from './Products.module.css';
 import { data } from './data.js';
 import ProductDetails from '../ProductDetails/ProductDetails.tsx';
 import { useEffect, useRef } from 'react';
-import { OrderType } from '../../StateContext.tsx';
+import { OrderType } from '../../../StateContext.tsx';
 
 const Products = () => {
     const ProductRef = useRef<HTMLDivElement[]>([]);

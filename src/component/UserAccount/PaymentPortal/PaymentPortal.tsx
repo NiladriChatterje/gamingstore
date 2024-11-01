@@ -16,7 +16,7 @@ const PaymentPortal = () => {
     return <>
         <div id={styles['form_container']}>
             <SignedOut>
-                <SignIn path={'/Payment'} forceRedirectUrl={'/Checkout'} />
+                <SignIn path={'/user/Payment'} forceRedirectUrl={'/user/Checkout'} />
             </SignedOut>
         </div>
     </>

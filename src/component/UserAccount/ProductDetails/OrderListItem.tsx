@@ -2,13 +2,13 @@ import styles from './OrderListItem.module.css';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import { OrderList } from '../components';
-import { useStateContext } from '../../StateContext';
-import { useNavigate } from 'react-router';
+import { useStateContext } from '../../../StateContext';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 
 const OrderListItem = () => {
-  const { data, totalPrice, oneItem, slide, setSlide } = useStateContext();
+  const { data, totalPrice, slide, setSlide, setOneItem } = useStateContext();
   const navigate = useNavigate();
 
   return <>
@@ -31,10 +31,9 @@ const OrderListItem = () => {
         <motion.button
           onClick={() => {
             if (totalPrice !== 0) {
-              navigate('/Payment');
-              if (oneItem)
-                oneItem.current = false;
-              localStorage.setItem('oneItem', false.toString());
+              localStorage.setItem("isOneItem", "false");
+              setOneItem?.(false);
+              navigate('/user/Payment');
               if (setSlide)
                 setSlide(false);
             }

@@ -13,8 +13,9 @@ export const StateContext = ({ children }: { children: ReactNode }) => {
     const [totalPrice, setTotalPrice] = useState<number>(Number(localStorage.getItem('totalPrice')) || 0);
     const [data, setData] = useState<OrderType[]>(() => JSON.parse(localStorage.getItem('orders') as string) || [] as OrderType[]);
     const [slide, setSlide] = useState<boolean>(false);
+    const [oneItem, setOneItem] = useState<boolean>((localStorage.getItem("isOneItem")) === 'false' ? false : true);
+    const [defaultLoginAdminOrUser, setDefaultLoginAdminOrUser] = useState<string>(localStorage.getItem("loginusertype") || "user");
 
-    const oneItem = useRef<boolean>(Boolean(localStorage.getItem('oneItem')) || false);
     const navRef = useRef<HTMLElement | null>(null);
 
     React.useEffect(() => {
@@ -22,7 +23,7 @@ export const StateContext = ({ children }: { children: ReactNode }) => {
         setTotalPrice(x);
         localStorage.setItem('totalPrice', totalPrice.toString());
         localStorage.setItem('orders', JSON.stringify(data));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [data]);
 
     function addItemToOrderList(item: OrderType) {
@@ -48,6 +49,8 @@ export const StateContext = ({ children }: { children: ReactNode }) => {
     return (<ProductContext.Provider
         value={
             {
+                defaultLoginAdminOrUser,
+                setDefaultLoginAdminOrUser,
                 navRef,
                 totalPrice,
                 setTotalPrice,
@@ -56,6 +59,7 @@ export const StateContext = ({ children }: { children: ReactNode }) => {
                 slide,
                 setData,
                 oneItem,
+                setOneItem,
                 qty,
                 setQty,
                 ItemIDCount,

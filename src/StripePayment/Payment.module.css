@@ -14,9 +14,15 @@
 #loader-payment-card-container {
     width: 50%;
     height: 100%;
+    padding: 5px 30px;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+#loader-payment-card-container>form {
+    position: relative;
+    width: 80%;
 }
 
 #whole_wrapper {

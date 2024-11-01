@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react'
-import { useParams, useNavigate } from 'react-router';
-import { useStateContext } from '../../StateContext';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useStateContext } from '../../../StateContext.tsx';
 import { data } from '../Products/data.ts'
 import styles from './Details.module.css';
 import UpcomingData from '../Body/upcomingData';
-import { OrderType } from '../../ProductContextType';
+import { OrderType } from '../../../ProductContextType';
 import toast from 'react-hot-toast';
 
 const Details = () => {
@@ -14,7 +14,7 @@ const Details = () => {
 
   const [item] = useState(data?.find(i => id && i.id === parseInt(id)) || UpcomingData?.find(i => id && i.id === parseInt(id)))
   const ImgRef = useRef<HTMLImageElement>(null);
-  const { addItemToOrderList, setItemIDCount, oneItem } = useStateContext();
+  const { addItemToOrderList, setDefaultLoginAdminOrUser, setItemIDCount, setOneItem } = useStateContext();
 
   return (
     <div id={styles.details__container}>
@@ -63,13 +63,14 @@ const Details = () => {
               {id && parseInt(id) < 100 && <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (oneItem !== undefined)
-                    oneItem.current = true;
+                  localStorage.setItem("isOneItem", "true");
+                  setOneItem?.(true);
+                  setDefaultLoginAdminOrUser?.('user');
                   localStorage.setItem('oneItem', 'true');
                   const foundData = data?.find((item: OrderType) => item.id === parseInt(id));
                   let oneProduct = { name: foundData?.name, price: foundData?.price, qty: counter }
                   localStorage.setItem('oneProduct', JSON.stringify(oneProduct));
-                  navigate('/Payment');
+                  navigate('/user/Payment');
                 }}
               >Buy now</button>}
             </section>

@@ -1,38 +1,26 @@
 import './App.css';
 import { useEffect, useState } from 'react';
-import {
-  Navbar, Body, About, Products, OrderListItem,
-  Details, PaymentPortal,
-} from './component/components.ts';
-import Payment from './StripePayment/Payment';
-import Completion from './StripePayment/Completion'
-import { Routes, Route } from 'react-router-dom';
+import { UserAccount, AdminAccount } from './component';
 import PreLoader from './PreLoader.tsx';
 import { Toaster } from 'react-hot-toast';
-import { StateContext } from './StateContext';
+import { useStateContext } from './StateContext';
+import { useUser } from '@clerk/clerk-react';
 
 function App() {
   const [loading, setLoading] = useState(() => true);
-  useEffect(() => { setTimeout(() => setLoading(false), 1200) }, []);
+  useEffect(() => { setTimeout(() => setLoading(false), 900) }, []);
+  const { defaultLoginAdminOrUser } = useStateContext();
+  const { user } = useUser();
+
 
   return (
     <div className="App">
       <Toaster containerStyle={{ fontSize: '0.65em', fontWeight: 900 }} />
-      {loading ? <PreLoader /> : <StateContext>
-        <OrderListItem />
-        <Navbar />
-        <Routes>
-          <Route path={'/'} element={<Body />} />
-          <Route path={'/Payment'} element={<PaymentPortal />} />
-          <Route path={'/About'} element={<About />} />
-          <Route path={'/Product'} element={<Products />} />
-          <Route path={'/Product/Details/:id'} element={<Details />} />
-          <Route path={'/Checkout'} element={<Payment />} />
-          <Route path={'/completion'} element={<Completion />} />
-          {/* <Route path={'/sign-in'} element={<Login />} />
-          <Route path={'/sign-up'} element={<SignUpPage />} /> */}
-        </Routes>
-      </StateContext>}
+      {loading ? <PreLoader /> : <>
+        {(defaultLoginAdminOrUser === 'admin' && user !== null) ?
+          <AdminAccount /> : (
+            <UserAccount />)}
+      </>}
     </div>
   );
 }

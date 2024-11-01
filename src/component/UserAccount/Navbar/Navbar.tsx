@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './Navbar.module.css'
 import './ClerkStyle.css'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { useStateContext } from '../../StateContext';
+import { useStateContext } from '../../../StateContext';
 import { BsFillBagPlusFill } from 'react-icons/bs';
 import { FaHome } from "react-icons/fa";
 import { MdProductionQuantityLimits } from "react-icons/md";
@@ -16,8 +16,10 @@ const navItems = [{ Img: FaHome, name: 'Home' }, { Img: MdProductionQuantityLimi
 { Img: FcAbout, name: 'About' }];
 
 const Navbar = () => {
+  const [userLogin, setUserLoginDiv] = useState<boolean>(true);
   const [navActive, setNavActive] = React.useState(() => false);
-  const { navRef, setSlide } = useStateContext();
+  const { navRef, setSlide, defaultLoginAdminOrUser, setDefaultLoginAdminOrUser } = useStateContext();
+
 
   return (
     <motion.nav
@@ -33,7 +35,7 @@ const Navbar = () => {
       <div
         className={styles['nav-routes']}
         id={navActive ? styles['navitems-active'] : styles['navitems-inactive']}>
-        {navItems?.map((item, i) => <Link to={`/${item.name === "Home" ? '' : item.name}`} className={styles['text']} key={i}>
+        {navItems?.map((item, i) => <Link to={`/user/${item.name === "Home" ? '' : item.name}`} className={styles['text']} key={i}>
           <item.Img className={styles['nav-list-icons']} />
           {item.name}</Link>)}
       </div>
@@ -46,10 +48,44 @@ const Navbar = () => {
           id={styles['BsFillBagPlusFill']}
           cursor={'pointer'} />
         <SignedOut>
-          <SignInButton
-            mode={'modal'}>
+          <button
+            onClick={() => {
+              setUserLoginDiv(prev => !prev);
+            }}
+          >
             Sign In
-          </SignInButton>
+          </button>
+          <div
+            className={userLogin ? styles['user-admin-btn-group-hide'] :
+              styles['user-admin-btn-group-show']
+            }
+            id={styles['user-admin-btn-group']}>
+            <SignInButton
+              mode='modal'>
+              <button
+                className={`${styles['login-btn']} ${defaultLoginAdminOrUser === 'admin' ? styles['selected-admin-user'] : ''}`}
+                onClick={() => {
+                  setUserLoginDiv(true);
+                  localStorage.setItem("loginusertype", "admin");
+                  setDefaultLoginAdminOrUser?.('admin');
+                }}
+              >
+                Admin
+              </button>
+            </SignInButton>
+            <SignInButton mode='modal'>
+              <button
+                className={`${styles['login-btn']} ${defaultLoginAdminOrUser === 'user' ? styles['selected-admin-user'] : ''}`}
+                onClick={() => {
+                  setUserLoginDiv(true);
+                  localStorage.setItem("loginusertype", "user");
+                  setDefaultLoginAdminOrUser?.('user')
+                }}
+              >
+                User
+              </button>
+            </SignInButton>
+          </div>
         </SignedOut>
         <SignedIn>
           <UserButton appearance={{
