@@ -7,6 +7,15 @@
     align-items: center;
 }
 
+#avatar-container {
+    position: fixed;
+    top: 30px;
+    left: 60px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
 #admin-routes {
     width: 450px;
 
@@ -17,9 +26,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    position: fixed;
-    top: 30px;
-    left: 60px;
+
 }
 
 #admin-container {

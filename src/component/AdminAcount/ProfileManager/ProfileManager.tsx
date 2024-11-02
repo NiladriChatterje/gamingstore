@@ -1,11 +1,26 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import styles from './ProfileManager.module.css';
 import { MdEdit } from "react-icons/md";
+import { FaPhone, FaUser } from "react-icons/fa6";
+import { IoIosPersonAdd } from "react-icons/io";
+import { useUser } from '@clerk/clerk-react';
+import { MdOutlineMarkEmailUnread } from "react-icons/md";
+import OTPMailModal from './OTPMailModal';
 
 
 const ProfileManager = () => {
-    const [usernameDisable, setUsernameDisable] = useState<boolean>(true);
+    const [disable, setDisable] = useState<boolean>(true);
+    const [toggleCountryCode, setToggleCountryCode] = useState<boolean>(false);
+    const { user } = useUser();
+    const mailRef = useRef<HTMLDialogElement>(null);
+    const phoneRef = useRef<HTMLDialogElement>(null);
 
+    async function sendOTPToPhone() {
+
+    }
+    async function sendOTPToMail() {
+
+    }
     async function handleUpdate(e: FormEvent) {
         e.preventDefault();
 
@@ -13,27 +28,84 @@ const ProfileManager = () => {
     }
 
     return (
-        <div id={styles['']}>
-            <form onSubmit={handleUpdate}>
-                <div>
-                    <input name={'username'} placeholder='username'
-                        disabled={usernameDisable} />
-                    <MdEdit
-                        onClick={() => { setUsernameDisable(prev => !prev) }}
-                    />
+        <div >
+            <form onSubmit={handleUpdate}
+                id={styles['form-container']}>
+                <div
+                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                    id={styles['username-input']}>
+                    <FaUser style={{ padding: '0 10px' }} />
+                    <input name={'username'} placeholder={user?.firstName ?? ''}
+                        disabled={disable} />
                 </div>
-                <div>
-                    <select>
-                        <option value={91}>India</option>
-                        <option value={144}>America</option>
-                        <option value={92}>Pakistan</option>
-                    </select>
-                    <input name={'phone'} placeholder='phone'
-                        disabled={usernameDisable} />
+                <section>
+                    <OTPMailModal ref={mailRef} />
+                    <div
+                        style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                        id={styles['phone-input']}>
+                        <div id={styles['phone-country-code']}>
+                            <FaPhone
+                                cursor={'pointer'}
+                                onClick={() => {
+                                    if (!disable)
+                                        setToggleCountryCode(prev => !prev)
+                                }}
+                                style={{ padding: '0 10px' }}
+                            />
+                            {!disable && <section className={`${toggleCountryCode ? '' : styles['country-code-list']}`}>
+                                <dl onClick={() => { setToggleCountryCode(false) }}>(+91)IN</dl>
+                                <dl onClick={() => { setToggleCountryCode(false) }}>(+144)US</dl>
+                                <dl onClick={() => { setToggleCountryCode(false) }}>(+92)PAK</dl>
+                            </section>}
+                        </div>
+                        <input name={'phone'} placeholder={'phone'} type='tel'
+                            maxLength={10} minLength={10}
+                            disabled={disable} />
+                    </div>
+                    <div
+                        id={styles['verify-span-btn']}
+                    ><span onClick={() => {
+                        sendOTPToPhone();
+                        phoneRef?.current?.showModal()
+                    }}>Verify</span></div>
+                </section>
+                <section>
+                    <div
+                        style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                        id={styles['username-input']}>
+                        <MdOutlineMarkEmailUnread style={{ padding: '0 10px' }} />
+                        <input name={'email'} placeholder={user?.emailAddresses[0].emailAddress}
+                            disabled={disable} />
+                    </div>
+                    <div
+                        id={styles['verify-span-btn']}
+                    ><span onClick={() => {
+                        sendOTPToMail();
+                        mailRef?.current?.showModal()
+                    }}>Verify</span></div>
+                </section>
+                <section style={{ display: 'flex', justifyContent: 'flex-end', gap: 15 }}>
                     <MdEdit
-                        onClick={() => { setUsernameDisable(prev => !prev) }}
+                        color='white'
+                        cursor={'pointer'}
+                        style={{
+                            backgroundColor: 'rgb(52, 48, 105)',
+                            borderRadius: 5, padding: '5px 10px'
+                        }}
+                        size={25}
+                        onClick={() => { setDisable(prev => !prev) }}
                     />
-                </div>
+                    <IoIosPersonAdd
+                        color='white'
+                        cursor={'pointer'}
+                        style={{
+                            backgroundColor: 'rgb(52, 48, 105)',
+                            borderRadius: 5, padding: '5px 10px'
+                        }}
+                        size={25}
+                        onClick={() => { }}
+                    />
+                </section>
             </form>
         </div>
     )
