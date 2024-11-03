@@ -65,8 +65,10 @@ const ProfileManager = () => {
                     <div
                         id={styles['verify-span-btn']}
                     ><span onClick={() => {
-                        sendOTPToPhone();
-                        phoneRef?.current?.showModal()
+                        if (!disable) {
+                            sendOTPToPhone();
+                            phoneRef?.current?.showModal()
+                        }
                     }}>Verify</span></div>
                 </section>
                 <section>
@@ -80,8 +82,10 @@ const ProfileManager = () => {
                     <div
                         id={styles['verify-span-btn']}
                     ><span onClick={() => {
-                        sendOTPToMail();
-                        mailRef?.current?.showModal()
+                        if (!disable) {
+                            sendOTPToMail();
+                            mailRef?.current?.showModal()
+                        }
                     }}>Verify</span></div>
                 </section>
                 <section style={{ display: 'flex', justifyContent: 'flex-end', gap: 15 }}>
