@@ -5,21 +5,35 @@ import { FaPhone, FaUser } from "react-icons/fa6";
 import { IoIosPersonAdd } from "react-icons/io";
 import { useUser } from '@clerk/clerk-react';
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
-import OTPMailModal from './OTPMailModal';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import OTPModal from './OTPModal';
 
 
 const ProfileManager = () => {
     const [disable, setDisable] = useState<boolean>(true);
     const [toggleCountryCode, setToggleCountryCode] = useState<boolean>(false);
+    const [OTP, setOTP] = useState<number>(0);
     const { user } = useUser();
-    const mailRef = useRef<HTMLDialogElement>(null);
-    const phoneRef = useRef<HTMLDialogElement>(null);
+    const modalRef = useRef<HTMLDialogElement>(null);
+    const mailInputRef = useRef<HTMLInputElement>(null);
 
-    async function sendOTPToPhone() {
 
-    }
-    async function sendOTPToMail() {
-
+    async function onClickMailVerify() {
+        console.log(mailInputRef?.current?.value)
+        try {
+            const { data }: { data: { OTP: number } } = await axios.post('http://localhost:5000/fetch-mail-otp', {
+                recipient: mailInputRef?.current?.value
+            }
+            );
+            if (data.OTP === -1)
+                throw new Error('Resend!');
+            setOTP(data.OTP);
+            toast('OTP sent')
+        }
+        catch (e: Error | any) {
+            toast.error(e.message)
+        }
     }
     async function handleUpdate(e: FormEvent) {
         e.preventDefault();
@@ -39,7 +53,9 @@ const ProfileManager = () => {
                         disabled={disable} />
                 </div>
                 <section>
-                    <OTPMailModal ref={mailRef} />
+                    <OTPModal
+                        OTP={OTP}
+                        ref={modalRef} />
                     <div
                         style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                         id={styles['phone-input']}>
@@ -66,25 +82,27 @@ const ProfileManager = () => {
                         id={styles['verify-span-btn']}
                     ><span onClick={() => {
                         if (!disable) {
-                            sendOTPToPhone();
-                            phoneRef?.current?.showModal()
+                            modalRef?.current?.showModal()
                         }
                     }}>Verify</span></div>
                 </section>
                 <section>
+                    <OTPModal
+                        OTP={OTP}
+                        ref={modalRef} />
                     <div
                         style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                         id={styles['username-input']}>
                         <MdOutlineMarkEmailUnread style={{ padding: '0 10px' }} />
-                        <input name={'email'} placeholder={user?.emailAddresses[0].emailAddress}
+                        <input ref={mailInputRef} name={'email'} placeholder={user?.emailAddresses[0].emailAddress}
                             disabled={disable} />
                     </div>
                     <div
                         id={styles['verify-span-btn']}
                     ><span onClick={() => {
                         if (!disable) {
-                            sendOTPToMail();
-                            mailRef?.current?.showModal()
+                            onClickMailVerify()
+                            modalRef?.current?.showModal()
                         }
                     }}>Verify</span></div>
                 </section>
