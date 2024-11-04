@@ -24,6 +24,7 @@
 }
 
 #username-input,
+#mail-input,
 #phone-input {
     display: flex;
     justify-content: center;
@@ -75,8 +76,8 @@
     background-color: white;
 }
 
-#username-input input[name="username"],
-#username-input input[name="username"]:focus,
+#mail-input input[name="mail"],
+#mail-input input[name="mail"]:focus,
 #phone-input input[name="phone"],
 #phone-input input[name="phone"]:focus,
 #phone-input select {

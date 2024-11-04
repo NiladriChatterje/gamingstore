@@ -17,6 +17,7 @@ const ProfileManager = () => {
     const { user } = useUser();
     const modalRef = useRef<HTMLDialogElement>(null);
     const mailInputRef = useRef<HTMLInputElement>(null);
+    const phoneInputRef = useRef<HTMLInputElement>(null);
 
 
     async function onClickMailVerify() {
@@ -35,6 +36,24 @@ const ProfileManager = () => {
             toast.error(e.message)
         }
     }
+
+    async function onClickPhoneVerify() {
+        console.log(phoneInputRef?.current?.value)
+        try {
+            const { data }: { data: { OTP: number } } = await axios.post('http://localhost:5000/fetch-mail-otp', {
+                recipient: phoneInputRef?.current?.value
+            }
+            );
+            if (data.OTP === -1)
+                throw new Error('Resend!');
+            setOTP(data.OTP);
+            toast('OTP sent')
+        }
+        catch (e: Error | any) {
+            toast.error(e.message)
+        }
+    }
+
     async function handleUpdate(e: FormEvent) {
         e.preventDefault();
 
@@ -74,7 +93,7 @@ const ProfileManager = () => {
                                 <dl onClick={() => { setToggleCountryCode(false) }}>(+92)PAK</dl>
                             </section>}
                         </div>
-                        <input name={'phone'} placeholder={'phone'} type='tel'
+                        <input ref={phoneInputRef} name={'phone'} placeholder={'phone'} type='tel'
                             maxLength={10} minLength={10}
                             disabled={disable} />
                     </div>
@@ -82,6 +101,7 @@ const ProfileManager = () => {
                         id={styles['verify-span-btn']}
                     ><span onClick={() => {
                         if (!disable) {
+                            onClickPhoneVerify();
                             modalRef?.current?.showModal()
                         }
                     }}>Verify</span></div>
@@ -92,7 +112,7 @@ const ProfileManager = () => {
                         ref={modalRef} />
                     <div
                         style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
-                        id={styles['username-input']}>
+                        id={styles['mail-input']}>
                         <MdOutlineMarkEmailUnread style={{ padding: '0 10px' }} />
                         <input ref={mailInputRef} name={'email'} placeholder={user?.emailAddresses[0].emailAddress}
                             disabled={disable} />
