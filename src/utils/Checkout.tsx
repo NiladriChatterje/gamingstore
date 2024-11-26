@@ -1,38 +1,38 @@
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
+import { useNavigate } from "react-router-dom";
 
 
 const Checkout = ({ price }: { price: number; }) => {
-    const { error, isLoading, Razorpay } = useRazorpay();
-
+    const { error, Razorpay } = useRazorpay();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const navigate = useNavigate();
 
     const handlePayment = async (e: FormEvent) => {
         e.preventDefault();
-        fetch('http://localhost:5000/razorpay', {
+        setIsLoading(true);
+        const response: Response = await fetch('http://localhost:5000/razorpay', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ price })
+            body: JSON.stringify({ price: price * 100 })
         });
+        const data: { id: string; } = await response.json();
 
-        const options: RazorpayOrderOptions = {
+        const options: () => RazorpayOrderOptions = () => ({
             key: import.meta.env.VITE_RAZORPAY_API_KEY,
-            amount: price, // Amount in paise
+            amount: price * 100, // Amount in paise
             currency: "INR",
             name: "XV Store",
             description: "Test Transaction",
-            order_id: "order_POlTlMsRI1yfq7", // Generate order_id on server
+            order_id: data.id, // Generate order_id on server
+            redirect: true,
             handler: (response) => {
                 console.log(response);
-                // fetch('http://localhost:5000/razorpay', {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json'
-                //     },
-                //     body:
-                // })
+                setIsLoading(false);
+                navigate(`/user/completion/${response.razorpay_order_id}/${response.razorpay_payment_id}/${response.razorpay_signature}`);
                 toast.success("Payment Successful!");
             },
             prefill: {
@@ -43,10 +43,13 @@ const Checkout = ({ price }: { price: number; }) => {
             theme: {
                 color: "rgb(85, 88, 117)",
             },
-        };
+        });
 
-        const razorpayInstance = new Razorpay(options);
+        const razorpayInstance = new Razorpay(options());
         razorpayInstance.open();
+        razorpayInstance.on('payment.failed', () => {
+            setIsLoading(false);
+        })
     };
 
     return (

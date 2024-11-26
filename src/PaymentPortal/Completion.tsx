@@ -1,20 +1,18 @@
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect } from "react";
 import { runFireworks } from './utils.tsx';
 import { useStateContext } from "../StateContext.tsx";
 import { BsBagCheckFill } from 'react-icons/bs'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './Completion.module.css';
 import { OrderType } from "../ProductContextType";
 
 function Completion() {
     const navigate = useNavigate();
     const { setData, setTotalPrice, oneItem } = useStateContext();
-
-    useLayoutEffect(() => {
-        window.history.forward();
-    });
+    const params = useParams();
 
     useEffect(() => {
+        console.log(params)
         if (!oneItem) {
             localStorage.removeItem("orders");
             setTotalPrice?.(0);
@@ -25,7 +23,10 @@ function Completion() {
                 return (e.which || e.keyCode) !== 116;
             };
         })();
-        runFireworks();
+        if (params?.order_id && params?.payment_id && params?.signature)
+            runFireworks();
+        if (!params?.order_id || !params?.payment_id || !params?.signature)
+            navigate('/')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

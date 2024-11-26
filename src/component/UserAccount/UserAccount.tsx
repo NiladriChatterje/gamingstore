@@ -21,7 +21,7 @@ const UserAccount = () => {
                 <Route path={'/user/Product'} element={<Products />} />
                 <Route path={'/user/Product/Details/:id'} element={<Details />} />
                 <Route path={'/user/Checkout'} element={<Payment />} />
-                <Route path={'/user/completion'} element={<Completion />} />
+                <Route path={'/user/completion/:order_id/:payment_id/:signature'} element={<Completion />} />
                 <Route path={'*'} element={<h1>404 | No such Route</h1>} />
             </Routes>
         </>

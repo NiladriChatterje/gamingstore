@@ -1,21 +1,13 @@
 import { useState } from "react";
 import styles from './Payment.module.css';
-// import axios from 'axios';
 import Loader from "./Loader.tsx";
-// import { Elements } from "@stripe/react-stripe-js";
-// import CheckoutForm from "./CheckoutForm";
-// import { loadStripe, Stripe } from "@stripe/stripe-js";
 import { useStateContext } from "../StateContext.tsx";
-// import PaymentLoader from "./PaymentLoader.tsx";
 import Checkout from "../utils/Checkout.tsx";
 
 
 function Payment() {
-    // const [loader, setLoader] = useState(() => true);
-    // eslint-disable-next-line
     const [oneProduct, _] = useState<{ name: string; qty: number; price: number }>(JSON.parse(localStorage.getItem('oneProduct') ?? '{}'));
     const { oneItem, data, totalPrice } = useStateContext();
-
 
 
     return (
