@@ -1,7 +1,7 @@
 #form-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
 }
 
 #phone-number-verification-modal {
@@ -26,8 +26,9 @@
 #username-input,
 #mail-input,
 #phone-input {
+    gap: 15px;
+    padding: 5px 10px;
     display: flex;
-    justify-content: center;
     align-items: center;
     border-radius: 5px;
 }
@@ -53,6 +54,7 @@
     z-index: 2;
     bottom: -135px;
     overflow: clip auto;
+    left: -20px;
     min-height: max-content;
     max-height: 180px;
     border-radius: 5px;
@@ -76,8 +78,25 @@
     background-color: white;
 }
 
-#mail-input input[name="mail"],
-#mail-input input[name="mail"]:focus,
+#mail-input input[name="email"],
+#phone-input input[name="phone"],
+#username-input input[name="username"] {
+    padding: 10px;
+    font-size: 0.70em;
+
+}
+
+#mail-input input[name="email"]::placeholder,
+#phone-input input[name="phone"]::placeholder,
+#username-input input[name="username"]::placeholder {
+    color: rgb(175, 175, 175);
+    font-weight: 400;
+}
+
+#mail-input input[name="email"],
+#mail-input input[name="email"]:focus,
+#username-input input[name="username"],
+#username-input input[name="username"]:focus,
 #phone-input input[name="phone"],
 #phone-input input[name="phone"]:focus,
 #phone-input select {

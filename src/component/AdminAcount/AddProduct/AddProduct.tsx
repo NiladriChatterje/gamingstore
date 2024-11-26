@@ -1,7 +1,16 @@
+import { FormEvent } from "react"
 
 const AddProduct = () => {
+
+    async function handleSubmitPdt(e: FormEvent) {
+        e.preventDefault();
+
+    }
+
     return (
-        <div>AddProduct</div>
+        <form onSubmit={handleSubmitPdt}>
+
+        </form>
     )
 }
 

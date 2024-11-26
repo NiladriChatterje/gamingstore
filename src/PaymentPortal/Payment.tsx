@@ -1,40 +1,26 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from './Payment.module.css';
-import axios from 'axios';
-import Loader from "./Loader";
-import { Elements } from "@stripe/react-stripe-js";
-import CheckoutForm from "./CheckoutForm";
-import { loadStripe, Stripe } from "@stripe/stripe-js";
-import { useStateContext } from "../StateContext";
-import PaymentLoader from "./PaymentLoader.tsx";
+// import axios from 'axios';
+import Loader from "./Loader.tsx";
+// import { Elements } from "@stripe/react-stripe-js";
+// import CheckoutForm from "./CheckoutForm";
+// import { loadStripe, Stripe } from "@stripe/stripe-js";
+import { useStateContext } from "../StateContext.tsx";
+// import PaymentLoader from "./PaymentLoader.tsx";
+import Checkout from "../utils/Checkout.tsx";
 
 
 function Payment() {
-    const [stripePromise, setStripePromise] = useState<Promise<Stripe | null>>();
-    const [clientSecret, setClientSecret] = useState("");
-    const [loader, setLoader] = useState(() => true);
+    // const [loader, setLoader] = useState(() => true);
     // eslint-disable-next-line
     const [oneProduct, _] = useState<{ name: string; qty: number; price: number }>(JSON.parse(localStorage.getItem('oneProduct') ?? '{}'));
     const { oneItem, data, totalPrice } = useStateContext();
 
-    useEffect(() => {
-        setStripePromise(loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_API));
 
-        (async function () {
-            // https://game-store-stripe.onrender.com
-            const { data } = await axios.post("http://localhost:5000/create-payment-intent", {
-                price: oneItem ? oneProduct.price : totalPrice
-            })
-            setClientSecret(data?.clientSecret)
-        })();
-        setTimeout(() => setLoader(false), 200);
-
-        //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     return (
         <div id={styles['payment-container']}>
-            {loader ? <Loader /> : (
+            {false ? <Loader /> : (
                 <div id={styles['whole_wrapper']}>
                     <div id={styles['product-list']}>
                         {oneItem ? <div id={styles['nam_price_container']}>
@@ -67,11 +53,7 @@ function Payment() {
                             </section>}
                     </div>
                     <div id={styles['loader-payment-card-container']}>
-                        {clientSecret && stripePromise ? (
-                            <Elements
-                                stripe={stripePromise} options={{ clientSecret }}>
-                                <CheckoutForm />
-                            </Elements>) : <PaymentLoader />}
+                        <Checkout price={oneItem ? oneProduct.price * oneProduct.qty : totalPrice || 0} />
                     </div>
                 </div>)}
         </div>

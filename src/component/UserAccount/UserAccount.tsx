@@ -1,5 +1,5 @@
-import Payment from '../../StripePayment/Payment';
-import Completion from '../../StripePayment/Completion'
+import Payment from '../../PaymentPortal/Payment.tsx';
+import Completion from '../../PaymentPortal/Completion.tsx'
 import { Routes, Route, Navigate } from 'react-router-dom';
 import {
     Body, About, Products,
@@ -22,6 +22,7 @@ const UserAccount = () => {
                 <Route path={'/user/Product/Details/:id'} element={<Details />} />
                 <Route path={'/user/Checkout'} element={<Payment />} />
                 <Route path={'/user/completion'} element={<Completion />} />
+                <Route path={'*'} element={<h1>404 | No such Route</h1>} />
             </Routes>
         </>
     )

@@ -10,7 +10,7 @@ const PaymentPortal = () => {
 
     useEffect(() => {
         if (isSignedIn)
-            navigate('/Checkout');
+            navigate('/user/Checkout');
     });
 
     return <>

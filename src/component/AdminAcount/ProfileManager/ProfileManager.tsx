@@ -18,6 +18,7 @@ const ProfileManager = () => {
     const modalRef = useRef<HTMLDialogElement>(null);
     const mailInputRef = useRef<HTMLInputElement>(null);
     const phoneInputRef = useRef<HTMLInputElement>(null);
+    const usernameInputRef = useRef<HTMLInputElement>(null);
 
 
     async function onClickMailVerify() {
@@ -67,8 +68,8 @@ const ProfileManager = () => {
                 <div
                     style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                     id={styles['username-input']}>
-                    <FaUser style={{ padding: '0 10px' }} />
-                    <input name={'username'} placeholder={user?.firstName ?? ''}
+                    <FaUser />
+                    <input name={'username'} ref={usernameInputRef} placeholder={user?.firstName ?? ''}
                         disabled={disable} />
                 </div>
                 <section>
@@ -85,7 +86,6 @@ const ProfileManager = () => {
                                     if (!disable)
                                         setToggleCountryCode(prev => !prev)
                                 }}
-                                style={{ padding: '0 10px' }}
                             />
                             {!disable && <section className={`${toggleCountryCode ? '' : styles['country-code-list']}`}>
                                 <dl onClick={() => { setToggleCountryCode(false) }}>(+91)IN</dl>
@@ -113,7 +113,7 @@ const ProfileManager = () => {
                     <div
                         style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                         id={styles['mail-input']}>
-                        <MdOutlineMarkEmailUnread style={{ padding: '0 10px' }} />
+                        <MdOutlineMarkEmailUnread />
                         <input ref={mailInputRef} name={'email'} placeholder={user?.emailAddresses[0].emailAddress}
                             disabled={disable} />
                     </div>
