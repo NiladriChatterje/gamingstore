@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
+import { CurrencyCode } from "react-razorpay/dist/constants/currency";
 import { useNavigate } from "react-router-dom";
 
 
@@ -19,12 +20,12 @@ const Checkout = ({ price }: { price: number; }) => {
             },
             body: JSON.stringify({ price: price * 100 })
         });
-        const data: { id: string; } = await response.json();
+        const data: { id: string; currency: CurrencyCode; } = await response.json();
 
         const options: () => RazorpayOrderOptions = () => ({
             key: import.meta.env.VITE_RAZORPAY_API_KEY,
             amount: price * 100, // Amount in paise
-            currency: "INR",
+            currency: data.currency,
             name: "XV Store",
             description: "Test Transaction",
             order_id: data.id, // Generate order_id on server
@@ -43,6 +44,9 @@ const Checkout = ({ price }: { price: number; }) => {
             theme: {
                 color: "rgb(85, 88, 117)",
             },
+            modal: {
+                ondismiss: () => { setIsLoading(false) }
+            }
         });
 
         const razorpayInstance = new Razorpay(options());
