@@ -7,6 +7,7 @@ import {
     OrderListItem,
     Navbar,
 } from './components.ts';
+import NotFound from '../../NotFound.tsx';
 const UserAccount = () => {
 
     return (
@@ -15,14 +16,14 @@ const UserAccount = () => {
             <Navbar />
             <Routes>
                 <Route index element={<Navigate to={'/user'} />} />
-                <Route path={'/user'} element={<Body />} />
+                <Route path={'/user/'} element={<Body />} />
                 <Route path={'/user/Payment'} element={<PaymentPortal />} />
                 <Route path={'/user/About'} element={<About />} />
                 <Route path={'/user/Product'} element={<Products />} />
                 <Route path={'/user/Product/Details/:id'} element={<Details />} />
                 <Route path={'/user/Checkout'} element={<Payment />} />
                 <Route path={'/user/completion/:order_id/:payment_id/:signature'} element={<Completion />} />
-                <Route path={'*'} element={<h1>404 | No such Route</h1>} />
+                <Route path={'*'} element={<NotFound />} />
             </Routes>
         </>
     )

@@ -10,7 +10,7 @@ const UpcomingDataMap = (item: ItemType) => {
     <div
       onClick={(e) => {
         e.stopPropagation();
-        navigate(`/Product/Details/${item.id}`)
+        navigate(`/user/Product/Details/${item.id}`)
       }}
       style={{ position: 'relative', cursor: 'pointer' }}
       key={item.id}

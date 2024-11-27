@@ -61,12 +61,8 @@ const AdminAccount = () => {
               </section> :
               <SubscriptionPlan />
             }
-
-
           </div>
-
           <span>e-cart</span>
-
         </div>
       </SignedIn>
       <SignedOut>

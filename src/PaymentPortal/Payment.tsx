@@ -21,7 +21,9 @@ function Payment() {
                                 <div className={styles['pdt-details']}><span>Quantity: </span><span>{oneProduct?.qty}</span></div>
                                 <div className={styles['pdt-details']}><span>Unit Price: </span><span>₹ {oneProduct?.price}</span></div>
                             </section>
-                            <div className={`${styles['pdt-details']} ${styles['single-pdt-total']}`}><span>Total: </span><span>₹ {oneProduct?.price * oneProduct?.qty}</span></div>
+                            <div className={`${styles['pdt-details']} ${styles['single-pdt-total']}`}>
+                                <Checkout price={oneProduct.price * oneProduct.qty} />
+                                <span>Total: </span><span>₹ {oneProduct?.price * oneProduct?.qty}</span></div>
                         </div> :
                             <section id={styles['table']}>
                                 <header>
@@ -38,14 +40,12 @@ function Payment() {
                                         </div>))}
                                 </div>
                                 <footer className={styles['single-pdt-total']}>
-                                    <span className={styles['first-column']}>Amount: </span>
-                                    <span className={styles['second-column']}></span>
-                                    <span className={styles['third-column']}>₹{oneItem ? oneProduct?.price * oneProduct?.qty : totalPrice}</span>
+                                    <Checkout price={oneItem ? oneProduct.price * oneProduct.qty : totalPrice || 0} />
+                                    {/* <span className={styles['first-column']}>Amount: </span> */}
+                                    <span className={styles['second-column']}>Amount: </span>
+                                    <span className={styles['third-column']}>₹{totalPrice}</span>
                                 </footer>
                             </section>}
-                    </div>
-                    <div id={styles['loader-payment-card-container']}>
-                        <Checkout price={oneItem ? oneProduct.price * oneProduct.qty : totalPrice || 0} />
                     </div>
                 </div>)}
         </div>

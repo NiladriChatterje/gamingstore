@@ -29,7 +29,7 @@
     display: flex;
     padding: 10px;
     color: black;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     height: 380px;
     width: 70vw
@@ -42,7 +42,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    border-right: 1px solid black;
 }
 
 #nam_price {
