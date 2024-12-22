@@ -5,21 +5,36 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { SignedIn, SignedOut, SignOutButton, useUser, useSignIn } from "@clerk/clerk-react";
 import SubscriptionPlan from "./SubscriptionPlan/SubscriptionPlan";
 import { useEffect, useState } from "react";
+import NotFound from "../../NotFound";
+import { createClient, SanityClient } from '@sanity/client'
 
+const sanityClient: SanityClient = createClient({
+  projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
+  token: import.meta.env.VITE_SANITY_TOKEN,
+  dataset: 'production'
+})
 
 const AdminAccount = () => {
   const [isPlanActiveState, setIsPlanActive] = useState(false);
-
   const { isLoaded } = useSignIn();
   const { user } = useUser();
 
+  console.log(user?.emailAddresses[0].id)
+
   useEffect(() => {
+    async function checkAdminEnrolled() {
+      const subscriptions = await sanityClient.fetch(`*[_type=='admin']`);
+
+      return subscriptions
+    }
     if (isLoaded) {
       //check from sanity if user has an existing 
       //subscription plan or not
-      // const {isPlanActive} = useSanity(user.id);
-      // if(!isPlanActive)
-      setIsPlanActive(false)
+      checkAdminEnrolled().then(result => {
+        console.log(result)
+        if (result)
+          setIsPlanActive(true)
+      })
     }
   }, [isPlanActiveState])
 
@@ -56,10 +71,11 @@ const AdminAccount = () => {
                   <Route path="/admin/add-product" element={<h1>Add product</h1>} />
                   <Route path="/admin/edit-product/:id" element={<h1>Edit product</h1>} />
                   <Route path="/admin/edit-bank" element={<h1>Edit bank account</h1>} />
-                  <Route path="*" element={'No such route'} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </section> :
-              <SubscriptionPlan />
+              <SubscriptionPlan
+                setIsPlanActive={setIsPlanActive} />
             }
           </div>
           <span>e-cart</span>

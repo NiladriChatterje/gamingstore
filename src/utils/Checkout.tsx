@@ -3,7 +3,6 @@ import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
 import { CurrencyCode } from "react-razorpay/dist/constants/currency";
-import { useNavigate } from "react-router-dom";
 
 const PayButtonStyle = {
     padding: '5px 20px',
@@ -15,14 +14,14 @@ const PayButtonStyle = {
     borderStyle: 'none'
 }
 
-const Checkout = ({ price }: { price: number; }) => {
+const Checkout = ({ price, callback }: { price: number; callback?: Function }) => {
     const { error, Razorpay } = useRazorpay();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const navigate = useNavigate();
+
 
     const { user } = useUser()
 
-    const handlePayment = async (e: FormEvent) => {
+    const handlePayment = async (e: FormEvent, _callback?: Function) => {
         e.preventDefault();
         setIsLoading(true);
         const response: Response = await fetch('http://localhost:5000/razorpay', {
@@ -45,8 +44,16 @@ const Checkout = ({ price }: { price: number; }) => {
             handler: (response) => {
                 console.log(response);
                 setIsLoading(false);
-                navigate(`/user/completion/${response.razorpay_order_id}/${response.razorpay_payment_id}/${response.razorpay_signature}`);
+                if (!response.razorpay_order_id || !response.razorpay_payment_id || !response.razorpay_signature) {
+                    // navigate('/error');
+                    // fetch(`http://localhost:5000/razorpay-refund/`,{method:'POST',body:response.razorpay_payment_id})
+                    toast.error('payment failed')
+                    return;
+                }
                 toast.success("Payment Successful!");
+                if (_callback)
+                    _callback(response.razorpay_payment_id, response.razorpay_signature, response.razorpay_order_id)
+                // navigate(`/user/completion/${response.razorpay_order_id}/${response.razorpay_payment_id}/${response.razorpay_signature}`);
             },
             prefill: {
                 name: user?.fullName || '',
@@ -73,7 +80,7 @@ const Checkout = ({ price }: { price: number; }) => {
     };
 
     return (
-        <form onSubmit={handlePayment}>
+        <form onSubmit={e => handlePayment(e, callback)}>
             {error && <p>Error loading Razorpay: {error}</p>}
             <input
                 style={PayButtonStyle}

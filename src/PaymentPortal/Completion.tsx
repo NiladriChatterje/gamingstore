@@ -12,21 +12,29 @@ function Completion() {
     const params = useParams();
 
     useEffect(() => {
-        console.log(params)
-        if (!oneItem) {
-            localStorage.removeItem("orders");
-            setTotalPrice?.(0);
-            setData?.([] as OrderType[]);
-        };
-        (function () {
-            document.onkeydown = function (e: KeyboardEvent) {
-                return (e.which || e.keyCode) !== 116;
+        try {
+            console.log(params)
+            if (!oneItem) {
+                localStorage.removeItem("orders");
+                setTotalPrice?.(0);
+                setData?.([] as OrderType[]);
             };
-        })();
-        if (params?.order_id && params?.payment_id && params?.signature)
-            runFireworks();
-        if (!params?.order_id || !params?.payment_id || !params?.signature)
-            navigate('/')
+            (function () {
+                document.onkeydown = function (e: KeyboardEvent) {
+                    return (e.which || e.keyCode) !== 116;
+                };
+            })();
+            if (params?.order_id === 'undefined' || params?.payment_id === 'undefined' || params?.signature === 'undefined')
+                throw new Error();
+
+            if (params?.order_id && params?.payment_id && params?.signature && params?.order_id != undefined &&
+                params?.payment_id != undefined && params?.signature != undefined
+            )
+                runFireworks();
+        } catch (e: Error | any) {
+            navigate('/error');
+        }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
