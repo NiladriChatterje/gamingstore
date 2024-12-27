@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { runFireworks } from './utils.tsx';
-import { useStateContext } from "../../../StateContext.tsx";
+import { useUserStateContext } from "../UserStateContext.tsx";
 import { BsBagCheckFill } from 'react-icons/bs'
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './Completion.module.css';
@@ -8,7 +8,7 @@ import { OrderType } from "../../../ProductContextType";
 
 function Completion() {
     const navigate = useNavigate();
-    const { setData, setTotalPrice, oneItem } = useStateContext();
+    const { setData, setTotalPrice, oneItem } = useUserStateContext();
     const params = useParams();
 
     useEffect(() => {

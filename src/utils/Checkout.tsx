@@ -3,6 +3,8 @@ import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
 import { CurrencyCode } from "react-razorpay/dist/constants/currency";
+import { useStateContext } from "../StateContext";
+import { useNavigate } from "react-router-dom";
 
 const PayButtonStyle = {
     padding: '5px 20px',
@@ -17,7 +19,8 @@ const PayButtonStyle = {
 const Checkout = ({ price, callback }: { price: number; callback?: Function }) => {
     const { error, Razorpay } = useRazorpay();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
+    const navigate = useNavigate()
+    const { defaultLoginAdminOrUser } = useStateContext()
 
     const { user } = useUser()
 
@@ -52,8 +55,9 @@ const Checkout = ({ price, callback }: { price: number; callback?: Function }) =
                 }
                 toast.success("Payment Successful!");
                 if (_callback)
-                    _callback(response.razorpay_payment_id, response.razorpay_signature, response.razorpay_order_id)
-                // navigate(`/user/completion/${response.razorpay_order_id}/${response.razorpay_payment_id}/${response.razorpay_signature}`);
+                    _callback(response.razorpay_payment_id, response.razorpay_signature, response.razorpay_order_id, defaultLoginAdminOrUser)
+                if (defaultLoginAdminOrUser === 'user')
+                    navigate(`/user/completion/${response.razorpay_order_id}/${response.razorpay_payment_id}/${response.razorpay_signature}`);
             },
             prefill: {
                 name: user?.fullName || '',

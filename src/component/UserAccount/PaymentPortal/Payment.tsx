@@ -14,9 +14,10 @@ function Payment() {
     const { setDefaultLoginAdminOrUser } = useStateContext()
 
     const { isLoaded } = useSignIn();
-    if (isLoaded)
+    if (isLoaded) {
+        localStorage.setItem('loginusertype', 'user')
         setDefaultLoginAdminOrUser?.('user')
-
+    }
     return (
 
         <div id={styles['payment-container']}>

@@ -22,6 +22,7 @@ const AdminAccount = () => {
   const { user } = useUser();
   const { defaultLoginAdminOrUser } = useStateContext()
 
+
   console.log(user?.emailAddresses[0].id)
 
   useEffect(() => {
@@ -105,7 +106,7 @@ const AdminAccount = () => {
         </div>}
       </SignedIn>
       <SignedOut>
-        <Navigate to={'/user'} />
+        <Navigate to={'/admin'} />
       </SignedOut>
     </>
   )

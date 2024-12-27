@@ -10,8 +10,6 @@ const ProductContext = createContext<Partial<ProductContextType>>({});
 export const StateContext = ({ children }: { children: ReactNode }) => {
     const [defaultLoginAdminOrUser, setDefaultLoginAdminOrUser] = useState<string>(localStorage.getItem("loginusertype") || "user");
 
-
-
     return (<ProductContext.Provider
         value={
             {

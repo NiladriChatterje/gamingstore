@@ -63,6 +63,7 @@ const Navbar = () => {
             }
             id={styles['user-admin-btn-group']}>
             <SignInButton
+              forceRedirectUrl={'/admin'}
               mode='modal'>
               <button
                 className={`${styles['login-btn']} ${defaultLoginAdminOrUser === 'admin' ? styles['selected-admin-user'] : ''}`}
@@ -75,7 +76,9 @@ const Navbar = () => {
                 Admin
               </button>
             </SignInButton>
-            <SignInButton mode='modal'>
+            <SignInButton
+              forceRedirectUrl={'/user'}
+              mode='modal' >
               <button
                 className={`${styles['login-btn']} ${defaultLoginAdminOrUser === 'user' ? styles['selected-admin-user'] : ''}`}
                 onClick={() => {
