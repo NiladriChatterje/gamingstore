@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { UserAccount, AdminAccount } from './component';
 import PreLoader from './PreLoader.tsx';
 import { Toaster } from 'react-hot-toast';
-import { useStateContext } from './StateContext';
+import { useStateContext } from './StateContext.tsx';
 import { useUser } from '@clerk/clerk-react';
 
 function App() {

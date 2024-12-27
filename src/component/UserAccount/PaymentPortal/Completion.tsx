@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { runFireworks } from './utils.tsx';
-import { useStateContext } from "../StateContext.tsx";
+import { useStateContext } from "../../../StateContext.tsx";
 import { BsBagCheckFill } from 'react-icons/bs'
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './Completion.module.css';
-import { OrderType } from "../ProductContextType";
+import { OrderType } from "../../../ProductContextType";
 
 function Completion() {
     const navigate = useNavigate();

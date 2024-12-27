@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useMemo, useRef, useState } from 'react';
 import styles from './ProfileManager.module.css';
 import { MdEdit } from "react-icons/md";
 import { FaPhone, FaUser } from "react-icons/fa6";
@@ -20,6 +20,22 @@ const ProfileManager = () => {
     const phoneInputRef = useRef<HTMLInputElement>(null);
     const usernameInputRef = useRef<HTMLInputElement>(null);
 
+    function alertInputFields() {
+        if (!mailInputRef?.current?.value || user?.emailAddresses[0]?.emailAddress) {
+            if (mailInputRef?.current?.style)
+                mailInputRef.current.style.border = '1px solid red';
+        } else {
+            if (mailInputRef?.current?.value || user?.emailAddresses[0]?.emailAddress) {
+                if (mailInputRef?.current?.style)
+                    mailInputRef.current.style.border = '1px solid green';
+                if (!mailInputRef?.current?.value)
+                    mailInputRef.current.value = user?.emailAddresses[0]?.emailAddress || '';
+            }
+        }
+    }
+    useMemo(() => {
+        alertInputFields();
+    }, [disable])
 
     async function onClickMailVerify() {
         console.log(mailInputRef?.current?.value)
@@ -135,7 +151,9 @@ const ProfileManager = () => {
                             borderRadius: 5, padding: '5px 10px'
                         }}
                         size={25}
-                        onClick={() => { setDisable(prev => !prev) }}
+                        onClick={() => {
+                            setDisable(prev => !prev)
+                        }}
                     />
                     <IoIosPersonAdd
                         color='white'

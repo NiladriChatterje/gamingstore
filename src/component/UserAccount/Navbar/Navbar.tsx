@@ -5,6 +5,7 @@ import { GiHamburgerMenu } from 'react-icons/gi'
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useStateContext } from '../../../StateContext';
+import { useUserStateContext } from '../UserStateContext';
 import { BsFillBagPlusFill } from 'react-icons/bs';
 import { FaHome } from "react-icons/fa";
 import { MdProductionQuantityLimits } from "react-icons/md";
@@ -18,7 +19,8 @@ const navItems = [{ Img: FaHome, name: 'Home' }, { Img: MdProductionQuantityLimi
 const Navbar = () => {
   const [userLogin, setUserLoginDiv] = useState<boolean>(true);
   const [navActive, setNavActive] = React.useState(() => false);
-  const { navRef, setSlide, defaultLoginAdminOrUser, setDefaultLoginAdminOrUser } = useStateContext();
+  const { defaultLoginAdminOrUser, setDefaultLoginAdminOrUser } = useStateContext();
+  const { navRef, setSlide } = useUserStateContext();
 
 
   return (

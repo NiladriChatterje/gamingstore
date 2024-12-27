@@ -2,13 +2,15 @@ import styles from './OrderListItem.module.css';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import { OrderList } from '../components';
-import { useStateContext } from '../../../StateContext';
+import { useUserStateContext } from '../UserStateContext';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useStateContext } from '../../../StateContext';
 
 
 const OrderListItem = () => {
-  const { data, totalPrice, slide, setSlide, setOneItem } = useStateContext();
+  const { data, totalPrice, slide, setSlide, setOneItem } = useUserStateContext();
+  const { setDefaultLoginAdminOrUser } = useStateContext();
   const navigate = useNavigate();
 
   return <>
@@ -30,6 +32,7 @@ const OrderListItem = () => {
         {data?.map((item, i) => <OrderList key={i} id={item.id} image={item.image} price={item.price} count={item.count} />)}
         <motion.button
           onClick={() => {
+            setDefaultLoginAdminOrUser?.('user')
             if (totalPrice !== 0) {
               localStorage.setItem("isOneItem", "false");
               setOneItem?.(false);

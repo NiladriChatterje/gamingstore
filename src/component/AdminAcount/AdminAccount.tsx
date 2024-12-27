@@ -7,6 +7,8 @@ import SubscriptionPlan from "./SubscriptionPlan/SubscriptionPlan";
 import { useEffect, useState } from "react";
 import NotFound from "../../NotFound";
 import { createClient, SanityClient } from '@sanity/client'
+import toast from "react-hot-toast";
+import { useStateContext } from "../../StateContext";
 
 const sanityClient: SanityClient = createClient({
   projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
@@ -18,18 +20,39 @@ const AdminAccount = () => {
   const [isPlanActiveState, setIsPlanActive] = useState(false);
   const { isLoaded } = useSignIn();
   const { user } = useUser();
+  const { defaultLoginAdminOrUser } = useStateContext()
 
   console.log(user?.emailAddresses[0].id)
 
   useEffect(() => {
     async function checkAdminEnrolled() {
-      const subscriptions = await sanityClient.fetch(`*[_type=='admin']`);
+      const userEnrolled = await sanityClient.fetch(`*[_type=='admin' && userId == ${user?.id}]`);
+      if (userEnrolled === null) {
+        alert('allowing location for inventory is important');
+        navigator.geolocation.getCurrentPosition(({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
+          console.log(latitude, longitude)
+        });
+        if (!user?.phoneNumbers[0].phoneNumber && !userEnrolled?.phone)
+          toast('! Fill up phone number for notifications')
+        try {
 
-      return subscriptions
+          await sanityClient.create({
+            _type: 'admin',
+            name: user?.username,
+            adminId: user?.id,
+            email: user?.emailAddresses[0].emailAddress,
+            phone: user?.phoneNumbers[0].phoneNumber || Number(prompt('Enter 10 digit phone number'))
+          });
+        } catch (e: Error | any) {
+          toast.error(e.message)
+        }
+
+      }
+      return userEnrolled
     }
     if (isLoaded) {
-      //check from sanity if user has an existing 
-      //subscription plan or not
+      // check from sanity if user has an existing 
+      // subscription plan or not
       checkAdminEnrolled().then(result => {
         console.log(result)
         if (result)
@@ -42,7 +65,7 @@ const AdminAccount = () => {
   return (
     <>
       <SignedIn>
-        <div
+        {defaultLoginAdminOrUser === 'admin' && <div
           id={styles['outer-container']}
         >
           {user?.imageUrl && <div id={styles['avatar-container']}><img src={user?.imageUrl}
@@ -79,10 +102,10 @@ const AdminAccount = () => {
             }
           </div>
           <span>e-cart</span>
-        </div>
+        </div>}
       </SignedIn>
       <SignedOut>
-        <Navigate to={'/'} />
+        <Navigate to={'/user'} />
       </SignedOut>
     </>
   )

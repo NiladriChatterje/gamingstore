@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
+import { useUserStateContext } from '../UserStateContext.tsx';
 import { useStateContext } from '../../../StateContext.tsx';
 import { data } from '../Products/data.ts'
 import styles from './Details.module.css';
@@ -14,7 +15,8 @@ const Details = () => {
 
   const [item] = useState(data?.find(i => id && i.id === parseInt(id)) || UpcomingData?.find(i => id && i.id === parseInt(id)))
   const ImgRef = useRef<HTMLImageElement>(null);
-  const { addItemToOrderList, setDefaultLoginAdminOrUser, setItemIDCount, setOneItem } = useStateContext();
+  const { addItemToOrderList, setItemIDCount, setOneItem } = useUserStateContext();
+  const { setDefaultLoginAdminOrUser } = useStateContext();
 
   return (
     <div id={styles.details__container}>
