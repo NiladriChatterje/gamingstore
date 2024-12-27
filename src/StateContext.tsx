@@ -5,12 +5,12 @@ export type OrderType = {
     id: number; name: string; price: number; image: string; desc: string; count: number;
 }
 
-const ProductContext = createContext<Partial<ProductContextType>>({});
+const Global = createContext<Partial<ProductContextType>>({});
 
 export const StateContext = ({ children }: { children: ReactNode }) => {
     const [defaultLoginAdminOrUser, setDefaultLoginAdminOrUser] = useState<string>(localStorage.getItem("loginusertype") || "user");
 
-    return (<ProductContext.Provider
+    return (<Global.Provider
         value={
             {
                 defaultLoginAdminOrUser,
@@ -18,7 +18,7 @@ export const StateContext = ({ children }: { children: ReactNode }) => {
             }
         }>
         {children}
-    </ProductContext.Provider>)
+    </Global.Provider>)
 }
 
-export const useStateContext = () => useContext(ProductContext);
+export const useStateContext = () => useContext(Global);
