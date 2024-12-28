@@ -28,7 +28,7 @@ const AdminAccount = () => {
   useEffect(() => {
     async function checkAdminEnrolled() {
       const userEnrolled = await sanityClient.fetch(`*[_type=='admin' && userId == ${user?.id}]`);
-      if (userEnrolled === null) {
+      if (userEnrolled === [] as Array<any>) {
         alert('allowing location for inventory is important');
         navigator.geolocation.getCurrentPosition(({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
           console.log(latitude, longitude)
@@ -56,7 +56,7 @@ const AdminAccount = () => {
       // subscription plan or not
       checkAdminEnrolled().then(result => {
         console.log(result)
-        if (result)
+        if (result.length > 0)
           setIsPlanActive(true)
       })
     }

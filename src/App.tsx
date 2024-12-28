@@ -12,7 +12,6 @@ function App() {
   const { defaultLoginAdminOrUser } = useStateContext();
   const { user } = useUser();
 
-
   return (
     <div className="App">
       <Toaster containerStyle={{ fontSize: '0.65em', fontWeight: 900 }} />
