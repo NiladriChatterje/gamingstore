@@ -11,6 +11,7 @@ import OTPModal from './OTPModal';
 import { FaCity, FaFileInvoiceDollar } from "react-icons/fa";
 import { SiFreelancermap } from 'react-icons/si';
 import { RiLandscapeFill } from 'react-icons/ri';
+import { useAdminStateContext } from '../AdminStateContext';
 
 
 
@@ -29,6 +30,8 @@ const ProfileManager = () => {
     const countryRef = useRef<HTMLInputElement>(null);
     const stateRef = useRef<HTMLInputElement>(null);
     const countyRef = useRef<HTMLInputElement>(null);
+
+    const { admin } = useAdminStateContext();
 
     function alertInputFields() {
         if (!mailInputRef?.current?.value || user?.emailAddresses[0]?.emailAddress) {
@@ -96,7 +99,7 @@ const ProfileManager = () => {
                         style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                         id={styles['username-input']}>
                         <FaUser />
-                        <input name={'username'} ref={usernameInputRef} placeholder={user?.firstName ?? ''}
+                        <input name={'username'} value={user?.firstName ?? ''} ref={usernameInputRef} placeholder={user?.firstName ?? ''}
                             disabled={disable} />
                     </div>
                     <section>
@@ -104,7 +107,7 @@ const ProfileManager = () => {
                             style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                             id={styles['phone-input']}>
                             <FaFileInvoiceDollar />
-                            <input ref={GstinInputRef} name={'gstin'} placeholder={'GSTIN'} type='number'
+                            <input ref={GstinInputRef} name={'gstin'} placeholder={'GSTIN'} type='text'
                                 maxLength={10} minLength={10}
                                 disabled={disable} />
                         </div>
@@ -164,7 +167,7 @@ const ProfileManager = () => {
                         }}>Verify</span></div>
                     </section>
                     <section data-label="address">
-                        <fieldset>
+                        <fieldset style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                             <legend>Address</legend>
                             <section>
                                 <div

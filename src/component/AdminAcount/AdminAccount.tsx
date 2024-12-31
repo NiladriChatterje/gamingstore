@@ -31,10 +31,21 @@ type subscription = {
 }
 
 interface AdminFieldsType {
-  username: string;
+  username: string | null | undefined;
+  geoPoint: {
+    lat: number;
+    lng: number;
+  }
   phone?: number;
-  email: string;
-  SubscriptionPlan: subscription[];
+  adminId: string | null | undefined;
+  email: string | null | undefined;
+  SubscriptionPlan?: subscription[] | undefined | null;
+  AddressObjectType: {
+    pinCode: string;
+    county: string;
+    country: string;
+    state: string;
+  }
 };
 const AdminAccount = () => {
   const [isPlanActiveState, setIsPlanActive] = useState<boolean>(true);
@@ -45,7 +56,7 @@ const AdminAccount = () => {
 
   useEffect(() => {
     async function checkAdminEnrolled() {
-      const userEnrolled: AdminFieldsType[] = await sanityClient.fetch(`*[_type=='admin' && adminId=='${user?.id}']`);
+      let userEnrolled: AdminFieldsType[] = await sanityClient.fetch(`*[_type=='admin' && adminId=='${user?.id}']`);
 
       if (userEnrolled?.length === 0) {
         toast('allowing location for inventory is important');
@@ -60,22 +71,37 @@ const AdminAccount = () => {
               const { features } = await response.json();
               const placeResult = features[0];
               console.log("reverse geocoding : ", placeResult)
-              // let result = await sanityClient.create({
-              //   _type: 'admin',
-              //   username: user?.firstName,
-              //   adminId: user?.id,
-              //   email: user?.emailAddresses[0].emailAddress,
-              //   geoPoint: {
-              //     lat: latitude,
-              //     lng: longitude
-              //   },
-              //pinCode:placeResult?.properties?.postcode
-              //county:placeResult?.properties?.county
-              //state:placeResult?.properties?.state
-              //country:placeResult?.properties?.country
-              // });
+              let result = await sanityClient.create({
+                _type: 'admin',
+                username: user?.firstName,
+                adminId: user?.id,
+                email: user?.emailAddresses[0].emailAddress,
+                geoPoint: {
+                  lat: latitude,
+                  lng: longitude
+                },
+                AddressObjectType: {
+                  pinCode: placeResult?.properties?.postcode,
+                  county: placeResult?.properties?.county,
+                  state: placeResult?.properties?.state,
+                  country: placeResult?.properties?.country
+                }
+              });
 
-              // console.log("document created : ", result)
+              console.log("document created : ", result)
+              userEnrolled = [{
+                username: user?.firstName, adminId: user?.id, email: user?.emailAddresses[0].emailAddress,
+                geoPoint: {
+                  lat: latitude,
+                  lng: longitude
+                },
+                AddressObjectType: {
+                  pinCode: placeResult?.properties?.postcode,
+                  county: placeResult?.properties?.county,
+                  state: placeResult?.properties?.state,
+                  country: placeResult?.properties?.country
+                }
+              }]
             } catch (e: Error | any) {
               toast.error(e.message)
             }
