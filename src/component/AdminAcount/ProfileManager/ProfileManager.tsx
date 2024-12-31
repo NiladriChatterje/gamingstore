@@ -25,17 +25,15 @@ const ProfileManager = () => {
     const [toggleCountryCode, setToggleCountryCode] = useState<boolean>(false);
     const [gstin, setGstin] = useState<string>(admin?.gstin ?? '');
     const [username, setUsername] = useState<string>(admin?.firstName);
-    const [locality, setLocality] = useState<string>(admin?.address.locality ?? '');
-    const [pinCode, setpinCode] = useState<string>(admin?.address.pinCode ?? '');
-    const [country, setCountry] = useState<string>(admin?.address.country ?? '');
-    const [state, setState] = useState<string>(admin?.address.state ?? '');
-    const [county, setCounty] = useState<string>(admin?.address.county ?? '');
-    const [email, setEmail] = useState<string>(admin?.address.email);
-    const [phone, setPhone] = useState<string>(admin?.address.phone ?? '');
+    const [pinCode, setpinCode] = useState<string>(admin?.address?.pinCode ?? '');
+    const [country, setCountry] = useState<string>(admin?.address?.country ?? '');
+    const [state, setState] = useState<string>(admin?.address?.state ?? '');
+    const [county, setCounty] = useState<string>(admin?.address?.county ?? '');
+    const [email, setEmail] = useState<string>(admin?.address?.email);
+    const [phone, setPhone] = useState<string>(admin?.address?.phone ?? '');
     const [OTP, setOTP] = useState<number>(0);
     const modalRef = useRef<HTMLDialogElement>(null);
     const mailInputRef = useRef<HTMLInputElement>(null);
-    const phoneInputRef = useRef<HTMLInputElement>(null);
 
 
 
@@ -57,10 +55,9 @@ const ProfileManager = () => {
     }, [disable])
 
     async function onClickMailVerify() {
-        console.log(mailInputRef?.current?.value)
         try {
             const { data }: { data: { OTP: number } } = await axios.post('http://localhost:5000/fetch-mail-otp', {
-                recipient: mailInputRef?.current?.value
+                recipient: phone
             }
             );
             if (data.OTP === -1)
@@ -74,9 +71,8 @@ const ProfileManager = () => {
     }
 
     async function onClickPhoneVerify() {
-        console.log(phoneInputRef?.current?.value)
         try {
-            const { data }: { data: { OTP: number } } = await axios.post('http://localhost:5000/fetch-mail-otp', {
+            const { data }: { data: { OTP: number } } = await axios.post('http://localhost:5000/fetch-phone-otp', {
                 recipient: phone
             }
             );
@@ -182,18 +178,6 @@ const ProfileManager = () => {
                     <section data-label="address">
                         <fieldset style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                             <legend>Address</legend>
-                            <section>
-                                <div
-                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
-                                    id={styles['phone-input']}>
-                                    <FaFileInvoiceDollar />
-                                    <input
-                                        value={locality}
-                                        onChange={e => { setLocality(e.target.value) }}
-                                        name={'locality'} placeholder={'locality'} type='text'
-                                        disabled={disable} />
-                                </div>
-                            </section>
                             <section>
                                 <div
                                     style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
