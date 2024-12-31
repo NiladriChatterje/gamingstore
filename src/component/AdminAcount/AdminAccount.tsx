@@ -9,7 +9,7 @@ import NotFound from "../../NotFound";
 import { createClient, SanityClient } from '@sanity/client'
 import toast from "react-hot-toast";
 import { useStateContext } from "../../StateContext";
-import { AdminStateContext, useAdminStateContext } from "./AdminStateContext";
+import { useAdminStateContext } from "./AdminStateContext";
 
 const sanityClient: SanityClient = createClient({
   projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
@@ -118,18 +118,18 @@ const AdminAccount = () => {
       if (isLoaded) {
         // check from sanity if user has an existing 
         // subscription plan or not
-        const result = await checkAdminEnrolled()
-        console.log(result)
-        if (result.length > 0 && result[0]?.SubscriptionPlan) {
-          let lastPlan = result[0].SubscriptionPlan.at(-1);
-          const today = new Date().getTime();
-          const expirationDay = new Date(lastPlan?.planSchemeList?.expireDate || new Date()).getTime()
+        checkAdminEnrolled().then(result => {
+          console.log(result)
+          if (result.length > 0 && result[0]?.SubscriptionPlan) {
+            let lastPlan = result[0].SubscriptionPlan.at(-1);
+            const today = new Date().getTime();
+            const expirationDay = new Date(lastPlan?.planSchemeList?.expireDate || new Date()).getTime()
 
-          if (expirationDay - today > 0)
-            setIsPlanActive(true)
-        }
-        setAdmin?.(result[0]);
-
+            if (expirationDay - today > 0)
+              setIsPlanActive(true)
+          }
+          setAdmin?.(result[0]);
+        })
       }
     }
 
@@ -138,7 +138,7 @@ const AdminAccount = () => {
 
 
   return (
-    <AdminStateContext>
+    <>
       <SignedIn>
         {defaultLoginAdminOrUser === 'admin' && <div
           id={styles['outer-container']}
@@ -182,7 +182,7 @@ const AdminAccount = () => {
       <SignedOut>
         <Navigate to={'/admin'} />
       </SignedOut>
-    </AdminStateContext>
+    </>
   )
 }
 
