@@ -24,13 +24,8 @@ function Completion() {
                     return (e.which || e.keyCode) !== 116;
                 };
             })();
-            if (params?.order_id === 'undefined' || params?.payment_id === 'undefined' || params?.signature === 'undefined')
-                throw new Error();
 
-            if (params?.order_id && params?.payment_id && params?.signature && params?.order_id != undefined &&
-                params?.payment_id != undefined && params?.signature != undefined
-            )
-                runFireworks();
+            runFireworks();
         } catch (e: Error | any) {
             navigate('/error');
         }

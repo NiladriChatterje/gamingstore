@@ -56,8 +56,10 @@ const Checkout = ({ price, callback }: { price: number; callback?: Function }) =
                 toast.success("Payment Successful!");
                 if (_callback)
                     _callback(response.razorpay_payment_id, response.razorpay_signature, response.razorpay_order_id, defaultLoginAdminOrUser)
-                if (defaultLoginAdminOrUser === 'user')
-                    navigate(`/user/completion/${response.razorpay_order_id}/${response.razorpay_payment_id}/${response.razorpay_signature}`);
+                if (defaultLoginAdminOrUser === 'user' && response.razorpay_order_id && response.razorpay_payment_id &&
+                    response.razorpay_signature
+                )
+                    navigate(`/user/completion/`);
             },
             prefill: {
                 name: user?.fullName || '',

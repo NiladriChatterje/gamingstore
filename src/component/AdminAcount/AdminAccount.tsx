@@ -31,6 +31,7 @@ type subscription = {
 }
 
 interface AdminFieldsType {
+  _id: string;
   username: string | null | undefined;
   geoPoint: {
     lat: number;
@@ -48,7 +49,7 @@ interface AdminFieldsType {
   }
 };
 const AdminAccount = () => {
-  const [isPlanActiveState, setIsPlanActive] = useState<boolean>(true);
+  const [isPlanActiveState, setIsPlanActive] = useState<boolean>(false);
   const { isLoaded } = useSignIn();
   const { user } = useUser();
   const { defaultLoginAdminOrUser } = useStateContext()
@@ -100,7 +101,8 @@ const AdminAccount = () => {
                   county: placeResult?.properties?.county,
                   state: placeResult?.properties?.state,
                   country: placeResult?.properties?.country
-                }
+                },
+                _id: result._id
               }]
             } catch (e: Error | any) {
               toast.error(e.message)

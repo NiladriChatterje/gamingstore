@@ -24,7 +24,7 @@ const UserAccount = () => {
                 <Route path={'/user/About'} element={<About />} />
                 <Route path={'/user/Product'} element={<Products />} />
                 <Route path={'/user/Product/Details/:id'} element={<Details />} />
-                <Route path={'/user/completion/:order_id/:payment_id/:signature'} element={<Completion />} />
+                <Route path={'/user/completion/'} element={<Completion />} />
                 <Route path={'*'} element={<NotFound />} />
             </Routes>
         </UserStateContext>
