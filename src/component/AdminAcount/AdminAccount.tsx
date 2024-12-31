@@ -37,7 +37,7 @@ interface AdminFieldsType {
   SubscriptionPlan: subscription[];
 };
 const AdminAccount = () => {
-  const [isPlanActiveState, setIsPlanActive] = useState<boolean>(false);
+  const [isPlanActiveState, setIsPlanActive] = useState<boolean>(true);
   const { isLoaded } = useSignIn();
   const { user } = useUser();
   const { defaultLoginAdminOrUser } = useStateContext()

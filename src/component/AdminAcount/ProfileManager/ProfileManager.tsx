@@ -4,11 +4,14 @@ import { MdEdit } from "react-icons/md";
 import { FaPhone, FaUser } from "react-icons/fa6";
 import { IoIosPersonAdd } from "react-icons/io";
 import { useUser } from '@clerk/clerk-react';
-import { MdOutlineMarkEmailUnread } from "react-icons/md";
+import { MdOutlineMarkEmailUnread, MdSignpost } from "react-icons/md";
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import OTPModal from './OTPModal';
-import { FaFileInvoiceDollar } from "react-icons/fa";
+import { FaCity, FaFileInvoiceDollar } from "react-icons/fa";
+import { SiFreelancermap } from 'react-icons/si';
+import { RiLandscapeFill } from 'react-icons/ri';
+
 
 
 const ProfileManager = () => {
@@ -169,7 +172,6 @@ const ProfileManager = () => {
                                     id={styles['phone-input']}>
                                     <FaFileInvoiceDollar />
                                     <input ref={localityRef} name={'locality'} placeholder={'locality'} type='text'
-                                        maxLength={6} minLength={6}
                                         disabled={disable} />
                                 </div>
                             </section>
@@ -177,7 +179,17 @@ const ProfileManager = () => {
                                 <div
                                     style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                                     id={styles['phone-input']}>
-                                    <FaFileInvoiceDollar />
+                                    <MdSignpost />
+                                    <input ref={pincodeRef} name={'pincode'} placeholder={'pincode'}
+                                        maxLength={6} minLength={6}
+                                        type='text' disabled={disable} />
+                                </div>
+                            </section>
+                            <section>
+                                <div
+                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                                    id={styles['phone-input']}>
+                                    <FaCity />
                                     <input ref={countyRef} name={'county'} placeholder={'county'} type='text' disabled={disable} />
                                 </div>
                             </section>
@@ -185,8 +197,14 @@ const ProfileManager = () => {
                                 <div
                                     style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                                     id={styles['phone-input']}>
-                                    <FaFileInvoiceDollar />
-                                    <input ref={countryRef} name={'country'} placeholder={'country'} type='text'
+                                    <SiFreelancermap />
+                                    <input ref={countryRef}
+                                        value={countryRef.current?.value}
+                                        onChange={e => {
+                                            if (countryRef?.current)
+                                                countryRef.current.value = e.target.value
+                                        }}
+                                        name={'country'} placeholder={'country'} type='text'
                                         disabled={disable} />
                                 </div>
                             </section>
@@ -194,8 +212,13 @@ const ProfileManager = () => {
                                 <div
                                     style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                                     id={styles['phone-input']}>
-                                    <FaFileInvoiceDollar />
-                                    <input ref={stateRef} name={'state'} placeholder={'state'} type='text'
+                                    <RiLandscapeFill />
+                                    <input ref={stateRef} value={stateRef?.current?.value}
+                                        onChange={e => {
+                                            if (stateRef?.current)
+                                                stateRef.current.value = e.target.value;
+                                        }}
+                                        name={'state'} placeholder={'state'} type='text'
                                         disabled={disable} />
                                 </div>
                             </section>
