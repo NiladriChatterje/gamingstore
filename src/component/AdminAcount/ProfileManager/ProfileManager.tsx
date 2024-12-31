@@ -22,12 +22,14 @@ const ProfileManager = () => {
     const [disable, setDisable] = useState<boolean>(true);
     const [toggleCountryCode, setToggleCountryCode] = useState<boolean>(false);
     const [gstin, setGstin] = useState<string>(admin?.gstin ?? '');
+    const [username, setUsername] = useState<string>(admin?.firstName);
     const [locality, setLocality] = useState<string>(admin?.locality ?? '');
     const [pincode, setPincode] = useState<string>(admin?.pincode ?? '');
     const [country, setCountry] = useState<string>(admin?.country ?? '');
     const [state, setState] = useState<string>(admin?.state ?? '');
     const [county, setCounty] = useState<string>(admin?.county ?? '');
     const [email, setEmail] = useState<string>(admin?.email);
+    const [phone, setPhone] = useState<string>(admin?.phone ?? '');
     const [OTP, setOTP] = useState<number>(0);
     const modalRef = useRef<HTMLDialogElement>(null);
     const mailInputRef = useRef<HTMLInputElement>(null);
@@ -73,7 +75,7 @@ const ProfileManager = () => {
         console.log(phoneInputRef?.current?.value)
         try {
             const { data }: { data: { OTP: number } } = await axios.post('http://localhost:5000/fetch-mail-otp', {
-                recipient: phoneInputRef?.current?.value
+                recipient: phone
             }
             );
             if (data.OTP === -1)
@@ -101,7 +103,7 @@ const ProfileManager = () => {
                         style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                         id={styles['username-input']}>
                         <FaUser />
-                        <input name={'username'} value={user?.firstName ?? ''} placeholder={user?.firstName ?? ''}
+                        <input name={'username'} value={username} onChange={e => { setUsername(e.target.value) }} placeholder={user?.firstName ?? ''}
                             disabled={disable} />
                     </div>
                     <section>
@@ -109,8 +111,11 @@ const ProfileManager = () => {
                             style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                             id={styles['phone-input']}>
                             <FaFileInvoiceDollar />
-                            <input name={'gstin'} placeholder={'GSTIN'} type='text'
-                                maxLength={10} minLength={10}
+                            <input name={'gstin'}
+                                value={gstin}
+                                onChange={e => { setGstin(e.target.value) }}
+                                placeholder={'GSTIN'} type='text'
+                                maxLength={15} minLength={15}
                                 disabled={disable} />
                         </div>
                     </section>
@@ -135,7 +140,9 @@ const ProfileManager = () => {
                                     <dl onClick={() => { setToggleCountryCode(false) }}>(+92)PAK</dl>
                                 </section>}
                             </div>
-                            <input ref={phoneInputRef} name={'phone'} placeholder={'phone'} type='tel'
+                            <input value={phone}
+                                onChange={e => { setPhone(e.target.value) }}
+                                name={'phone'} placeholder={admin?.phone || 'xxx-xxx-xxxx'} type='tel'
                                 maxLength={10} minLength={10}
                                 disabled={disable} />
                         </div>
@@ -156,7 +163,9 @@ const ProfileManager = () => {
                             style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                             id={styles['mail-input']}>
                             <MdOutlineMarkEmailUnread />
-                            <input ref={mailInputRef} name={'email'} placeholder={user?.emailAddresses[0].emailAddress}
+                            <input value={email}
+                                onChange={e => { setEmail(e.target.value) }}
+                                name={'email'} placeholder={user?.emailAddresses[0].emailAddress}
                                 disabled={disable} />
                         </div>
                         <div
@@ -176,7 +185,10 @@ const ProfileManager = () => {
                                     style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                                     id={styles['phone-input']}>
                                     <FaFileInvoiceDollar />
-                                    <input name={'locality'} placeholder={'locality'} type='text'
+                                    <input
+                                        value={locality}
+                                        onChange={e => { setLocality(e.target.value) }}
+                                        name={'locality'} placeholder={'locality'} type='text'
                                         disabled={disable} />
                                 </div>
                             </section>
@@ -185,7 +197,10 @@ const ProfileManager = () => {
                                     style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                                     id={styles['phone-input']}>
                                     <MdSignpost />
-                                    <input name={'pincode'} placeholder={'pincode'}
+                                    <input
+                                        value={pincode}
+                                        onChange={e => setPincode(e.target.value)}
+                                        name={'pincode'} placeholder={'pincode'}
                                         maxLength={6} minLength={6}
                                         type='text' disabled={disable} />
                                 </div>
@@ -195,7 +210,10 @@ const ProfileManager = () => {
                                     style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                                     id={styles['phone-input']}>
                                     <FaCity />
-                                    <input name={'county'} placeholder={'county'} type='text' disabled={disable} />
+                                    <input
+                                        value={county}
+                                        onChange={e => { setCounty(e.target.value) }}
+                                        name={'county'} placeholder={'county'} type='text' disabled={disable} />
                                 </div>
                             </section>
                             <section>
@@ -206,7 +224,7 @@ const ProfileManager = () => {
                                     <input
                                         value={country}
                                         onChange={e => {
-
+                                            setCountry(e.target.value)
                                         }}
                                         name={'country'} placeholder={'country'} type='text'
                                         disabled={disable} />
@@ -219,7 +237,7 @@ const ProfileManager = () => {
                                     <RiLandscapeFill />
                                     <input value={state}
                                         onChange={e => {
-
+                                            setState(e.target.value)
                                         }}
                                         name={'state'} placeholder={'state'} type='text'
                                         disabled={disable} />
