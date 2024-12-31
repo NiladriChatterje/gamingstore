@@ -9,6 +9,7 @@ import NotFound from "../../NotFound";
 import { createClient, SanityClient } from '@sanity/client'
 import toast from "react-hot-toast";
 import { useStateContext } from "../../StateContext";
+import { useAdminStateContext } from "./AdminStateContext";
 
 const sanityClient: SanityClient = createClient({
   projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
@@ -16,37 +17,63 @@ const sanityClient: SanityClient = createClient({
   dataset: 'production'
 })
 
+interface planSchemeList {
+  activeDate: Date;
+  expireDate: Date;
+}
+
+type subscription = {
+  transactionId: string;
+  orderId: string;
+  paymentSignature: string;
+  activePlan: number;
+  planSchemeList: planSchemeList;
+}
+
+interface AdminFieldsType {
+  username: string;
+  phone?: number;
+  email: string;
+  SubscriptionPlan: subscription[];
+};
 const AdminAccount = () => {
-  const [isPlanActiveState, setIsPlanActive] = useState(false);
+  const [isPlanActiveState, setIsPlanActive] = useState<boolean>(false);
   const { isLoaded } = useSignIn();
   const { user } = useUser();
   const { defaultLoginAdminOrUser } = useStateContext()
-
-
-  console.log(user?.emailAddresses[0].id)
+  const { setAdmin } = useAdminStateContext()
 
   useEffect(() => {
     async function checkAdminEnrolled() {
-      const userEnrolled = await sanityClient.fetch(`*[_type=='admin' && userId == ${user?.id}]`);
-      if (userEnrolled === [] as Array<any>) {
-        alert('allowing location for inventory is important');
-        navigator.geolocation.getCurrentPosition(({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
-          console.log(latitude, longitude)
-        });
-        if (!user?.phoneNumbers[0].phoneNumber && !userEnrolled?.phone)
-          toast('! Fill up phone number for notifications')
-        try {
+      const userEnrolled: AdminFieldsType[] = await sanityClient.fetch(`*[_type=='admin' && adminId=='${user?.id}']`);
 
-          await sanityClient.create({
-            _type: 'admin',
-            name: user?.username,
-            adminId: user?.id,
-            email: user?.emailAddresses[0].emailAddress,
-            phone: user?.phoneNumbers[0].phoneNumber || Number(prompt('Enter 10 digit phone number'))
-          });
-        } catch (e: Error | any) {
-          toast.error(e.message)
-        }
+      if (userEnrolled?.length === 0) {
+        toast('allowing location for inventory is important');
+        navigator.geolocation.getCurrentPosition(({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
+          (async () => {
+            try {
+              if (!user?.phoneNumbers[0]?.phoneNumber && !userEnrolled[0]?.phone)
+                toast('! Fill up phone number for notifications in profile-manager tab')
+
+              let result = await sanityClient.create({
+                _type: 'admin',
+                username: user?.firstName,
+                adminId: user?.id,
+                email: user?.emailAddresses[0].emailAddress,
+                geoPoint: {
+                  lat: latitude,
+                  lng: longitude
+                }
+              });
+
+              console.log("document created : ", result)
+            } catch (e: Error | any) {
+              toast.error(e.message)
+            }
+          })()
+        });
+      }
+      else {
 
       }
       return userEnrolled
@@ -56,11 +83,18 @@ const AdminAccount = () => {
       // subscription plan or not
       checkAdminEnrolled().then(result => {
         console.log(result)
-        if (result.length > 0)
-          setIsPlanActive(true)
+        if (result.length > 0 && result[0]?.SubscriptionPlan) {
+          let lastPlan = result[0].SubscriptionPlan.at(-1);
+          const today = new Date().getTime();
+          const expirationDay = new Date(lastPlan?.planSchemeList?.expireDate || new Date()).getTime()
+
+          if (expirationDay - today > 0)
+            setIsPlanActive(true)
+        }
+        setAdmin?.(result[0]);
       })
     }
-  }, [isPlanActiveState])
+  }, []);
 
 
   return (

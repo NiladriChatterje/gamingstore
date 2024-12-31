@@ -8,6 +8,7 @@ import { MdOutlineMarkEmailUnread } from "react-icons/md";
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import OTPModal from './OTPModal';
+import { FaFileInvoiceDollar } from "react-icons/fa";
 
 
 const ProfileManager = () => {
@@ -19,6 +20,7 @@ const ProfileManager = () => {
     const mailInputRef = useRef<HTMLInputElement>(null);
     const phoneInputRef = useRef<HTMLInputElement>(null);
     const usernameInputRef = useRef<HTMLInputElement>(null);
+    const GstinInputRef = useRef<HTMLInputElement>(null);
 
     function alertInputFields() {
         if (!mailInputRef?.current?.value || user?.emailAddresses[0]?.emailAddress) {
@@ -88,6 +90,16 @@ const ProfileManager = () => {
                     <input name={'username'} ref={usernameInputRef} placeholder={user?.firstName ?? ''}
                         disabled={disable} />
                 </div>
+                <section>
+                    <div
+                        style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                        id={styles['phone-input']}>
+                        <FaFileInvoiceDollar />
+                        <input ref={GstinInputRef} name={'gstin'} placeholder={'GSTIN'} type='number'
+                            maxLength={10} minLength={10}
+                            disabled={disable} />
+                    </div>
+                </section>
                 <section>
                     <OTPModal
                         OTP={OTP}
