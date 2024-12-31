@@ -20,6 +20,7 @@ const UserAccount = () => {
                 <Route index element={<Navigate to={'/user'} />} />
                 <Route path={'/user/'} element={<Body />} />
                 <Route path={'/user/Payment'} element={<Payment />} />
+                <Route path={'/user/Orders'} element={<About />} />
                 <Route path={'/user/About'} element={<About />} />
                 <Route path={'/user/Product'} element={<Products />} />
                 <Route path={'/user/Product/Details/:id'} element={<Details />} />

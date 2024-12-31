@@ -54,19 +54,28 @@ const AdminAccount = () => {
             try {
               if (!user?.phoneNumbers[0]?.phoneNumber && !userEnrolled[0]?.phone)
                 toast('! Fill up phone number for notifications in profile-manager tab')
-
-              let result = await sanityClient.create({
-                _type: 'admin',
-                username: user?.firstName,
-                adminId: user?.id,
-                email: user?.emailAddresses[0].emailAddress,
-                geoPoint: {
-                  lat: latitude,
-                  lng: longitude
-                }
+              const response = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${import.meta.env.VITE_GEOAPIFY_API}`, {
+                method: 'GET'
               });
+              const { features } = await response.json();
+              const placeResult = features[0];
+              console.log("reverse geocoding : ", placeResult)
+              // let result = await sanityClient.create({
+              //   _type: 'admin',
+              //   username: user?.firstName,
+              //   adminId: user?.id,
+              //   email: user?.emailAddresses[0].emailAddress,
+              //   geoPoint: {
+              //     lat: latitude,
+              //     lng: longitude
+              //   },
+              //pinCode:placeResult?.properties?.postcode
+              //county:placeResult?.properties?.county
+              //state:placeResult?.properties?.state
+              //country:placeResult?.properties?.country
+              // });
 
-              console.log("document created : ", result)
+              // console.log("document created : ", result)
             } catch (e: Error | any) {
               toast.error(e.message)
             }

@@ -7,14 +7,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useStateContext } from '../../../StateContext';
 import { useUserStateContext } from '../UserStateContext';
 import { BsFillBagPlusFill } from 'react-icons/bs';
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaShopify } from "react-icons/fa";
 import { MdProductionQuantityLimits } from "react-icons/md";
 import { FcAbout } from "react-icons/fc";
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 
 
 const navItems = [{ Img: FaHome, name: 'Home' }, { Img: MdProductionQuantityLimits, name: 'Product' },
-{ Img: FcAbout, name: 'About' }];
+{ Img: FaShopify, name: 'Orders' }, { Img: FcAbout, name: 'About' }];
 
 const Navbar = () => {
   const [userLogin, setUserLoginDiv] = useState<boolean>(true);
