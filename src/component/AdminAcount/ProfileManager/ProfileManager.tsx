@@ -19,17 +19,19 @@ const ProfileManager = () => {
     const { admin } = useAdminStateContext();
     const { user } = useUser();
 
+    console.log('admin ', admin)
+
     const [disable, setDisable] = useState<boolean>(true);
     const [toggleCountryCode, setToggleCountryCode] = useState<boolean>(false);
     const [gstin, setGstin] = useState<string>(admin?.gstin ?? '');
     const [username, setUsername] = useState<string>(admin?.firstName);
-    const [locality, setLocality] = useState<string>(admin?.locality ?? '');
-    const [pincode, setPincode] = useState<string>(admin?.pincode ?? '');
-    const [country, setCountry] = useState<string>(admin?.country ?? '');
-    const [state, setState] = useState<string>(admin?.state ?? '');
-    const [county, setCounty] = useState<string>(admin?.county ?? '');
-    const [email, setEmail] = useState<string>(admin?.email);
-    const [phone, setPhone] = useState<string>(admin?.phone ?? '');
+    const [locality, setLocality] = useState<string>(admin?.address.locality ?? '');
+    const [pinCode, setpinCode] = useState<string>(admin?.address.pinCode ?? '');
+    const [country, setCountry] = useState<string>(admin?.address.country ?? '');
+    const [state, setState] = useState<string>(admin?.address.state ?? '');
+    const [county, setCounty] = useState<string>(admin?.address.county ?? '');
+    const [email, setEmail] = useState<string>(admin?.address.email);
+    const [phone, setPhone] = useState<string>(admin?.address.phone ?? '');
     const [OTP, setOTP] = useState<number>(0);
     const modalRef = useRef<HTMLDialogElement>(null);
     const mailInputRef = useRef<HTMLInputElement>(null);
@@ -198,9 +200,9 @@ const ProfileManager = () => {
                                     id={styles['phone-input']}>
                                     <MdSignpost />
                                     <input
-                                        value={pincode}
-                                        onChange={e => setPincode(e.target.value)}
-                                        name={'pincode'} placeholder={'pincode'}
+                                        value={pinCode}
+                                        onChange={e => setpinCode(e.target.value)}
+                                        name={'pinCode'} placeholder={'pinCode'}
                                         maxLength={6} minLength={6}
                                         type='text' disabled={disable} />
                                 </div>
