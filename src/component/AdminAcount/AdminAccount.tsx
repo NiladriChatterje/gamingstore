@@ -9,7 +9,7 @@ import NotFound from "../../NotFound";
 import { createClient, SanityClient } from '@sanity/client'
 import toast from "react-hot-toast";
 import { useStateContext } from "../../StateContext";
-import { useAdminStateContext } from "./AdminStateContext";
+import { AdminStateContext, useAdminStateContext } from "./AdminStateContext";
 
 const sanityClient: SanityClient = createClient({
   projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
@@ -133,7 +133,7 @@ const AdminAccount = () => {
 
 
   return (
-    <>
+    <AdminStateContext>
       <SignedIn>
         {defaultLoginAdminOrUser === 'admin' && <div
           id={styles['outer-container']}
@@ -177,7 +177,7 @@ const AdminAccount = () => {
       <SignedOut>
         <Navigate to={'/admin'} />
       </SignedOut>
-    </>
+    </AdminStateContext>
   )
 }
 
