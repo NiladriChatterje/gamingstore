@@ -4,6 +4,13 @@
     gap: 15px;
 }
 
+#form-input-field-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow: clip auto;
+}
+
 #phone-number-verification-modal {
     border-radius: 5px;
     border-style: none;

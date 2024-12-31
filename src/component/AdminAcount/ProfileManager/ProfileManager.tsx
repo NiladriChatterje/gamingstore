@@ -21,6 +21,11 @@ const ProfileManager = () => {
     const phoneInputRef = useRef<HTMLInputElement>(null);
     const usernameInputRef = useRef<HTMLInputElement>(null);
     const GstinInputRef = useRef<HTMLInputElement>(null);
+    const localityRef = useRef<HTMLInputElement>(null);
+    const pincodeRef = useRef<HTMLInputElement>(null);
+    const countryRef = useRef<HTMLInputElement>(null);
+    const stateRef = useRef<HTMLInputElement>(null);
+    const countyRef = useRef<HTMLInputElement>(null);
 
     function alertInputFields() {
         if (!mailInputRef?.current?.value || user?.emailAddresses[0]?.emailAddress) {
@@ -83,77 +88,120 @@ const ProfileManager = () => {
         <div >
             <form onSubmit={handleUpdate}
                 id={styles['form-container']}>
-                <div
-                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
-                    id={styles['username-input']}>
-                    <FaUser />
-                    <input name={'username'} ref={usernameInputRef} placeholder={user?.firstName ?? ''}
-                        disabled={disable} />
-                </div>
-                <section>
+                <div id={styles['form-input-field-container']}>
                     <div
                         style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
-                        id={styles['phone-input']}>
-                        <FaFileInvoiceDollar />
-                        <input ref={GstinInputRef} name={'gstin'} placeholder={'GSTIN'} type='number'
-                            maxLength={10} minLength={10}
+                        id={styles['username-input']}>
+                        <FaUser />
+                        <input name={'username'} ref={usernameInputRef} placeholder={user?.firstName ?? ''}
                             disabled={disable} />
                     </div>
-                </section>
-                <section>
-                    <OTPModal
-                        OTP={OTP}
-                        ref={modalRef} />
-                    <div
-                        style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
-                        id={styles['phone-input']}>
-                        <div id={styles['phone-country-code']}>
-                            <FaPhone
-                                cursor={'pointer'}
-                                onClick={() => {
-                                    if (!disable)
-                                        setToggleCountryCode(prev => !prev)
-                                }}
-                            />
-                            {!disable && <section className={`${toggleCountryCode ? '' : styles['country-code-list']}`}>
-                                <dl onClick={() => { setToggleCountryCode(false) }}>(+91)IN</dl>
-                                <dl onClick={() => { setToggleCountryCode(false) }}>(+144)US</dl>
-                                <dl onClick={() => { setToggleCountryCode(false) }}>(+92)PAK</dl>
-                            </section>}
+                    <section>
+                        <div
+                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                            id={styles['phone-input']}>
+                            <FaFileInvoiceDollar />
+                            <input ref={GstinInputRef} name={'gstin'} placeholder={'GSTIN'} type='number'
+                                maxLength={10} minLength={10}
+                                disabled={disable} />
                         </div>
-                        <input ref={phoneInputRef} name={'phone'} placeholder={'phone'} type='tel'
-                            maxLength={10} minLength={10}
-                            disabled={disable} />
-                    </div>
-                    <div
-                        id={styles['verify-span-btn']}
-                    ><span onClick={() => {
-                        if (!disable) {
-                            onClickPhoneVerify();
-                            modalRef?.current?.showModal()
-                        }
-                    }}>Verify</span></div>
-                </section>
-                <section>
-                    <OTPModal
-                        OTP={OTP}
-                        ref={modalRef} />
-                    <div
-                        style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
-                        id={styles['mail-input']}>
-                        <MdOutlineMarkEmailUnread />
-                        <input ref={mailInputRef} name={'email'} placeholder={user?.emailAddresses[0].emailAddress}
-                            disabled={disable} />
-                    </div>
-                    <div
-                        id={styles['verify-span-btn']}
-                    ><span onClick={() => {
-                        if (!disable) {
-                            onClickMailVerify()
-                            modalRef?.current?.showModal()
-                        }
-                    }}>Verify</span></div>
-                </section>
+                    </section>
+                    <section>
+                        <OTPModal
+                            OTP={OTP}
+                            ref={modalRef} />
+                        <div
+                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                            id={styles['phone-input']}>
+                            <div id={styles['phone-country-code']}>
+                                <FaPhone
+                                    cursor={'pointer'}
+                                    onClick={() => {
+                                        if (!disable)
+                                            setToggleCountryCode(prev => !prev)
+                                    }}
+                                />
+                                {!disable && <section className={`${toggleCountryCode ? '' : styles['country-code-list']}`}>
+                                    <dl onClick={() => { setToggleCountryCode(false) }}>(+91)IN</dl>
+                                    <dl onClick={() => { setToggleCountryCode(false) }}>(+144)US</dl>
+                                    <dl onClick={() => { setToggleCountryCode(false) }}>(+92)PAK</dl>
+                                </section>}
+                            </div>
+                            <input ref={phoneInputRef} name={'phone'} placeholder={'phone'} type='tel'
+                                maxLength={10} minLength={10}
+                                disabled={disable} />
+                        </div>
+                        <div
+                            id={styles['verify-span-btn']}
+                        ><span onClick={() => {
+                            if (!disable) {
+                                onClickPhoneVerify();
+                                modalRef?.current?.showModal()
+                            }
+                        }}>Verify</span></div>
+                    </section>
+                    <section>
+                        <OTPModal
+                            OTP={OTP}
+                            ref={modalRef} />
+                        <div
+                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                            id={styles['mail-input']}>
+                            <MdOutlineMarkEmailUnread />
+                            <input ref={mailInputRef} name={'email'} placeholder={user?.emailAddresses[0].emailAddress}
+                                disabled={disable} />
+                        </div>
+                        <div
+                            id={styles['verify-span-btn']}
+                        ><span onClick={() => {
+                            if (!disable) {
+                                onClickMailVerify()
+                                modalRef?.current?.showModal()
+                            }
+                        }}>Verify</span></div>
+                    </section>
+                    <section data-label="address">
+                        <fieldset>
+                            <legend>Address</legend>
+                            <section>
+                                <div
+                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                                    id={styles['phone-input']}>
+                                    <FaFileInvoiceDollar />
+                                    <input ref={localityRef} name={'locality'} placeholder={'locality'} type='text'
+                                        maxLength={6} minLength={6}
+                                        disabled={disable} />
+                                </div>
+                            </section>
+                            <section>
+                                <div
+                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                                    id={styles['phone-input']}>
+                                    <FaFileInvoiceDollar />
+                                    <input ref={countyRef} name={'county'} placeholder={'county'} type='text' disabled={disable} />
+                                </div>
+                            </section>
+                            <section>
+                                <div
+                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                                    id={styles['phone-input']}>
+                                    <FaFileInvoiceDollar />
+                                    <input ref={countryRef} name={'country'} placeholder={'country'} type='text'
+                                        disabled={disable} />
+                                </div>
+                            </section>
+                            <section>
+                                <div
+                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                                    id={styles['phone-input']}>
+                                    <FaFileInvoiceDollar />
+                                    <input ref={stateRef} name={'state'} placeholder={'state'} type='text'
+                                        disabled={disable} />
+                                </div>
+                            </section>
+                        </fieldset>
+                    </section>
+                </div>
                 <section style={{ display: 'flex', justifyContent: 'flex-end', gap: 15 }}>
                     <MdEdit
                         color='white'
