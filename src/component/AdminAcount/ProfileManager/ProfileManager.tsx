@@ -16,22 +16,24 @@ import { useAdminStateContext } from '../AdminStateContext';
 
 
 const ProfileManager = () => {
+    const { admin } = useAdminStateContext();
+    const { user } = useUser();
+
     const [disable, setDisable] = useState<boolean>(true);
     const [toggleCountryCode, setToggleCountryCode] = useState<boolean>(false);
+    const [gstin, setGstin] = useState<string>(admin?.gstin ?? '');
+    const [locality, setLocality] = useState<string>(admin?.locality ?? '');
+    const [pincode, setPincode] = useState<string>(admin?.pincode ?? '');
+    const [country, setCountry] = useState<string>(admin?.country ?? '');
+    const [state, setState] = useState<string>(admin?.state ?? '');
+    const [county, setCounty] = useState<string>(admin?.county ?? '');
+    const [email, setEmail] = useState<string>(admin?.email);
     const [OTP, setOTP] = useState<number>(0);
-    const { user } = useUser();
     const modalRef = useRef<HTMLDialogElement>(null);
     const mailInputRef = useRef<HTMLInputElement>(null);
     const phoneInputRef = useRef<HTMLInputElement>(null);
-    const usernameInputRef = useRef<HTMLInputElement>(null);
-    const GstinInputRef = useRef<HTMLInputElement>(null);
-    const localityRef = useRef<HTMLInputElement>(null);
-    const pincodeRef = useRef<HTMLInputElement>(null);
-    const countryRef = useRef<HTMLInputElement>(null);
-    const stateRef = useRef<HTMLInputElement>(null);
-    const countyRef = useRef<HTMLInputElement>(null);
 
-    const { admin } = useAdminStateContext();
+
 
     function alertInputFields() {
         if (!mailInputRef?.current?.value || user?.emailAddresses[0]?.emailAddress) {
@@ -99,7 +101,7 @@ const ProfileManager = () => {
                         style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                         id={styles['username-input']}>
                         <FaUser />
-                        <input name={'username'} value={user?.firstName ?? ''} ref={usernameInputRef} placeholder={user?.firstName ?? ''}
+                        <input name={'username'} value={user?.firstName ?? ''} placeholder={user?.firstName ?? ''}
                             disabled={disable} />
                     </div>
                     <section>
@@ -107,7 +109,7 @@ const ProfileManager = () => {
                             style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                             id={styles['phone-input']}>
                             <FaFileInvoiceDollar />
-                            <input ref={GstinInputRef} name={'gstin'} placeholder={'GSTIN'} type='text'
+                            <input name={'gstin'} placeholder={'GSTIN'} type='text'
                                 maxLength={10} minLength={10}
                                 disabled={disable} />
                         </div>
@@ -174,7 +176,7 @@ const ProfileManager = () => {
                                     style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                                     id={styles['phone-input']}>
                                     <FaFileInvoiceDollar />
-                                    <input ref={localityRef} name={'locality'} placeholder={'locality'} type='text'
+                                    <input name={'locality'} placeholder={'locality'} type='text'
                                         disabled={disable} />
                                 </div>
                             </section>
@@ -183,7 +185,7 @@ const ProfileManager = () => {
                                     style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                                     id={styles['phone-input']}>
                                     <MdSignpost />
-                                    <input ref={pincodeRef} name={'pincode'} placeholder={'pincode'}
+                                    <input name={'pincode'} placeholder={'pincode'}
                                         maxLength={6} minLength={6}
                                         type='text' disabled={disable} />
                                 </div>
@@ -193,7 +195,7 @@ const ProfileManager = () => {
                                     style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                                     id={styles['phone-input']}>
                                     <FaCity />
-                                    <input ref={countyRef} name={'county'} placeholder={'county'} type='text' disabled={disable} />
+                                    <input name={'county'} placeholder={'county'} type='text' disabled={disable} />
                                 </div>
                             </section>
                             <section>
@@ -201,11 +203,10 @@ const ProfileManager = () => {
                                     style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                                     id={styles['phone-input']}>
                                     <SiFreelancermap />
-                                    <input ref={countryRef}
-                                        value={countryRef.current?.value}
+                                    <input
+                                        value={country}
                                         onChange={e => {
-                                            if (countryRef?.current)
-                                                countryRef.current.value = e.target.value
+
                                         }}
                                         name={'country'} placeholder={'country'} type='text'
                                         disabled={disable} />
@@ -216,10 +217,9 @@ const ProfileManager = () => {
                                     style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
                                     id={styles['phone-input']}>
                                     <RiLandscapeFill />
-                                    <input ref={stateRef} value={stateRef?.current?.value}
+                                    <input value={state}
                                         onChange={e => {
-                                            if (stateRef?.current)
-                                                stateRef.current.value = e.target.value;
+
                                         }}
                                         name={'state'} placeholder={'state'} type='text'
                                         disabled={disable} />
