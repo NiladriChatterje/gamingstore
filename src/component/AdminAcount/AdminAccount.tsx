@@ -6,16 +6,10 @@ import { SignedIn, SignedOut, SignOutButton, useUser, useSignIn } from "@clerk/c
 import SubscriptionPlan from "./SubscriptionPlan/SubscriptionPlan";
 import { useEffect, useState } from "react";
 import NotFound from "../../NotFound";
-import { createClient, SanityClient } from '@sanity/client'
 import toast from "react-hot-toast";
 import { useStateContext } from "../../StateContext";
 import { useAdminStateContext } from "./AdminStateContext";
 
-const sanityClient: SanityClient = createClient({
-  projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
-  token: import.meta.env.VITE_SANITY_TOKEN,
-  dataset: 'production'
-})
 
 interface planSchemeList {
   activeDate: Date;
@@ -49,15 +43,15 @@ interface AdminFieldsType {
   }
 };
 const AdminAccount = () => {
-  const [isPlanActiveState, setIsPlanActive] = useState<boolean>(false);
+  const [isPlanActiveState, setIsPlanActive] = useState<boolean>(true);
   const { isLoaded } = useSignIn();
   const { user } = useUser();
   const { defaultLoginAdminOrUser } = useStateContext()
-  const { setAdmin } = useAdminStateContext()
+  const { setAdmin, sanityClient } = useAdminStateContext()
 
   useEffect(() => {
     async function checkAdminEnrolled() {
-      let userEnrolled: AdminFieldsType[] = await sanityClient.fetch(`*[_type=='admin' && adminId=='${user?.id}']`);
+      let userEnrolled: AdminFieldsType[] | any = await sanityClient?.fetch(`*[_type=='admin' && adminId=='${user?.id}']`);
 
       if (userEnrolled?.length === 0) {
         toast('allowing location for inventory is important');
@@ -72,7 +66,7 @@ const AdminAccount = () => {
               const { features } = await response.json();
               const placeResult = features[0];
               console.log("reverse geocoding : ", placeResult)
-              let result = await sanityClient.create({
+              let result = await sanityClient?.create({
                 _type: 'admin',
                 username: user?.firstName,
                 adminId: user?.id,
@@ -102,7 +96,7 @@ const AdminAccount = () => {
                   state: placeResult?.properties?.state,
                   country: placeResult?.properties?.country
                 },
-                _id: result._id
+                _id: result?._id
               }]
             } catch (e: Error | any) {
               toast.error(e.message)

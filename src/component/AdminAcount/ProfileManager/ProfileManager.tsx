@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import styles from './ProfileManager.module.css';
 import { MdEdit } from "react-icons/md";
 import { FaPhone, FaUser } from "react-icons/fa6";
@@ -16,43 +16,26 @@ import { useAdminStateContext } from '../AdminStateContext';
 
 
 const ProfileManager = () => {
-    const { admin } = useAdminStateContext();
+    const { admin, sanityClient } = useAdminStateContext();
     const { user } = useUser();
 
     console.log('admin ', admin)
 
     const [disable, setDisable] = useState<boolean>(true);
     const [toggleCountryCode, setToggleCountryCode] = useState<boolean>(false);
-    const [gstin, setGstin] = useState<string>(admin?.gstin ?? '');
+    const [gstin, setGstin] = useState<string>(admin?.gstin);
     const [username, setUsername] = useState<string>(admin?.firstName);
-    const [pinCode, setpinCode] = useState<string>(admin?.address?.pinCode ?? '');
-    const [country, setCountry] = useState<string>(admin?.address?.country ?? '');
-    const [state, setState] = useState<string>(admin?.address?.state ?? '');
-    const [county, setCounty] = useState<string>(admin?.address?.county ?? '');
-    const [email, setEmail] = useState<string>(admin?.address?.email);
-    const [phone, setPhone] = useState<string>(admin?.address?.phone ?? '');
+    const [pinCode, setpinCode] = useState<string>(admin?.address?.pinCode);
+    const [country, setCountry] = useState<string>(admin?.address?.country);
+    const [state, setState] = useState<string>(admin?.address?.state);
+    const [county, setCounty] = useState<string>(admin?.address?.county);
+    const [email, setEmail] = useState<string>(admin?.email);
+    const [phone, setPhone] = useState<string>(admin?.phone);
     const [OTP, setOTP] = useState<number>(0);
     const modalRef = useRef<HTMLDialogElement>(null);
-    const mailInputRef = useRef<HTMLInputElement>(null);
 
 
 
-    function alertInputFields() {
-        if (!mailInputRef?.current?.value || user?.emailAddresses[0]?.emailAddress) {
-            if (mailInputRef?.current?.style)
-                mailInputRef.current.style.border = '1px solid red';
-        } else {
-            if (mailInputRef?.current?.value || user?.emailAddresses[0]?.emailAddress) {
-                if (mailInputRef?.current?.style)
-                    mailInputRef.current.style.border = '1px solid green';
-                if (!mailInputRef?.current?.value)
-                    mailInputRef.current.value = user?.emailAddresses[0]?.emailAddress || '';
-            }
-        }
-    }
-    useMemo(() => {
-        alertInputFields();
-    }, [disable])
 
     async function onClickMailVerify() {
         try {
@@ -86,10 +69,17 @@ const ProfileManager = () => {
         }
     }
 
-    async function handleUpdate(e: FormEvent) {
-        e.preventDefault();
-
-
+    async function handleUpdate() {
+        const result = await sanityClient?.patch(admin._id).set({
+            gstin, address: {
+                pinCode,
+                county, country, state
+            }, email, phone: Number(phone)
+        }).commit();
+        // e.preventDefault();
+        console.log(result)
+        toast.success('new records updated!');
+        setDisable(true)
     }
 
     return (
@@ -163,7 +153,7 @@ const ProfileManager = () => {
                             <MdOutlineMarkEmailUnread />
                             <input value={email}
                                 onChange={e => { setEmail(e.target.value) }}
-                                name={'email'} placeholder={user?.emailAddresses[0].emailAddress}
+                                name={'email'}
                                 disabled={disable} />
                         </div>
                         <div
@@ -253,7 +243,13 @@ const ProfileManager = () => {
                             borderRadius: 5, padding: '5px 10px'
                         }}
                         size={25}
-                        onClick={() => { }}
+                        // type={'submit'}
+                        onClick={() => {
+                            if (!disable) {
+                                toast('updating...')
+                                handleUpdate()
+                            }
+                        }}
                     />
                 </section>
             </form>
