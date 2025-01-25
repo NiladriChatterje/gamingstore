@@ -13,7 +13,9 @@ const PayButtonStyle = {
     width: 'max-content',
     outline: 'none',
     fontWeight: 600,
-    borderStyle: 'none'
+    borderStyle: 'none',
+    color: 'white',
+    backgroundColor: 'rgb(85, 88, 117)'
 }
 
 const Checkout = ({ price, callback }: { price: number; callback?: Function }) => {

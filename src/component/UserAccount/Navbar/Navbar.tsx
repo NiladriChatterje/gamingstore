@@ -3,7 +3,7 @@ import styles from './Navbar.module.css'
 import './ClerkStyle.css'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { motion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useStateContext } from '../../../StateContext';
 import { useUserStateContext } from '../UserStateContext';
 import { BsFillBagPlusFill } from 'react-icons/bs';
@@ -22,7 +22,6 @@ const Navbar = () => {
   const { defaultLoginAdminOrUser, setDefaultLoginAdminOrUser } = useStateContext();
   const { navRef, setSlide } = useUserStateContext();
 
-  const navigate = useNavigate()
   return (
     <motion.nav
       ref={navRef}
@@ -67,7 +66,6 @@ const Navbar = () => {
               <button
                 className={`${styles['login-btn']} ${defaultLoginAdminOrUser === 'admin' ? styles['selected-admin-user'] : ''}`}
                 onClick={() => {
-                  navigate('/admin', { replace: true })
                   setUserLoginDiv(true);
                   localStorage.setItem("loginusertype", "admin");
                   setDefaultLoginAdminOrUser?.('admin');
@@ -81,7 +79,6 @@ const Navbar = () => {
               <button
                 className={`${styles['login-btn']} ${defaultLoginAdminOrUser === 'user' ? styles['selected-admin-user'] : ''}`}
                 onClick={() => {
-                  navigate('/user', { replace: true })
                   setUserLoginDiv(true);
                   localStorage.setItem("loginusertype", "user");
                   setDefaultLoginAdminOrUser?.('user')

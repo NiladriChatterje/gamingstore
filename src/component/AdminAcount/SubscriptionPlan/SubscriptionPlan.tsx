@@ -1,11 +1,11 @@
 import React from 'react'
-import { useUser } from '@clerk/clerk-react';
 import Checkout from '../../../utils/Checkout';
 import styles from './SubscriptionPlan.module.css';
 import { useNavigate } from 'react-router-dom';
+import { useAdminStateContext } from '../AdminStateContext';
 
 const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch<boolean> }) => {
-    const { user } = useUser();
+    const { admin } = useAdminStateContext()
     const navigate = useNavigate();
 
     return (
@@ -29,13 +29,14 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                user: user?.emailAddresses[0].id,
+                                admin: admin?.id,
                                 plan: Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_1),
-                                _payment_id, _order_id, _payment_signature
+                                _payment_id, _order_id, _payment_signature,
+                                document_id: admin._id
                             }),
                         });
-                        setIsPlanActive(true)
-                        navigate('/admin')
+                        setIsPlanActive(true);
+                        navigate('/admin');
                         return;
                     }} />
             </section>
@@ -61,9 +62,10 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                user: user?.emailAddresses[0].id,
+                                admin: admin?.id,
                                 plan: Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_2),
-                                _payment_id, _order_id, _payment_signature
+                                _payment_id, _order_id, _payment_signature,
+                                document_id: admin?._id
                             }),
                         })
                         setIsPlanActive(true)
