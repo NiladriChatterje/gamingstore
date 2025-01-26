@@ -192,16 +192,19 @@ const AddProduct = () => {
                 </section>
             </div>
             <section style={{ display: 'flex', justifyContent: 'flex-end', gap: 15 }}>
-                <IoIosPersonAdd
-                    color='white'
-                    cursor={'pointer'}
-                    style={{
-                        backgroundColor: 'rgb(52, 48, 105)',
-                        borderRadius: 5, padding: '5px 10px'
-                    }}
-                    size={25}
-                    type={'submit'}
-                />
+                <button
+                    style={{ padding: 0, borderStyle: 'none', margin: 0 }}
+                    type="submit">
+                    <IoIosPersonAdd
+                        color='white'
+                        cursor={'pointer'}
+                        style={{
+                            backgroundColor: 'rgb(52, 48, 105)',
+                            borderRadius: 5, padding: '5px 10px'
+                        }}
+                        size={25}
+                    />
+                </button>
             </section>
         </form>
     )
