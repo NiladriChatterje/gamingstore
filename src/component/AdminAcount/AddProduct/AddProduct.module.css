@@ -20,11 +20,13 @@
 }
 
 #keyword-list {
-    width: 100%;
+    width: 370px;
     padding: 5px 10px;
     overflow: auto clip;
     display: flex;
     gap: 15px;
+    border-style: none;
+    outline: none;
 }
 
 .keyword {

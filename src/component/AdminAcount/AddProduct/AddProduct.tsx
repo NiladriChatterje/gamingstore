@@ -1,4 +1,4 @@
-import { FormEvent, useState, KeyboardEvent } from "react";
+import { FormEvent, useState, KeyboardEvent, useRef } from "react";
 import styles from './AddProduct.module.css';
 import { IoIosArrowDropdownCircle, IoIosPersonAdd } from "react-icons/io";
 import { AiFillCloseCircle, AiFillProduct } from "react-icons/ai";
@@ -26,7 +26,7 @@ interface productType {
     price: productPriceType;
     keywords: string[]
 }
-
+const KeywordsMap = new Set<string>();
 const AddProduct = () => {
     const [modelNumber, setModelNumber] = useState<string>(() => '');
     const [eanUpc, setEacUpc] = useState<string>(() => '')
@@ -36,6 +36,8 @@ const AddProduct = () => {
     const [keyword, setKeyword] = useState<string>(() => '');
     const [keywordArray, setKeywordArray] = useState<string[]>(() => []);
     const [toggleEacUpcType, setToggleEacUpcType] = useState<boolean>(() => false);//close the dropdown
+
+    const keywordsRef = useRef<HTMLDivElement>(null);
 
     async function handleSubmitPdt(e: FormEvent) {
         e.preventDefault();
@@ -52,6 +54,15 @@ const AddProduct = () => {
 
     function fillKeywordsArray(e: KeyboardEvent) {
         if (e.key === 'Tab') {
+            if (keywordArray.length > 30) {
+                toast.error('limit reached');
+                return;
+            }
+            if (KeywordsMap.has(keyword.toLowerCase())) {
+                toast('Keyword is already added');
+                return
+            }
+            KeywordsMap.add(keyword.toLowerCase())
             setKeywordArray([...keywordArray, keyword]);
             setKeyword('')
         }
@@ -163,10 +174,14 @@ const AddProduct = () => {
                                     name={'keywords'} placeholder={'keywords [press Tab to add]'} type='text'
                                 />
                             </div>
-                            <div id={styles['keyword-list']}>
+                            <div ref={keywordsRef} id={styles['keyword-list']}
+                                onWheel={e => {
+                                    if (keywordsRef.current)
+                                        keywordsRef.current.scrollLeft += e.deltaY
+                                }}>
                                 {keywordArray?.map((item, i) => (
-                                    <article className={styles['keyword']}>
-                                        <span key={i}>{item}</span>
+                                    <article key={i} className={styles['keyword']}>
+                                        <span >{item}</span>
                                         <AiFillCloseCircle cursor={'pointer'}
                                             onClick={() => spliceKeywordArray(i)}
                                         />

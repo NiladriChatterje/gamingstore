@@ -22,7 +22,8 @@ input::-webkit-inner-spin-button {
 }
 
 *::-webkit-scrollbar {
-  width: 6px
+  width: 6px;
+  height: 5px
 }
 
 *::-webkit-scrollbar-track {
