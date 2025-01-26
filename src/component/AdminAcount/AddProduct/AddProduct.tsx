@@ -1,7 +1,7 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, KeyboardEvent } from "react";
 import styles from './AddProduct.module.css';
 import { IoIosArrowDropdownCircle, IoIosPersonAdd } from "react-icons/io";
-import { AiFillProduct } from "react-icons/ai";
+import { AiFillCloseCircle, AiFillProduct } from "react-icons/ai";
 import { MdConfirmationNumber, MdModelTraining, MdOutlineProductionQuantityLimits } from "react-icons/md";
 import toast from "react-hot-toast";
 import { FaRupeeSign } from "react-icons/fa";
@@ -28,12 +28,14 @@ interface productType {
 }
 
 const AddProduct = () => {
-    const [modelNumber, setModelNumber] = useState<string>('');
-    const [eanUpc, setEacUpc] = useState<string>('')
+    const [modelNumber, setModelNumber] = useState<string>(() => '');
+    const [eanUpc, setEacUpc] = useState<string>(() => '')
     const [quantity, setQuantity] = useState<number>(0)
-    const [eacUpcType, setEacUpcType] = useState<EanUpcIsbn>(EanUpcIsbn.EAN);
-    const [price, setPrice] = useState<number>(0);
-    const [toggleEacUpcType, setToggleEacUpcType] = useState<boolean>(false);//close the dropdown
+    const [eacUpcType, setEacUpcType] = useState<EanUpcIsbn>(() => EanUpcIsbn.EAN);
+    const [price, setPrice] = useState<number>(() => 0);
+    const [keyword, setKeyword] = useState<string>(() => '');
+    const [keywordArray, setKeywordArray] = useState<string[]>(() => []);
+    const [toggleEacUpcType, setToggleEacUpcType] = useState<boolean>(() => false);//close the dropdown
 
     async function handleSubmitPdt(e: FormEvent) {
         e.preventDefault();
@@ -48,6 +50,14 @@ const AddProduct = () => {
         });
     }
 
+    function fillKeywordsArray(e: KeyboardEvent) {
+        if (e.key === 'Tab')
+            setKeywordArray([...keywordArray, keyword]);
+    }
+
+    function spliceKeywordArray(index: number) {
+        setKeywordArray([...keywordArray.filter((_, i) => i !== index)])
+    }
     return (
         <form onSubmit={handleSubmitPdt}
             id={styles['form-container']}>
@@ -121,11 +131,11 @@ const AddProduct = () => {
                                     onChange={e => {
                                         setQuantity(isNaN(parseInt(e.target.value)) || Number(e.target.value) < 0 ? 0 : parseInt(e.target.value))
                                     }}
-                                    name={'quantity'} placeholder={'Quantity'} type='integer'
+                                    name={'quantity'} placeholder={'Quantity'} type='number' step={1} pattern="\d+"
                                 />
                             </div>
                             <div
-                                data-section={'quantity'}
+                                data-section={'price'}
                                 style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
                                 className={styles['input-containers']}>
                                 <FaRupeeSign />
@@ -133,8 +143,32 @@ const AddProduct = () => {
                                     onChange={e => {
                                         setPrice(isNaN(Number(e.target.value)) || Number(e.target.value) < 0 ? 0 : Number(e.target.value))
                                     }}
-                                    name={'quantity'} placeholder={'Quantity'} type='number'
+                                    name={'price'} placeholder={'price'} type='number'
                                 />
+                            </div>
+                        </section>
+                        <section>
+                            <div
+                                data-section={'keywords'}
+                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                                className={styles['input-containers']}>
+                                <MdOutlineProductionQuantityLimits />
+                                <input value={keyword}
+                                    onChange={e => {
+                                        setKeyword(e.target.value)
+                                    }}
+                                    onKeyDown={fillKeywordsArray}
+                                    name={'keywords'} placeholder={'keywords [press Tab to add]'} type='text'
+                                />
+                            </div>
+                            <div id={styles['keyword-list']}>
+                                {keywordArray?.map((item, i) => (
+                                    <article className={styles['keyword']}>
+                                        <span key={i}>{item}</span>
+                                        <AiFillCloseCircle cursor={'pointer'}
+                                            onClick={() => spliceKeywordArray(i)}
+                                        />
+                                    </article>))}
                             </div>
                         </section>
                     </fieldset>

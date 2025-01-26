@@ -19,6 +19,14 @@
     padding: 5px;
 }
 
+#keyword-list {
+    width: 100%;
+    padding: 5px 10px;
+    overflow: auto clip;
+    display: flex;
+    gap: 15px;
+}
+
 #form-input-field-container {
     display: flex;
     flex-direction: column;
