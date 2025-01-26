@@ -23,7 +23,7 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                 <Checkout
                     price={Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_1)}
                     callback={async (_payment_id: string, _payment_signature: string, _order_id: string) => {
-                        await fetch('http://localhost:5000/save-subscription', {
+                        const response = await fetch('http://localhost:5000/save-subscription', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -35,8 +35,12 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                                 document_id: admin._id
                             }),
                         });
-                        setIsPlanActive(true);
-                        navigate('/admin');
+                        const data = await response.json()
+
+                        if (data?.status == 200) {
+                            setIsPlanActive(true);
+                            navigate('/admin');
+                        }
                         return;
                     }} />
             </section>
@@ -56,7 +60,7 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                 <Checkout
                     price={Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_2)}
                     callback={async (_payment_id: string, _payment_signature: string, _order_id: string) => {
-                        await fetch('http://localhost:5000/save-subscription', {
+                        const response = await fetch('http://localhost:5000/save-subscription', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -67,9 +71,13 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                                 _payment_id, _order_id, _payment_signature,
                                 document_id: admin?._id
                             }),
-                        })
-                        setIsPlanActive(true)
-                        navigate('/admin')
+                        });
+                        const data = await response.json();
+
+                        if (data?.status === 200) {
+                            setIsPlanActive(true)
+                            navigate('/admin')
+                        }
                         return;
                     }}
                 />
