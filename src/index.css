@@ -10,6 +10,12 @@ body {
   background-color: rgb(226, 226, 226);
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 *::selection {
   background-color: rgba(87, 87, 129, 0.892);
   color: white;

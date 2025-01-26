@@ -2,8 +2,9 @@ import { FormEvent, useState } from "react";
 import styles from './AddProduct.module.css';
 import { IoIosArrowDropdownCircle, IoIosPersonAdd } from "react-icons/io";
 import { AiFillProduct } from "react-icons/ai";
-import { MdConfirmationNumber, MdModelTraining } from "react-icons/md";
+import { MdConfirmationNumber, MdModelTraining, MdOutlineProductionQuantityLimits } from "react-icons/md";
 import toast from "react-hot-toast";
+import { FaRupeeSign } from "react-icons/fa";
 
 enum EanUpcIsbn { EAN = "EAN", UPC = "UPC", ISBN = "ISBN", ASIN = "ASIN", GTIN = "GTIN", OTHERS = "OTHERS" }
 enum currency { INR = "INR", YEN = "YEN", USD = "USD" }
@@ -29,8 +30,10 @@ interface productType {
 const AddProduct = () => {
     const [modelNumber, setModelNumber] = useState<string>('');
     const [eanUpc, setEacUpc] = useState<string>('')
+    const [quantity, setQuantity] = useState<number>(0)
     const [eacUpcType, setEacUpcType] = useState<EanUpcIsbn>(EanUpcIsbn.EAN);
-    const [toggleEacUpcType, setToggleEacUpcType] = useState<boolean>(true);//close the dropdown
+    const [price, setPrice] = useState<number>(0);
+    const [toggleEacUpcType, setToggleEacUpcType] = useState<boolean>(false);//close the dropdown
 
     async function handleSubmitPdt(e: FormEvent) {
         e.preventDefault();
@@ -66,23 +69,24 @@ const AddProduct = () => {
                             </div>
                         </section>
                         <section
-                            style={{ display: 'flex', gap: 10, width: '100%' }}>
-                            <div style={{ maxWidth: 120, backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                            style={{ display: 'flex', gap: 10, width: '100%', position: 'relative' }}>
+                            <div style={{ maxWidth: 100, backgroundColor: 'rgba(255, 255, 255, 0.963)', flexGrow: 1 }}
                                 data-section={'eanUpcIsbnGtinAsinType'}
                                 className={styles['input-containers']}>
                                 <IoIosArrowDropdownCircle cursor={'pointer'}
                                     onClick={() => setToggleEacUpcType(prev => !prev)}
                                 />
+                                <input value={eacUpcType} disabled />
                                 {toggleEacUpcType && <section className={`${toggleEacUpcType ? '' : styles['product-identification-list']}`}>
-                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.EAN); setToggleEacUpcType(true) }}>EAN</dl>
-                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.UPC); setToggleEacUpcType(true) }}>UPC</dl>
-                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.ISBN); setToggleEacUpcType(true) }}>ISBN</dl>
-                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.ASIN); setToggleEacUpcType(true) }}>ASIN</dl>
-                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.GTIN); setToggleEacUpcType(true) }}>GTIN</dl>
+                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.EAN); setToggleEacUpcType(false) }}>EAN</dl>
+                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.UPC); setToggleEacUpcType(false) }}>UPC</dl>
+                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.ISBN); setToggleEacUpcType(false) }}>ISBN</dl>
+                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.ASIN); setToggleEacUpcType(false) }}>ASIN</dl>
+                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.GTIN); setToggleEacUpcType(false) }}>GTIN</dl>
                                 </section>}
                             </div>
                             <div
-                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)', flexGrow: 3 }}
                                 data-section={'EAC-UPC-ISBN-ASIN-OTHERS-Identification-Number'}
                                 className={styles['input-containers']}>
                                 <MdConfirmationNumber />
@@ -103,6 +107,33 @@ const AddProduct = () => {
                                         setModelNumber(e.target.value)
                                     }}
                                     name={'model-number'} placeholder={'model number'} type='text'
+                                />
+                            </div>
+                        </section>
+                        <section
+                            style={{ display: 'flex', gap: 15 }}>
+                            <div
+                                data-section={'quantity'}
+                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                                className={styles['input-containers']}>
+                                <MdOutlineProductionQuantityLimits />
+                                <input value={quantity}
+                                    onChange={e => {
+                                        setQuantity(isNaN(parseInt(e.target.value)) || Number(e.target.value) < 0 ? 0 : parseInt(e.target.value))
+                                    }}
+                                    name={'quantity'} placeholder={'Quantity'} type='integer'
+                                />
+                            </div>
+                            <div
+                                data-section={'quantity'}
+                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                                className={styles['input-containers']}>
+                                <FaRupeeSign />
+                                <input value={price}
+                                    onChange={e => {
+                                        setPrice(isNaN(Number(e.target.value)) || Number(e.target.value) < 0 ? 0 : Number(e.target.value))
+                                    }}
+                                    name={'quantity'} placeholder={'Quantity'} type='number'
                                 />
                             </div>
                         </section>

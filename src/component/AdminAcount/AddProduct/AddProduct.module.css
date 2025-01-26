@@ -11,6 +11,7 @@
 
 #form-container input,
 #form-container input:focus {
+    width: 100%;
     background-color: transparent;
     border-style: none;
     height: 100%;
@@ -21,29 +22,10 @@
 #form-input-field-container {
     display: flex;
     flex-direction: column;
-    max-height: 330px;
+    height: 320px;
     padding: 3px 10px;
     gap: 15px;
     overflow: clip auto;
-}
-
-#phone-number-verification-modal {
-    border-radius: 5px;
-    border-style: none;
-    background-color: rgb(237, 237, 237);
-}
-
-#verify-span-btn {
-    display: flex;
-    justify-content: flex-end;
-    font-size: 0.7em;
-    margin-bottom: 10px;
-}
-
-#verify-span-btn>span {
-    color: rgb(46, 46, 77);
-    cursor: pointer;
-    font-weight: 600;
 }
 
 .input-containers {
@@ -55,39 +37,47 @@
     border-radius: 5px;
 }
 
-
-.product-identification-list {
-    position: absolute;
-    z-index: 2;
+.input-containers[data-section='product-name']:focus-within {
+    border: 1px solid rgb(231, 0, 0);
 }
 
-.product-identification-list>dl {
+.input-containers[data-section="eanUpcIsbnGtinAsinType"] dl {
     cursor: pointer;
-    width: 100%;
+    font-size: small;
+    font-weight: 600;
+    width: 50%;
+    border-radius: 5px;
+    text-align: center;
     padding: 2px 10px;
 }
 
-#phone-country-code>section>dl:hover {
+.input-containers[data-section="eanUpcIsbnGtinAsinType"] dl:hover {
     background-color: rgb(54, 49, 83);
     color: white;
+    cursor: pointer;
 }
 
-#phone-country-code>section {
+.input-containers[data-section="eanUpcIsbnGtinAsinType"]>section {
     position: absolute;
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     z-index: 2;
-    bottom: -135px;
+    bottom: -185px;
+    box-shadow: 0 0 15px -8px grey;
     overflow: clip auto;
-    left: -20px;
-    min-height: max-content;
-    max-height: 180px;
+    left: 22px;
+    height: max-content;
+    max-height: 160px;
     border-radius: 5px;
     transition: all;
     transition-duration: 150ms;
-    background-color: rgb(245, 245, 245);
+    background-color: rgb(255, 255, 255);
 }
 
 .input-containers[data-section="EAC-UPC-ISBN-ASIN-OTHERS-Identification-Number"]:focus-within {
-    border: 1px solid red;
+    border: 1px solid rgb(225, 0, 0);
 }
 
 .product-identification-list {
@@ -96,12 +86,7 @@
     opacity: 0;
 }
 
-.input-containers dl {
-    width: max-content;
-    font-size: smaller;
-}
-
-.input-containers:focus {
+.input-containers:focus-within {
     background-color: white;
 }
 
