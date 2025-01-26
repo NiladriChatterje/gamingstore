@@ -27,6 +27,19 @@
     gap: 15px;
 }
 
+.keyword {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    background-color: grey;
+    border-radius: 15px;
+    padding: 3px 10px;
+    font-size: smaller;
+    font-weight: 600;
+    color: white;
+    align-items: center;
+}
+
 #form-input-field-container {
     display: flex;
     flex-direction: column;

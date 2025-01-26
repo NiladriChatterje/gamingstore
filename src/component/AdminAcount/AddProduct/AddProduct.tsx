@@ -51,8 +51,10 @@ const AddProduct = () => {
     }
 
     function fillKeywordsArray(e: KeyboardEvent) {
-        if (e.key === 'Tab')
+        if (e.key === 'Tab') {
             setKeywordArray([...keywordArray, keyword]);
+            setKeyword('')
+        }
     }
 
     function spliceKeywordArray(index: number) {
