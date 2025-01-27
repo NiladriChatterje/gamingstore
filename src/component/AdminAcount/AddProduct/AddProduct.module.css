@@ -60,7 +60,10 @@
     border-radius: 5px;
 }
 
-.input-containers[data-section='product-name']:focus-within {
+.input-containers[data-section='price']:focus-within,
+.input-containers[data-section="EAC-UPC-ISBN-ASIN-OTHERS-Identification-Number"]:focus-within,
+.input-containers[data-section='product-name']:focus-within,
+.input-containers[data-section="quantity"]:focus-within {
     border: 1px solid rgb(231, 0, 0);
 }
 
@@ -87,7 +90,7 @@
     flex-direction: column;
     align-items: center;
     z-index: 2;
-    bottom: -185px;
+    top: 40px;
     box-shadow: 0 0 15px -8px grey;
     overflow: clip auto;
     left: 22px;
@@ -99,9 +102,6 @@
     background-color: rgb(255, 255, 255);
 }
 
-.input-containers[data-section="EAC-UPC-ISBN-ASIN-OTHERS-Identification-Number"]:focus-within {
-    border: 1px solid rgb(225, 0, 0);
-}
 
 .product-identification-list {
     transform: translateY(-10px);
@@ -111,6 +111,10 @@
 
 .input-containers:focus-within {
     background-color: white;
+}
+
+.input-containers[data-section='modelNumber'] {
+    flex-grow: 1;
 }
 
 #form-container input::placeholder {

@@ -1,4 +1,4 @@
-import { FormEvent, useState, KeyboardEvent, useRef } from "react";
+import { FormEvent, useState, KeyboardEvent, useRef, useEffect } from "react";
 import styles from './AddProduct.module.css';
 import { IoIosArrowDropdownCircle, IoIosPersonAdd } from "react-icons/io";
 import { AiFillCloseCircle, AiFillProduct } from "react-icons/ai";
@@ -36,13 +36,23 @@ const AddProduct = () => {
     const [keyword, setKeyword] = useState<string>(() => '');
     const [keywordArray, setKeywordArray] = useState<string[]>(() => []);
     const [toggleEacUpcType, setToggleEacUpcType] = useState<boolean>(() => false);//close the dropdown
+    const [checked, setChecked] = useState<boolean>(() => false);
 
-    const keywordsRef = useRef<HTMLDivElement>(null);
+    const keywordsRef = useRef<HTMLDivElement>(null);//for horizontal scrolling
+    const modelNumberRef = useRef<HTMLDivElement>(null);
 
     async function handleSubmitPdt(e: FormEvent) {
         e.preventDefault();
-        toast('submitting')
-        return;
+        if (!eanUpc || !quantity || !price || !keywordArray.length) {
+            toast('Please fill necessary fields!')
+            return
+        }
+        if (checked)
+            if (!modelNumber) {
+                toast('Model number for gadgets are mandatory!');
+                return;
+            }
+
         await fetch('http://localhost:5000/add-product', {
             method: 'POST',
             headers: {
@@ -71,6 +81,16 @@ const AddProduct = () => {
     function spliceKeywordArray(index: number) {
         setKeywordArray([...keywordArray.filter((_, i) => i !== index)])
     }
+
+    useEffect(() => {
+        if (checked && modelNumberRef.current) {
+            modelNumberRef.current.style.border = '1px solid red'
+        }
+        else
+            if (modelNumberRef.current)
+                modelNumberRef.current.style.border = 'none'
+    }, [checked])
+
     return (
         <form onSubmit={handleSubmitPdt}
             id={styles['form-container']}>
@@ -85,7 +105,6 @@ const AddProduct = () => {
                                 className={styles['input-containers']}>
                                 <AiFillProduct />
                                 <input
-
                                     name={'product-name'} placeholder={'Product Name'}
                                     maxLength={6} minLength={6}
                                     type='text' />
@@ -119,8 +138,22 @@ const AddProduct = () => {
                                     name={'ean-upc'} placeholder={'EAN | UPC | ISBN | ASIN | GTIN | OTHERS'} type='text' />
                             </div>
                         </section>
-                        <section>
+                        <section
+                            style={{ display: 'flex', gap: 15 }}>
                             <div
+                                data-section={'isGadget'}
+                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                                className={styles['input-containers']}>
+                                <input
+                                    onChange={e => {
+                                        setChecked(e.target.checked)
+                                    }}
+                                    name={'is-gadget'} type='checkbox'
+                                />
+                                <label>Gadget</label>
+                            </div>
+                            <div
+                                ref={modelNumberRef}
                                 data-section={'modelNumber'}
                                 style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
                                 className={styles['input-containers']}>
@@ -193,7 +226,7 @@ const AddProduct = () => {
             </div>
             <section style={{ display: 'flex', justifyContent: 'flex-end', gap: 15 }}>
                 <button
-                    style={{ padding: 0, borderStyle: 'none', margin: 0 }}
+                    style={{ padding: 0, borderStyle: 'none', margin: 0, outline: 'none' }}
                     type="submit">
                     <IoIosPersonAdd
                         color='white'
