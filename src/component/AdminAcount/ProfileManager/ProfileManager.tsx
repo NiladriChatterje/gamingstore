@@ -154,7 +154,8 @@ const ProfileManager = () => {
                             <input value={email}
                                 onChange={e => { setEmail(e.target.value) }}
                                 name={'email'}
-                                disabled={disable} />
+                                disabled={disable}
+                                placeholder={admin?.email ?? 'example@domain.com'} />
                         </div>
                         <div
                             id={styles['verify-span-btn']}
@@ -176,7 +177,7 @@ const ProfileManager = () => {
                                     <input
                                         value={pinCode}
                                         onChange={e => setpinCode(e.target.value)}
-                                        name={'pinCode'} placeholder={'pinCode'}
+                                        name={'pinCode'} placeholder={admin.address?.pinCode ?? 'PIN code'}
                                         maxLength={6} minLength={6}
                                         type='text' disabled={disable} />
                                 </div>
@@ -189,7 +190,7 @@ const ProfileManager = () => {
                                     <input
                                         value={county}
                                         onChange={e => { setCounty(e.target.value) }}
-                                        name={'county'} placeholder={'county'} type='text' disabled={disable} />
+                                        name={'county'} placeholder={admin.address?.county ?? 'county'} type='text' disabled={disable} />
                                 </div>
                             </section>
                             <section>
@@ -202,7 +203,7 @@ const ProfileManager = () => {
                                         onChange={e => {
                                             setCountry(e.target.value)
                                         }}
-                                        name={'country'} placeholder={'country'} type='text'
+                                        name={'country'} placeholder={admin.address?.country ?? 'country'} type='text'
                                         disabled={disable} />
                                 </div>
                             </section>
@@ -215,7 +216,7 @@ const ProfileManager = () => {
                                         onChange={e => {
                                             setState(e.target.value)
                                         }}
-                                        name={'state'} placeholder={'state'} type='text'
+                                        name={'state'} placeholder={admin.address?.state ?? 'state'} type='text'
                                         disabled={disable} />
                                 </div>
                             </section>

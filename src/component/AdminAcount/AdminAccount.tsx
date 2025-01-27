@@ -105,7 +105,7 @@ const AdminAccount = () => {
         });
       }
       else {
-
+        setAdmin?.(userEnrolled[0]);
       }
       return userEnrolled
     }
