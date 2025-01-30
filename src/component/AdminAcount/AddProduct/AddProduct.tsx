@@ -5,6 +5,7 @@ import { AiFillCloseCircle, AiFillProduct } from "react-icons/ai";
 import { MdConfirmationNumber, MdModelTraining, MdOutlineProductionQuantityLimits } from "react-icons/md";
 import toast from "react-hot-toast";
 import { FaRupeeSign } from "react-icons/fa";
+import { ImUpload } from "react-icons/im";
 
 enum EanUpcIsbn { EAN = "EAN", UPC = "UPC", ISBN = "ISBN", ASIN = "ASIN", GTIN = "GTIN", OTHERS = "OTHERS" }
 enum currency { INR = "INR", YEN = "YEN", USD = "USD" }
@@ -17,7 +18,7 @@ type productPriceType = {
 
 interface productType {
     productName: string;
-    image: File[];
+    image: FileList | null;
     eanUpcIsbnGtinAsinType: EanUpcIsbn;
     eanUpcIsbnGtinAsinNumber: string;
     modelNumber?: string;
@@ -30,8 +31,10 @@ const KeywordsMap = new Set<string>();
 const AddProduct = () => {
     const [modelNumber, setModelNumber] = useState<string>(() => '');
     const [eanUpc, setEacUpc] = useState<string>(() => '')
+    const [productName, setProductName] = useState<string>(() => '')
+    const [images, setImages] = useState<FileList | null>(() => (null));
     const [quantity, setQuantity] = useState<number>(0)
-    const [eacUpcType, setEacUpcType] = useState<EanUpcIsbn>(() => EanUpcIsbn.EAN);
+    const [eanUpcType, setEacUpcType] = useState<EanUpcIsbn>(() => EanUpcIsbn.EAN);
     const [price, setPrice] = useState<number>(() => 0);
     const [keyword, setKeyword] = useState<string>(() => '');
     const [keywordArray, setKeywordArray] = useState<string[]>(() => []);
@@ -47,18 +50,33 @@ const AddProduct = () => {
             toast('Please fill necessary fields!')
             return
         }
-        if (checked)
+        const formData: productType = {
+            productName: productName,
+            eanUpcIsbnGtinAsinType: eanUpcType,
+            eanUpcIsbnGtinAsinNumber: eanUpc,
+            quantity,
+            price: {
+                currency: currency.INR,
+                pdtPrice: price,
+                discountPercentage: 0
+            },
+            keywords: keywordArray,
+            image: images,
+            seller: []
+        }
+        if (checked) {
             if (!modelNumber) {
                 toast('Model number for gadgets are mandatory!');
                 return;
             }
-
+            formData.modelNumber = modelNumber
+        }
         await fetch('http://localhost:5000/add-product', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify('')
+            body: JSON.stringify(formData)
         });
     }
 
@@ -93,6 +111,7 @@ const AddProduct = () => {
 
     return (
         <form onSubmit={handleSubmitPdt}
+            encType={'multipart/form-data'}
             id={styles['form-container']}>
             <div id={styles['form-input-field-container']}>
                 <section data-label="product-details">
@@ -106,7 +125,7 @@ const AddProduct = () => {
                                 <AiFillProduct />
                                 <input
                                     name={'product-name'} placeholder={'Product Name'}
-                                    maxLength={6} minLength={6}
+                                    onInput={e => { setProductName(e.currentTarget.value) }}
                                     type='text' />
                             </div>
                         </section>
@@ -118,7 +137,7 @@ const AddProduct = () => {
                                 <IoIosArrowDropdownCircle cursor={'pointer'}
                                     onClick={() => setToggleEacUpcType(prev => !prev)}
                                 />
-                                <input value={eacUpcType} disabled />
+                                <input name='eanUpcType' value={eanUpcType} disabled />
                                 {toggleEacUpcType && <section className={`${toggleEacUpcType ? '' : styles['product-identification-list']}`}>
                                     <dl onClick={() => { setEacUpcType(EanUpcIsbn.EAN); setToggleEacUpcType(false) }}>EAN</dl>
                                     <dl onClick={() => { setEacUpcType(EanUpcIsbn.UPC); setToggleEacUpcType(false) }}>UPC</dl>
@@ -163,6 +182,22 @@ const AddProduct = () => {
                                         setModelNumber(e.target.value)
                                     }}
                                     name={'model-number'} placeholder={'model number'} type='text'
+                                />
+                            </div>
+                        </section>
+                        <section
+                            style={{ display: 'flex', gap: 15 }}>
+                            <div
+                                data-section={'product-images'}
+                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                                className={styles['input-containers']}>
+                                <ImUpload size={35} />
+                                <input
+
+                                    onChange={e => {
+                                        setImages(e.target.files)
+                                    }}
+                                    name={'product-images'} placeholder={'Image'} type='file' accept="image/*"
                                 />
                             </div>
                         </section>
