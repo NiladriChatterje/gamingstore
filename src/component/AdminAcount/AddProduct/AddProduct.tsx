@@ -188,29 +188,25 @@ const AddProduct = () => {
                         <section
                             style={{ display: 'flex', gap: 15 }}>
                             <div
-                                data-section={'product-images'}
-                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
-                                className={styles['input-containers']}>
-                                <ImUpload size={35} />
-                                <input
-
-                                    onChange={e => {
-                                        setImages(e.target.files)
-                                    }}
-                                    name={'product-images'} placeholder={'Image'} type='file' accept="image/*"
-                                />
-                            </div>
-                        </section>
-                        <section
-                            style={{ display: 'flex', gap: 15 }}>
-                            <div
                                 data-section={'quantity'}
                                 style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
                                 className={styles['input-containers']}>
                                 <MdOutlineProductionQuantityLimits />
                                 <input value={quantity}
                                     onChange={e => {
-                                        setQuantity(isNaN(parseInt(e.target.value)) || Number(e.target.value) < 0 ? 0 : parseInt(e.target.value))
+                                        if (isNaN(parseInt(e.target.value))) {
+                                            toast.error('Quantity must be whole number!')
+                                            return;
+                                        }
+                                        if (Number(e.target.value) < 0) {
+                                            toast.error('Quantity cannot be -ve!')
+                                            return;
+                                        }
+                                        if (e.target.value.includes('.')) {
+                                            toast.error('Quantity cannot be in fraction!')
+                                            return;
+                                        }
+                                        setQuantity(parseInt(e.target.value))
                                     }}
                                     name={'quantity'} placeholder={'Quantity'} type='number' step={1} pattern="\d+"
                                 />
@@ -222,7 +218,15 @@ const AddProduct = () => {
                                 <FaRupeeSign />
                                 <input value={price}
                                     onChange={e => {
-                                        setPrice(isNaN(Number(e.target.value)) || Number(e.target.value) < 0 ? 0 : Number(e.target.value))
+                                        if (isNaN(Number(e.target.value))) {
+                                            toast.error('Only numbers are accepted!');
+                                            return
+                                        }
+                                        if (Number(e.target.value) < 0) {
+                                            toast.error('Price cannot be -ve!');
+                                            return;
+                                        }
+                                        setPrice(Number(e.target.value))
                                     }}
                                     name={'price'} placeholder={'price'} type='number'
                                 />
@@ -254,6 +258,29 @@ const AddProduct = () => {
                                             onClick={() => spliceKeywordArray(i)}
                                         />
                                     </article>))}
+                            </div>
+                        </section>
+                        <section
+                            style={{ display: 'flex', gap: 15, justifyContent: 'center', alignItems: 'center' }}>
+                            <div
+                                data-section={'product-images'}
+                                style={{
+                                    backgroundColor: 'rgba(255, 255, 255, 0.963)', flexGrow: 1,
+                                    width: 'max-content', height: 90
+                                }}
+                                className={styles['input-containers']}>
+                                <ImUpload size={35} />
+                                <input
+                                    onChange={e => {
+                                        if (images && images?.length > 6) {
+                                            toast.error('Images list full!')
+                                            return;
+                                        }
+                                        setImages(e.target.files)
+                                    }}
+                                    multiple={true}
+                                    name={'product-images'} placeholder={'Image'} type='file' accept="image/*"
+                                />
                             </div>
                         </section>
                     </fieldset>
