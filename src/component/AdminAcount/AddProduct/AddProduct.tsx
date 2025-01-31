@@ -118,6 +118,7 @@ const AddProduct = () => {
                     <fieldset style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                         <legend>Product Details</legend>
                         <section>
+                            <label>Product Name</label>
                             <div
                                 style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
                                 data-section={'product-name'}
@@ -129,60 +130,66 @@ const AddProduct = () => {
                                     type='text' />
                             </div>
                         </section>
-                        <section
-                            style={{ display: 'flex', gap: 10, width: '100%', position: 'relative' }}>
-                            <div style={{ maxWidth: 100, backgroundColor: 'rgba(255, 255, 255, 0.963)', flexGrow: 1 }}
-                                data-section={'eanUpcIsbnGtinAsinType'}
-                                className={styles['input-containers']}>
-                                <IoIosArrowDropdownCircle cursor={'pointer'}
-                                    onClick={() => setToggleEacUpcType(prev => !prev)}
-                                />
-                                <input name='eanUpcType' value={eanUpcType} disabled />
-                                {toggleEacUpcType && <section className={`${toggleEacUpcType ? '' : styles['product-identification-list']}`}>
-                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.EAN); setToggleEacUpcType(false) }}>EAN</dl>
-                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.UPC); setToggleEacUpcType(false) }}>UPC</dl>
-                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.ISBN); setToggleEacUpcType(false) }}>ISBN</dl>
-                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.ASIN); setToggleEacUpcType(false) }}>ASIN</dl>
-                                    <dl onClick={() => { setEacUpcType(EanUpcIsbn.GTIN); setToggleEacUpcType(false) }}>GTIN</dl>
-                                </section>}
-                            </div>
-                            <div
-                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)', flexGrow: 3 }}
-                                data-section={'EAC-UPC-ISBN-ASIN-OTHERS-Identification-Number'}
-                                className={styles['input-containers']}>
-                                <MdConfirmationNumber />
-                                <input
-                                    value={eanUpc}
-                                    onChange={e => { setEacUpc(e.target.value) }}
-                                    name={'ean-upc'} placeholder={'EAN | UPC | ISBN | ASIN | GTIN | OTHERS'} type='text' />
-                            </div>
+                        <section>
+                            <label>EAN|UPC|GTIN|ISBN|ASIN|OTHERS</label>
+                            <article
+                                style={{ display: 'flex', gap: 10, width: '100%', position: 'relative' }}>
+                                <div style={{ maxWidth: 100, backgroundColor: 'rgba(255, 255, 255, 0.963)', flexGrow: 1 }}
+                                    data-section={'eanUpcIsbnGtinAsinType'}
+                                    className={styles['input-containers']}>
+                                    <IoIosArrowDropdownCircle cursor={'pointer'}
+                                        onClick={() => setToggleEacUpcType(prev => !prev)}
+                                    />
+                                    <input name='eanUpcType' value={eanUpcType} disabled />
+                                    {toggleEacUpcType && <section className={`${toggleEacUpcType ? '' : styles['product-identification-list']}`}>
+                                        <dl onClick={() => { setEacUpcType(EanUpcIsbn.EAN); setToggleEacUpcType(false) }}>EAN</dl>
+                                        <dl onClick={() => { setEacUpcType(EanUpcIsbn.UPC); setToggleEacUpcType(false) }}>UPC</dl>
+                                        <dl onClick={() => { setEacUpcType(EanUpcIsbn.ISBN); setToggleEacUpcType(false) }}>ISBN</dl>
+                                        <dl onClick={() => { setEacUpcType(EanUpcIsbn.ASIN); setToggleEacUpcType(false) }}>ASIN</dl>
+                                        <dl onClick={() => { setEacUpcType(EanUpcIsbn.GTIN); setToggleEacUpcType(false) }}>GTIN</dl>
+                                    </section>}
+                                </div>
+                                <div
+                                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)', flexGrow: 3 }}
+                                    data-section={'EAC-UPC-ISBN-ASIN-OTHERS-Identification-Number'}
+                                    className={styles['input-containers']}>
+                                    <MdConfirmationNumber />
+                                    <input
+                                        value={eanUpc}
+                                        onChange={e => { setEacUpc(e.target.value) }}
+                                        name={'ean-upc'} placeholder={'EAN | UPC | ISBN | ASIN | GTIN | OTHERS'} type='text' />
+                                </div>
+                            </article>
+
                         </section>
-                        <section
-                            style={{ display: 'flex', gap: 15 }}>
-                            <div
-                                data-section={'isGadget'}
-                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
-                                className={styles['input-containers']}>
-                                <input
-                                    onChange={e => {
-                                        setChecked(e.target.checked)
-                                    }}
-                                    name={'is-gadget'} type='checkbox'
-                                />
-                                <label>Gadget</label>
-                            </div>
-                            <div
-                                ref={modelNumberRef}
-                                data-section={'modelNumber'}
-                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
-                                className={styles['input-containers']}>
-                                <MdModelTraining />
-                                <input value={modelNumber}
-                                    onChange={e => {
-                                        setModelNumber(e.target.value)
-                                    }}
-                                    name={'model-number'} placeholder={'model number'} type='text'
-                                />
+                        <section>
+                            <label>Model Number</label>
+                            <div style={{ display: 'flex', gap: 15 }}>
+                                <div
+                                    data-section={'isGadget'}
+                                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                                    className={styles['input-containers']}>
+                                    <input
+                                        onChange={e => {
+                                            setChecked(e.target.checked)
+                                        }}
+                                        name={'is-gadget'} type='checkbox'
+                                    />
+                                    <label>Gadget</label>
+                                </div>
+                                <div
+                                    ref={modelNumberRef}
+                                    data-section={'modelNumber'}
+                                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                                    className={styles['input-containers']}>
+                                    <MdModelTraining />
+                                    <input value={modelNumber}
+                                        onChange={e => {
+                                            setModelNumber(e.target.value)
+                                        }}
+                                        name={'model-number'} placeholder={'model number'} type='text'
+                                    />
+                                </div>
                             </div>
                         </section>
                         <section
@@ -195,7 +202,8 @@ const AddProduct = () => {
                                 <input value={quantity}
                                     onChange={e => {
                                         if (isNaN(parseInt(e.target.value))) {
-                                            toast.error('Quantity must be whole number!')
+                                            toast.error('Quantity must be whole number!');
+                                            setQuantity(0)
                                             return;
                                         }
                                         if (Number(e.target.value) < 0) {
@@ -206,6 +214,9 @@ const AddProduct = () => {
                                             toast.error('Quantity cannot be in fraction!')
                                             return;
                                         }
+                                        if (e.target.value[0] === '0')
+                                            e.target.value = e.target.value.slice(1)
+
                                         setQuantity(parseInt(e.target.value))
                                     }}
                                     name={'quantity'} placeholder={'Quantity'} type='number' step={1} pattern="\d+"
@@ -226,6 +237,9 @@ const AddProduct = () => {
                                             toast.error('Price cannot be -ve!');
                                             return;
                                         }
+                                        if (e.target.value[0] === '0')
+                                            e.target.value = e.target.value.slice(1);
+
                                         setPrice(Number(e.target.value))
                                     }}
                                     name={'price'} placeholder={'price'} type='number'
