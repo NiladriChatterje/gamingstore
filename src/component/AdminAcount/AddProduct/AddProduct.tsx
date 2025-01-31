@@ -18,7 +18,7 @@ type productPriceType = {
 
 interface productType {
     productName: string;
-    image: FileList | null;
+    image: File[];
     eanUpcIsbnGtinAsinType: EanUpcIsbn;
     eanUpcIsbnGtinAsinNumber: string;
     modelNumber?: string;
@@ -32,7 +32,7 @@ const AddProduct = () => {
     const [modelNumber, setModelNumber] = useState<string>(() => '');
     const [eanUpc, setEacUpc] = useState<string>(() => '')
     const [productName, setProductName] = useState<string>(() => '')
-    const [images, setImages] = useState<FileList | null>(() => (null));
+    const [images, setImages] = useState<File[]>(() => ([]));
     const [quantity, setQuantity] = useState<number>(0)
     const [eanUpcType, setEacUpcType] = useState<EanUpcIsbn>(() => EanUpcIsbn.EAN);
     const [price, setPrice] = useState<number>(() => 0);
@@ -41,8 +41,12 @@ const AddProduct = () => {
     const [toggleEacUpcType, setToggleEacUpcType] = useState<boolean>(() => false);//close the dropdown
     const [checked, setChecked] = useState<boolean>(() => false);
 
+    const [blobUrl, setBlobURL] = useState('')
+
     const keywordsRef = useRef<HTMLDivElement>(null);//for horizontal scrolling
     const modelNumberRef = useRef<HTMLDivElement>(null);
+    const ImageInputRef = useRef<HTMLInputElement>(null);
+    const testImgRef = useRef<HTMLImageElement>(null);
 
     async function handleSubmitPdt(e: FormEvent) {
         e.preventDefault();
@@ -102,11 +106,15 @@ const AddProduct = () => {
 
     useEffect(() => {
         if (checked && modelNumberRef.current) {
-            modelNumberRef.current.style.border = '1px solid red'
+            modelNumberRef.current.style.border = '1px solid red';
+            modelNumberRef.current.style.boxShadow = '0 0 8px -5px red';
+
         }
         else
-            if (modelNumberRef.current)
+            if (modelNumberRef.current) {
                 modelNumberRef.current.style.border = 'none'
+                modelNumberRef.current.style.boxShadow = '0 0 0 0 transparent';
+            }
     }, [checked])
 
     return (
@@ -194,107 +202,147 @@ const AddProduct = () => {
                         </section>
                         <section
                             style={{ display: 'flex', gap: 15 }}>
-                            <div
-                                data-section={'quantity'}
-                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
-                                className={styles['input-containers']}>
-                                <MdOutlineProductionQuantityLimits />
-                                <input value={quantity}
-                                    onChange={e => {
-                                        if (isNaN(parseInt(e.target.value))) {
-                                            toast.error('Quantity must be whole number!');
-                                            setQuantity(0)
-                                            return;
-                                        }
-                                        if (Number(e.target.value) < 0) {
-                                            toast.error('Quantity cannot be -ve!')
-                                            return;
-                                        }
-                                        if (e.target.value.includes('.')) {
-                                            toast.error('Quantity cannot be in fraction!')
-                                            return;
-                                        }
-                                        if (e.target.value[0] === '0')
-                                            e.target.value = e.target.value.slice(1)
+                            <div>
+                                <label>Quantity :</label>
+                                <div
+                                    data-section={'quantity'}
+                                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                                    className={styles['input-containers']}>
+                                    <MdOutlineProductionQuantityLimits />
+                                    <input value={quantity}
+                                        onChange={e => {
+                                            if (isNaN(parseInt(e.target.value))) {
+                                                toast.error('Quantity must be whole number!');
+                                                setQuantity(0)
+                                                return;
+                                            }
+                                            if (Number(e.target.value) < 0) {
+                                                toast.error('Quantity cannot be -ve!')
+                                                return;
+                                            }
+                                            if (e.target.value.includes('.')) {
+                                                toast.error('Quantity cannot be in fraction!')
+                                                return;
+                                            }
+                                            if (e.target.value[0] === '0')
+                                                e.target.value = e.target.value.slice(1)
 
-                                        setQuantity(parseInt(e.target.value))
-                                    }}
-                                    name={'quantity'} placeholder={'Quantity'} type='number' step={1} pattern="\d+"
-                                />
+                                            setQuantity(parseInt(e.target.value))
+                                        }}
+                                        name={'quantity'} placeholder={'Quantity'} type='number' step={1} pattern="\d+"
+                                    />
+                                </div>
                             </div>
-                            <div
-                                data-section={'price'}
-                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
-                                className={styles['input-containers']}>
-                                <FaRupeeSign />
-                                <input value={price}
-                                    onChange={e => {
-                                        if (isNaN(Number(e.target.value))) {
-                                            toast.error('Only numbers are accepted!');
-                                            return
-                                        }
-                                        if (Number(e.target.value) < 0) {
-                                            toast.error('Price cannot be -ve!');
-                                            return;
-                                        }
-                                        if (e.target.value[0] === '0')
-                                            e.target.value = e.target.value.slice(1);
+                            <div>
+                                <label>Price :</label>
+                                <div
+                                    data-section={'price'}
+                                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                                    className={styles['input-containers']}>
+                                    <FaRupeeSign />
+                                    <input value={price}
+                                        onChange={e => {
+                                            if (isNaN(Number(e.target.value))) {
+                                                toast.error('Only numbers are accepted!');
+                                                return
+                                            }
+                                            if (Number(e.target.value) < 0) {
+                                                toast.error('Price cannot be -ve!');
+                                                return;
+                                            }
+                                            if (e.target.value[0] === '0')
+                                                e.target.value = e.target.value.slice(1);
 
-                                        setPrice(Number(e.target.value))
-                                    }}
-                                    name={'price'} placeholder={'price'} type='number'
-                                />
+                                            setPrice(Number(e.target.value))
+                                        }}
+                                        name={'price'} placeholder={'price'} type='number'
+                                    />
+                                </div>
                             </div>
                         </section>
                         <section>
-                            <div
-                                data-section={'keywords'}
-                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
-                                className={styles['input-containers']}>
-                                <MdOutlineProductionQuantityLimits />
-                                <input value={keyword}
-                                    onChange={e => {
-                                        setKeyword(e.target.value)
-                                    }}
-                                    onKeyDown={fillKeywordsArray}
-                                    name={'keywords'} placeholder={'keywords [press Tab to add]'} type='text'
-                                />
-                            </div>
-                            <div ref={keywordsRef} id={styles['keyword-list']}
-                                onWheel={e => {
-                                    if (keywordsRef.current)
-                                        keywordsRef.current.scrollLeft += e.deltaY
-                                }}>
-                                {keywordArray?.map((item, i) => (
-                                    <article key={i} className={styles['keyword']}>
-                                        <span >{item}</span>
-                                        <AiFillCloseCircle cursor={'pointer'}
-                                            onClick={() => spliceKeywordArray(i)}
-                                        />
-                                    </article>))}
+                            <label>Keywords :</label>
+                            <div>
+                                <div
+                                    data-section={'keywords'}
+                                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                                    className={styles['input-containers']}>
+                                    <MdOutlineProductionQuantityLimits />
+                                    <input value={keyword}
+                                        onChange={e => {
+                                            setKeyword(e.target.value)
+                                        }}
+                                        onKeyDown={fillKeywordsArray}
+                                        name={'keywords'} placeholder={'keywords [press Tab to add]'} type='text'
+                                    />
+                                </div>
+                                <div ref={keywordsRef} id={styles['keyword-list']}
+                                    onWheel={e => {
+                                        if (keywordsRef.current)
+                                            keywordsRef.current.scrollLeft += e.deltaY
+                                    }}>
+                                    {keywordArray?.map((item, i) => (
+                                        <article key={i} className={styles['keyword']}>
+                                            <span >{item}</span>
+                                            <AiFillCloseCircle cursor={'pointer'}
+                                                onClick={() => spliceKeywordArray(i)}
+                                            />
+                                        </article>))}
+                                </div>
                             </div>
                         </section>
-                        <section
-                            style={{ display: 'flex', gap: 15, justifyContent: 'center', alignItems: 'center' }}>
-                            <div
-                                data-section={'product-images'}
-                                style={{
-                                    backgroundColor: 'rgba(255, 255, 255, 0.963)', flexGrow: 1,
-                                    width: 'max-content', height: 90
-                                }}
-                                className={styles['input-containers']}>
-                                <ImUpload size={35} />
-                                <input
-                                    onChange={e => {
-                                        if (images && images?.length > 6) {
-                                            toast.error('Images list full!')
-                                            return;
-                                        }
-                                        setImages(e.target.files)
+                        <section>
+                            <label>Product images :</label>
+                            <div>
+                                <div
+                                    onClick={() => {
+                                        ImageInputRef.current?.click()
                                     }}
-                                    multiple={true}
-                                    name={'product-images'} placeholder={'Image'} type='file' accept="image/*"
-                                />
+                                    data-section={'product-images'}
+                                    style={{
+                                        backgroundColor: 'rgba(255, 255, 255, 0.963)', display: 'flex',
+                                        justifyContent: 'center', alignItems: 'center',
+                                        height: 90, cursor: 'pointer'
+                                    }}
+                                    className={styles['input-containers']}>
+                                    <ImUpload size={35}
+                                        id={'img-upload'}
+                                    />
+                                    <input
+                                        id={styles['images-input']}
+                                        ref={ImageInputRef}
+                                        onChange={async e => {
+                                            if (images && images?.length > 6) {
+                                                toast.error('Images list full!')
+                                                return;
+                                            }
+                                            const imagesList = []
+                                            if (e.target?.files)
+                                                for (let i = 0; i < e.target.files?.length; i++)
+                                                    if (e.target.files.item(i) !== null)
+                                                        imagesList.push(e.target.files.item(i));
+
+                                            setImages([images, ...imagesList] as File[])
+                                            const buffer = await imagesList[0]?.arrayBuffer()
+                                            console.log(imagesList);
+                                            if (buffer) {
+                                                const blob = new Blob([new Uint8Array(buffer)])
+                                                console.log(blob)
+                                                const url = URL.createObjectURL(blob);
+                                                console.log(url)
+                                                setBlobURL(url)
+                                            }
+                                        }}
+                                        multiple={true}
+                                        name={'product-images'} placeholder={'Image'} type='file' accept="image/*"
+                                    />
+                                </div>
+                                <img ref={testImgRef} src={blobUrl} />
+                                <div>
+                                    {images?.map((item, i) => (
+                                        <img key={i} src={'s'} />
+                                    ))}
+                                </div>
                             </div>
                         </section>
                     </fieldset>

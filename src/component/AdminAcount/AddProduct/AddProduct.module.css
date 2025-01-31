@@ -55,6 +55,10 @@
     font-size: x-small;
 }
 
+#images-input {
+    display: none;
+}
+
 .input-containers {
     position: relative;
     gap: 15px;
@@ -64,11 +68,31 @@
     border-radius: 5px;
 }
 
+.input-containers[data-section='price']::after,
+.input-containers[data-section="EAC-UPC-ISBN-ASIN-OTHERS-Identification-Number"]::after,
+.input-containers[data-section='product-name']::after,
+.input-containers[data-section="quantity"]::after,
+.input-containers[data-section="keywords"]::after {
+    content: '*';
+    box-sizing: border-box;
+    display: block;
+    width: 20px;
+    height: 20px;
+    color: red;
+    position: absolute;
+    top: -15px;
+    right: 0;
+
+}
+
+
 .input-containers[data-section='price']:focus-within,
 .input-containers[data-section="EAC-UPC-ISBN-ASIN-OTHERS-Identification-Number"]:focus-within,
 .input-containers[data-section='product-name']:focus-within,
-.input-containers[data-section="quantity"]:focus-within {
+.input-containers[data-section="quantity"]:focus-within,
+.input-containers[data-section="keywords"]:focus-within {
     border: 1px solid rgb(231, 0, 0);
+    box-shadow: 0 0 8px -5px red;
 }
 
 .input-containers[data-section="eanUpcIsbnGtinAsinType"] dl {

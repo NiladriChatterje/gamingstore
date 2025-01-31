@@ -27,6 +27,10 @@
     overflow: clip auto;
 }
 
+#form-input-field-container label {
+    font-size: x-small;
+}
+
 #phone-number-verification-modal {
     border-radius: 5px;
     border-style: none;
