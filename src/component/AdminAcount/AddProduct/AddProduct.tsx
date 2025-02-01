@@ -36,6 +36,7 @@ const AddProduct = () => {
     const [quantity, setQuantity] = useState<number>(0)
     const [eanUpcType, setEacUpcType] = useState<EanUpcIsbn>(() => EanUpcIsbn.EAN);
     const [price, setPrice] = useState<number>(() => 0);
+    const [discount, setDiscount] = useState<number>(() => 0);
     const [keyword, setKeyword] = useState<string>(() => '');
     const [imageToUrlPreviewMap, _] = useState<Map<Blob, string>>(() => new Map<Blob, string>());
     const [keywordArray, setKeywordArray] = useState<string[]>(() => []);
@@ -56,7 +57,7 @@ const AddProduct = () => {
             toast('Please fill necessary fields!')
             return
         }
-        const formData: productType = {
+        const JSONObj: productType = {
             productName: productName,
             eanUpcIsbnGtinAsinType: eanUpcType,
             eanUpcIsbnGtinAsinNumber: eanUpc,
@@ -75,15 +76,33 @@ const AddProduct = () => {
                 toast('Model number for gadgets are mandatory!');
                 return;
             }
-            formData.modelNumber = modelNumber
+            JSONObj.modelNumber = modelNumber
         }
-        await fetch('http://localhost:5000/add-product', {
+        const formData = new FormData();
+        for (let key in JSONObj)
+            formData.append(key, 'JSONObj[key]');
+
+        const response = await fetch('http://localhost:5000/add-product', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'multipart/form-data'
             },
-            body: JSON.stringify(formData)
+            body: formData
         });
+
+        //clearing form data on successful transfer
+        if (response?.ok) {
+            toast.success('Product added successfully!')
+            setModelNumber('');
+            setProductName('');
+            setPrice(0);
+            setQuantity(0);
+            setEacUpc('');
+            setImages([] as File[]);
+            setBlobUrlForPreview([] as string[])
+            setKeywordArray([] as string[])
+        }
+
     }
 
     function fillKeywordsArray(e: KeyboardEvent) {
@@ -135,6 +154,7 @@ const AddProduct = () => {
                                 className={styles['input-containers']}>
                                 <AiFillProduct />
                                 <input
+                                    value={productName}
                                     name={'product-name'} placeholder={'Product Name'}
                                     onInput={e => { setProductName(e.currentTarget.value) }}
                                     type='text' />
@@ -332,10 +352,10 @@ const AddProduct = () => {
 
                                             const urlPreview: string[] = [];
                                             async function convertArrayBufferToObjectUrl(image: File) {
-                                                const buffer = await image?.arrayBuffer()
-                                                buffer
-                                                if (buffer) {
-                                                    const blob = new Blob([new Uint8Array(buffer)])
+                                                const arrayBuffer = await image?.arrayBuffer()
+
+                                                if (arrayBuffer) {
+                                                    const blob = new Blob([new Uint8Array(arrayBuffer)])
                                                     const url = URL.createObjectURL(blob);
                                                     urlPreview.push(url);
                                                     imageToUrlPreviewMap.set(image, url)
@@ -383,6 +403,38 @@ const AddProduct = () => {
                                             </figcaption>
                                         </figure>
                                     ))}
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <label>Discount :</label>
+                            <div>
+                                <div
+                                    data-section={'discount'}
+                                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                                    className={styles['input-containers']}>
+                                    <FaRupeeSign />
+                                    <input value={discount}
+                                        onChange={e => {
+                                            if (isNaN(Number(e.target.value))) {
+                                                toast.error('Only numbers are accepted!');
+                                                return
+                                            }
+                                            if (Number(e.target.value) < 0) {
+                                                toast.error('Discount cannot be < 0%!');
+                                                return;
+                                            }
+                                            if (Number(e.target.value) > 100) {
+                                                toast.error('Discount cannot be > 100%!');
+                                                return;
+                                            }
+                                            if (e.target.value[0] === '0')
+                                                e.target.value = e.target.value.slice(1);
+
+                                            setDiscount(Number(e.target.value))
+                                        }}
+                                        name={'discount'} placeholder={'discount (%)'} type='number'
+                                    />
                                 </div>
                             </div>
                         </section>
