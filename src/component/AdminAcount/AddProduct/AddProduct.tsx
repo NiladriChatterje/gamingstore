@@ -2,7 +2,7 @@ import { FormEvent, useState, KeyboardEvent, useRef, useEffect } from "react";
 import styles from './AddProduct.module.css';
 import { IoIosArrowDropdownCircle, IoIosPersonAdd } from "react-icons/io";
 import { AiFillCloseCircle, AiFillProduct } from "react-icons/ai";
-import { MdConfirmationNumber, MdModelTraining, MdOutlineProductionQuantityLimits } from "react-icons/md";
+import { MdConfirmationNumber, MdDeleteSweep, MdModelTraining, MdOutlineProductionQuantityLimits } from "react-icons/md";
 import toast from "react-hot-toast";
 import { FaRupeeSign } from "react-icons/fa";
 import { ImUpload } from "react-icons/im";
@@ -37,6 +37,7 @@ const AddProduct = () => {
     const [eanUpcType, setEacUpcType] = useState<EanUpcIsbn>(() => EanUpcIsbn.EAN);
     const [price, setPrice] = useState<number>(() => 0);
     const [keyword, setKeyword] = useState<string>(() => '');
+    const [imageToUrlPreviewMap, setImageToUrlPreviewMap] = useState<Map<string, Object>>(() => new Map<string, Object>());
     const [keywordArray, setKeywordArray] = useState<string[]>(() => []);
     const [toggleEacUpcType, setToggleEacUpcType] = useState<boolean>(() => false);//close the dropdown
     const [checked, setChecked] = useState<boolean>(() => false);
@@ -353,13 +354,25 @@ const AddProduct = () => {
                                         gap: 15,
                                         marginTop: 10,
                                         width: 390,
-                                        padding: 5,
                                         overflow: 'auto clip'
                                     }}>
                                     {blobUrlForPreview?.map((item, i) => (
-                                        <img key={i} src={item}
-                                            className={styles['preview-images']}
-                                        />
+                                        <figure
+                                            key={i}
+                                            className={styles['image-preview-container']}
+                                        >
+                                            <img src={item}
+                                                className={styles['preview-images']}
+                                            />
+                                            <figcaption
+                                                onClick={() => {
+                                                    setImages
+                                                }}
+                                                className={styles['bottom-label-delete-image']}
+                                            >
+                                                <MdDeleteSweep />
+                                            </figcaption>
+                                        </figure>
                                     ))}
                                 </div>
                             </div>
