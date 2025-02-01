@@ -129,7 +129,10 @@ const AdminAccount = () => {
       }
     }
 
-    mainCheck()
+    async function blockThreadForMainCheck() {
+      await mainCheck()
+    }
+    blockThreadForMainCheck();
   }, []);
 
 

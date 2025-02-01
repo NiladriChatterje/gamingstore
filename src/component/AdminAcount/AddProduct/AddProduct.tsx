@@ -18,7 +18,8 @@ type productPriceType = {
 
 interface productType {
     productName: string;
-    image: File[];
+    images: File[];
+    imagesBase64: string[] | any;
     eanUpcIsbnGtinAsinType: EanUpcIsbn;
     eanUpcIsbnGtinAsinNumber: string;
     modelNumber?: string;
@@ -57,52 +58,66 @@ const AddProduct = () => {
             toast('Please fill necessary fields!')
             return
         }
-        const JSONObj: productType = {
-            productName: productName,
-            eanUpcIsbnGtinAsinType: eanUpcType,
-            eanUpcIsbnGtinAsinNumber: eanUpc,
-            quantity,
-            price: {
-                currency: currency.INR,
-                pdtPrice: price,
-                discountPercentage: 0
-            },
-            keywords: keywordArray,
-            image: images,
-            seller: []
-        }
-        if (checked) {
-            if (!modelNumber) {
-                toast('Model number for gadgets are mandatory!');
-                return;
-            }
-            JSONObj.modelNumber = modelNumber
-        }
-        const formData = new FormData();
-        for (let key in JSONObj)
-            formData.append(key, 'JSONObj[key]');
 
-        const response = await fetch('http://localhost:5000/add-product', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            },
-            body: formData
-        });
+        const base64Images: string[] | any = []
 
-        //clearing form data on successful transfer
-        if (response?.ok) {
-            toast.success('Product added successfully!')
-            setModelNumber('');
-            setProductName('');
-            setPrice(0);
-            setQuantity(0);
-            setEacUpc('');
-            setImages([] as File[]);
-            setBlobUrlForPreview([] as string[])
-            setKeywordArray([] as string[])
+        for (let image of images) {
+            const fileReader = new FileReader();
+            fileReader.addEventListener('loadend', async () => {
+                if (fileReader.result)
+                    base64Images.push(fileReader.result)
+
+                if (base64Images.length === images.length) {
+                    const formData: productType = {
+                        productName: productName,
+                        eanUpcIsbnGtinAsinType: eanUpcType,
+                        eanUpcIsbnGtinAsinNumber: eanUpc,
+                        quantity,
+                        price: {
+                            currency: currency.INR,
+                            pdtPrice: price,
+                            discountPercentage: 0
+                        },
+                        keywords: keywordArray,
+                        images: images,
+                        imagesBase64: [...base64Images],
+                        seller: []
+                    }
+                    if (checked) {
+                        if (!modelNumber) {
+                            toast('Model number for gadgets are mandatory!');
+                            return;
+                        }
+                        formData.modelNumber = modelNumber
+                    }
+
+
+
+                    const response = await fetch('http://localhost:5000/add-product', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    //clearing form data on successful transfer
+                    if (response?.ok) {
+                        toast.success('Product added successfully!')
+                        setModelNumber('');
+                        setProductName('');
+                        setPrice(0);
+                        setQuantity(0);
+                        setEacUpc('');
+                        setImages([] as File[]);
+                        setBlobUrlForPreview([] as string[])
+                        setKeywordArray([] as string[])
+                    }
+                }
+            });
+            fileReader.readAsDataURL(image)
         }
-
+        console.log(base64Images)
     }
 
     function fillKeywordsArray(e: KeyboardEvent) {
