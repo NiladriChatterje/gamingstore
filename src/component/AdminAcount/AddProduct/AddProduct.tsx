@@ -18,7 +18,6 @@ type productPriceType = {
 
 interface productType {
     productName: string;
-    images: File[];
     imagesBase64: string[] | any;
     eanUpcIsbnGtinAsinType: EanUpcIsbn;
     eanUpcIsbnGtinAsinNumber: string;
@@ -79,7 +78,6 @@ const AddProduct = () => {
                             discountPercentage: 0
                         },
                         keywords: keywordArray,
-                        images: images,
                         imagesBase64: [...base64Images],
                         seller: []
                     }
