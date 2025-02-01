@@ -40,13 +40,13 @@ const AddProduct = () => {
     const [keywordArray, setKeywordArray] = useState<string[]>(() => []);
     const [toggleEacUpcType, setToggleEacUpcType] = useState<boolean>(() => false);//close the dropdown
     const [checked, setChecked] = useState<boolean>(() => false);
+    const [blobUrlForPreview, setBlobUrlForPreview] = useState<string[]>(() => []);
 
-    const [blobUrl, setBlobURL] = useState('')
+
 
     const keywordsRef = useRef<HTMLDivElement>(null);//for horizontal scrolling
     const modelNumberRef = useRef<HTMLDivElement>(null);
     const ImageInputRef = useRef<HTMLInputElement>(null);
-    const testImgRef = useRef<HTMLImageElement>(null);
 
     async function handleSubmitPdt(e: FormEvent) {
         e.preventDefault();
@@ -293,7 +293,9 @@ const AddProduct = () => {
                         </section>
                         <section>
                             <label>Product images :</label>
-                            <div>
+                            <div
+                                style={{ display: 'flex', flexDirection: 'column' }}
+                            >
                                 <div
                                     onClick={() => {
                                         ImageInputRef.current?.click()
@@ -316,31 +318,48 @@ const AddProduct = () => {
                                                 toast.error('Images list full!')
                                                 return;
                                             }
-                                            const imagesList = []
+                                            const imagesList: (File | null)[] = []
                                             if (e.target?.files)
                                                 for (let i = 0; i < e.target.files?.length; i++)
                                                     if (e.target.files.item(i) !== null)
                                                         imagesList.push(e.target.files.item(i));
 
-                                            setImages([images, ...imagesList] as File[])
-                                            const buffer = await imagesList[0]?.arrayBuffer()
-                                            console.log(imagesList);
-                                            if (buffer) {
-                                                const blob = new Blob([new Uint8Array(buffer)])
-                                                console.log(blob)
-                                                const url = URL.createObjectURL(blob);
-                                                console.log(url)
-                                                setBlobURL(url)
+                                            setImages([...images, ...imagesList] as File[]);
+                                            console.log(imagesList)
+
+                                            const urlPreview: string[] = [];
+                                            async function convertArrayBufferToObjectUrl(image: File) {
+                                                const buffer = await image?.arrayBuffer()
+                                                buffer
+                                                if (buffer) {
+                                                    const blob = new Blob([new Uint8Array(buffer)])
+                                                    const url = URL.createObjectURL(blob);
+                                                    urlPreview.push(url)
+                                                }
                                             }
+
+                                            for (let image of imagesList)
+                                                if (image)
+                                                    await convertArrayBufferToObjectUrl(image);
+                                            setBlobUrlForPreview([...blobUrlForPreview, ...urlPreview])
                                         }}
                                         multiple={true}
                                         name={'product-images'} placeholder={'Image'} type='file' accept="image/*"
                                     />
                                 </div>
-                                <img ref={testImgRef} src={blobUrl} />
-                                <div>
-                                    {images?.map((item, i) => (
-                                        <img key={i} src={'s'} />
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        gap: 15,
+                                        marginTop: 10,
+                                        width: 390,
+                                        padding: 5,
+                                        overflow: 'auto clip'
+                                    }}>
+                                    {blobUrlForPreview?.map((item, i) => (
+                                        <img key={i} src={item}
+                                            className={styles['preview-images']}
+                                        />
                                     ))}
                                 </div>
                             </div>

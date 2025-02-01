@@ -19,6 +19,15 @@
     padding: 5px;
 }
 
+.preview-images {
+    position: relative;
+    object-fit: 'contain';
+    height: 190px;
+    border-radius: 5px
+}
+
+
+
 #keyword-list {
     width: 370px;
     padding: 5px 10px;
