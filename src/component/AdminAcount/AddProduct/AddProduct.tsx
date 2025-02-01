@@ -37,7 +37,7 @@ const AddProduct = () => {
     const [eanUpcType, setEacUpcType] = useState<EanUpcIsbn>(() => EanUpcIsbn.EAN);
     const [price, setPrice] = useState<number>(() => 0);
     const [keyword, setKeyword] = useState<string>(() => '');
-    const [imageToUrlPreviewMap, setImageToUrlPreviewMap] = useState<Map<string, Object>>(() => new Map<string, Object>());
+    const [imageToUrlPreviewMap, _] = useState<Map<Blob, string>>(() => new Map<Blob, string>());
     const [keywordArray, setKeywordArray] = useState<string[]>(() => []);
     const [toggleEacUpcType, setToggleEacUpcType] = useState<boolean>(() => false);//close the dropdown
     const [checked, setChecked] = useState<boolean>(() => false);
@@ -335,7 +335,8 @@ const AddProduct = () => {
                                                 if (buffer) {
                                                     const blob = new Blob([new Uint8Array(buffer)])
                                                     const url = URL.createObjectURL(blob);
-                                                    urlPreview.push(url)
+                                                    urlPreview.push(url);
+                                                    imageToUrlPreviewMap.set(image, url)
                                                 }
                                             }
 
@@ -366,7 +367,8 @@ const AddProduct = () => {
                                             />
                                             <figcaption
                                                 onClick={() => {
-                                                    setImages
+                                                    setImages(images.filter((img) => (item !== imageToUrlPreviewMap.get(img))));
+                                                    setBlobUrlForPreview(blobUrlForPreview.filter(itemUrl => itemUrl !== item))
                                                 }}
                                                 className={styles['bottom-label-delete-image']}
                                             >
