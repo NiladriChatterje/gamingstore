@@ -48,6 +48,7 @@ const AddProduct = () => {
     const keywordsRef = useRef<HTMLDivElement>(null);//for horizontal scrolling
     const modelNumberRef = useRef<HTMLDivElement>(null);
     const ImageInputRef = useRef<HTMLInputElement>(null);
+    const imageCarouselContainerRef = useRef<HTMLDivElement>(null);
 
     async function handleSubmitPdt(e: FormEvent) {
         e.preventDefault();
@@ -350,6 +351,11 @@ const AddProduct = () => {
                                     />
                                 </div>
                                 <div
+                                    ref={imageCarouselContainerRef}
+                                    onWheel={e => {
+                                        if (imageCarouselContainerRef.current)
+                                            imageCarouselContainerRef.current.scrollLeft += e.deltaY;
+                                    }}
                                     style={{
                                         display: 'flex',
                                         gap: 15,
