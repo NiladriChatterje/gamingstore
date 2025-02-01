@@ -280,6 +280,7 @@ const AddProduct = () => {
                                 </div>
                                 <div ref={keywordsRef} id={styles['keyword-list']}
                                     onWheel={e => {
+                                        e.stopPropagation();
                                         if (keywordsRef.current)
                                             keywordsRef.current.scrollLeft += e.deltaY
                                     }}>
