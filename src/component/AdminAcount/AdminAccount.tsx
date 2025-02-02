@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom"
-import { ProfileManager, SideBar, Home, AddProduct } from "./component"
+import { ProfileManager, SideBar, Home, AddProduct, EditProduct } from "./component"
 import styles from './AdminAccount.module.css';
 import { IoLogOutOutline } from "react-icons/io5";
 import { SignedIn, SignedOut, SignOutButton, useUser, useSignIn } from "@clerk/clerk-react";
@@ -166,6 +166,7 @@ const AdminAccount = () => {
                   <Route path="/admin/sales" element={<h1>Sales</h1>} />
                   <Route path="/admin/edit-profile" element={<ProfileManager />} />
                   <Route path="/admin/add-product" element={<AddProduct />} />
+                  <Route path="/admin/edit-product/" element={<EditProduct />} />
                   <Route path="/admin/edit-product/:id" element={<h1>Edit product</h1>} />
                   <Route path="/admin/edit-bank" element={<h1>Edit bank account</h1>} />
                   <Route path="*" element={<NotFound />} />
