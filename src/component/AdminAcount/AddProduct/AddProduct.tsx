@@ -18,7 +18,7 @@ type productPriceType = {
 
 interface productType {
     productName: string;
-    imagesBase64: string[] | any;
+    imagesBase64: { size: number; extension: string; base64: string }[];
     eanUpcIsbnGtinAsinType: EanUpcIsbn;
     eanUpcIsbnGtinAsinNumber: string;
     modelNumber?: string;
@@ -27,7 +27,9 @@ interface productType {
     price: productPriceType;
     keywords: string[]
 }
-const KeywordsMap = new Set<string>();
+const keywordsSet = new Set<string>();
+
+
 const AddProduct = () => {
     const [modelNumber, setModelNumber] = useState<string>(() => '');
     const [eanUpc, setEacUpc] = useState<string>(() => '')
@@ -58,13 +60,18 @@ const AddProduct = () => {
             return
         }
 
-        const base64Images: string[] | any = []
+        const base64Images: { size: number; extension: string; base64: string }[] = []
 
         for (let image of images) {
             const fileReader = new FileReader();
             fileReader.addEventListener('loadend', async () => {
+
                 if (fileReader.result)
-                    base64Images.push(fileReader.result)
+                    base64Images.push({
+                        size: image.size,
+                        extension: image.type.split('/')[1],
+                        base64: fileReader.result as string
+                    })
 
                 if (base64Images.length === images.length) {
                     const formData: productType = {
@@ -110,12 +117,12 @@ const AddProduct = () => {
                         setImages([] as File[]);
                         setBlobUrlForPreview([] as string[])
                         setKeywordArray([] as string[])
+                        keywordsSet.clear()
                     }
                 }
             });
             fileReader.readAsDataURL(image)
         }
-        console.log(base64Images)
     }
 
     function fillKeywordsArray(e: KeyboardEvent) {
@@ -124,11 +131,11 @@ const AddProduct = () => {
                 toast.error('limit reached');
                 return;
             }
-            if (KeywordsMap.has(keyword.toLowerCase())) {
+            if (keywordsSet.has(keyword.toLowerCase())) {
                 toast('Keyword is already added');
                 return
             }
-            KeywordsMap.add(keyword.toLowerCase())
+            keywordsSet.add(keyword.toLowerCase())
             setKeywordArray([...keywordArray, keyword]);
             setKeyword('')
         }
@@ -321,7 +328,7 @@ const AddProduct = () => {
                                         <article key={i} className={styles['keyword']}>
                                             <span >{item}</span>
                                             <AiFillCloseCircle cursor={'pointer'}
-                                                onClick={() => spliceKeywordArray(i)}
+                                                onClick={() => { spliceKeywordArray(i); keywordsSet.delete(item) }}
                                             />
                                         </article>))}
                                 </div>
@@ -355,13 +362,11 @@ const AddProduct = () => {
                                                 return;
                                             }
                                             const imagesList: (File | null)[] = []
-                                            if (e.target?.files)
+                                            if (e.target?.files?.length)
                                                 for (let i = 0; i < e.target.files?.length; i++)
-                                                    if (e.target.files.item(i) !== null)
-                                                        imagesList.push(e.target.files.item(i));
+                                                    imagesList.push(e.target.files.item(i));
 
                                             setImages([...images, ...imagesList] as File[]);
-                                            console.log(imagesList)
 
                                             const urlPreview: string[] = [];
                                             async function convertArrayBufferToObjectUrl(image: File) {
