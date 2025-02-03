@@ -46,7 +46,6 @@ const sanityClient: SanityClient = createClient({
 
 export const AdminStateContext = ({ children }: { children: ReactNode }) => {
     const [admin, setAdmin] = useState<any>({});
-
     const [isPlanActiveState, setIsPlanActive] = useState<boolean>(true);
     const { isLoaded } = useSignIn();
     const { user } = useUser();
@@ -57,8 +56,8 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
 
             if (userEnrolled?.length === 0) {
                 toast('allowing location for inventory is important');
-                navigator.geolocation.getCurrentPosition(({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
-                    (async () => {
+                navigator.geolocation.getCurrentPosition(async ({ coords: { latitude, longitude } }: { coords: { latitude: number; longitude: number } }) => {
+                    const userOps = async () => {
                         try {
                             if (!user?.phoneNumbers[0]?.phoneNumber && !userEnrolled[0]?.phone)
                                 toast('! Fill up phone number for notifications in profile-manager tab')
@@ -103,28 +102,31 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
                         } catch (e: Error | any) {
                             toast.error(e.message)
                         }
-                    })()
+                    }
+
+                    await userOps();
                 });
             }
 
             return userEnrolled
         }
 
-        async function mainCheck() {
+        function mainCheck() {
             if (isLoaded) {
                 // check from sanity if user has an existing 
                 // subscription plan or not
-                const result = await checkAdminEnrolled()
-                console.log(result)
-                if (result.length > 0 && result[0]?.SubscriptionPlan) {
-                    let lastPlan = result[0].SubscriptionPlan.at(-1);
-                    const today = new Date().getTime();
-                    const expirationDay = new Date(lastPlan?.planSchemeList?.expireDate || new Date()).getTime()
+                checkAdminEnrolled().then(result => {
+                    console.log(result)
+                    if (result.length > 0 && result[0]?.SubscriptionPlan) {
+                        let lastPlan = result[0].SubscriptionPlan.at(-1);
+                        const today = new Date().getTime();
+                        const expirationDay = new Date(lastPlan?.planSchemeList?.expireDate || new Date()).getTime()
 
-                    if (expirationDay - today > 0)
-                        setIsPlanActive(true)
-                }
-                setAdmin?.(result[0]);
+                        if (expirationDay - today > 0)
+                            setIsPlanActive(true)
+                    }
+                    setAdmin?.(result[0]);
+                })
             }
         }
 
