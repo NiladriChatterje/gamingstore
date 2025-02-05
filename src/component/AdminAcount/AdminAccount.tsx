@@ -41,7 +41,6 @@ const AdminAccount = () => {
                 <Routes>
                   <Route index element={<Navigate to={'/admin'} />} />
                   <Route path="/admin" element={<Home />} />
-                  <Route path="/admin/orders" element={<h1>Orders</h1>} />
                   <Route path="/admin/sales" element={<h1>Sales</h1>} />
                   <Route path="/admin/edit-profile" element={<ProfileManager />} />
                   <Route path="/admin/add-product" element={<AddProduct />} />

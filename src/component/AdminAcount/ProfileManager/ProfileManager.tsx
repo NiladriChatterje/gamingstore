@@ -71,7 +71,7 @@ const ProfileManager = () => {
 
     async function handleUpdate() {
         const result = await sanityClient?.patch(admin._id).set({
-            gstin, address: {
+            gstin, AddressObjectType: {
                 pinCode,
                 county, country, state
             }, email, phone: Number(phone)
@@ -177,7 +177,7 @@ const ProfileManager = () => {
                                     <input
                                         value={pinCode}
                                         onChange={e => setpinCode(e.target.value)}
-                                        name={'pinCode'} placeholder={admin.address?.pinCode ?? 'PIN code'}
+                                        name={'pinCode'} placeholder={admin.AddressObjectType?.pinCode ?? 'PIN code'}
                                         maxLength={6} minLength={6}
                                         type='text' disabled={disable} />
                                 </div>
@@ -190,7 +190,7 @@ const ProfileManager = () => {
                                     <input
                                         value={county}
                                         onChange={e => { setCounty(e.target.value) }}
-                                        name={'county'} placeholder={admin.address?.county ?? 'county'} type='text' disabled={disable} />
+                                        name={'county'} placeholder={admin.AddressObjectType?.county ?? 'county'} type='text' disabled={disable} />
                                 </div>
                             </section>
                             <section>
@@ -203,7 +203,7 @@ const ProfileManager = () => {
                                         onChange={e => {
                                             setCountry(e.target.value)
                                         }}
-                                        name={'country'} placeholder={admin.address?.country ?? 'country'} type='text'
+                                        name={'country'} placeholder={admin.AddressObjectType?.country ?? 'country'} type='text'
                                         disabled={disable} />
                                 </div>
                             </section>
@@ -216,7 +216,7 @@ const ProfileManager = () => {
                                         onChange={e => {
                                             setState(e.target.value)
                                         }}
-                                        name={'state'} placeholder={admin.address?.state ?? 'state'} type='text'
+                                        name={'state'} placeholder={admin.AddressObjectType?.state ?? 'state'} type='text'
                                         disabled={disable} />
                                 </div>
                             </section>
