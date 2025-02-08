@@ -36,7 +36,7 @@ const Navbar = () => {
       <div
         className={styles['nav-routes']}
         id={navActive ? styles['navitems-active'] : styles['navitems-inactive']}>
-        {navItems?.map((item, i) => <Link to={`/user${item.name === "Home" ? '' : `/${item.name}`}`} className={styles['text']} key={i}>
+        {navItems?.map((item, i) => <Link to={`${item.name === "Home" ? '' : `/user/${item.name}`}`} className={styles['text']} key={i}>
           <item.Img className={styles['nav-list-icons']} />
           {item.name}</Link>)}
       </div>

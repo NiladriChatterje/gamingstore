@@ -1,6 +1,6 @@
 import { useUser, SignIn } from '@clerk/clerk-react'
 import styles from './Orders.module.css'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Orders = () => {
     const [orders, setOrders] = useState<any[]>(() => [1, 2, 3, 5, 6, 6, 6, 8]);
@@ -20,7 +20,11 @@ const Orders = () => {
             >
                 <SignIn redirectUrl={'/user/Orders'} />
             </section>
-        )
+        );
+
+    useEffect(() => {
+        fetchOrderData("")
+    }, [])
 
 
     return (

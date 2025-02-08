@@ -5,7 +5,13 @@
       "es6",
       "dom",
       "dom.iterable"
-    ]
+    ],
+    "baseUrl": "src",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
   },
   "files": [],
   "references": [
