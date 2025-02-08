@@ -5,28 +5,14 @@ import PreLoader from './PreLoader.tsx';
 import { Toaster } from 'react-hot-toast';
 import { useStateContext } from './StateContext.tsx';
 import { useUser } from '@clerk/clerk-react';
-import { useNavigate } from 'react-router-dom';
-
 
 
 function App() {
   const [loading, setLoading] = useState(() => true);
-  useEffect(() => { setTimeout(() => setLoading(false), 900) }, []);
+  useEffect(() => { setTimeout(() => setLoading(false), 100) }, []);
   const { defaultLoginAdminOrUser } = useStateContext();
-  const { user, isSignedIn } = useUser();
+  const { user } = useUser();
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isSignedIn) {
-      if (defaultLoginAdminOrUser === 'user')
-        navigate('/', { replace: true })
-      else
-        navigate('/admin', { replace: true })
-    }
-    else
-      navigate('/user', { replace: true })
-  }, [isSignedIn])
 
   return (
     <div className="App">

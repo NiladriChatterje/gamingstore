@@ -60,7 +60,7 @@ function Payment() {
                     </div>)}
             </SignedIn>
             <SignedOut>
-                <SignIn afterSignInUrl={'/user/payment'} />
+                <SignIn redirectUrl={'/user/payment'} afterSignInUrl={'/user/payment'} />
             </SignedOut>
         </div>
     );

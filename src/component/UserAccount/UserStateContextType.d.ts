@@ -5,6 +5,8 @@ type OrderType = {
 }
 
 export type ProductContextType = {
+    lastRoute: string;
+    setLastRoute: React.Dispatch<React.SetStateAction<string>>,
     slide: boolean,
     setSlide: React.Dispatch<React.setStateAction<boolean>>,
     navRef: LegacyRef<HTMLElement>;

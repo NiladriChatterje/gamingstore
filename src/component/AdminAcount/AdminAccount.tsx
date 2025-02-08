@@ -2,11 +2,11 @@ import { Navigate, Route, Routes } from "react-router-dom"
 import { ProfileManager, SideBar, Home, AddProduct, EditProduct, EditProductDetails } from "./component"
 import styles from './AdminAccount.module.css';
 import { IoLogOutOutline } from "react-icons/io5";
-import { SignedIn, SignedOut, SignOutButton, useUser } from "@clerk/clerk-react";
+import { SignedIn, SignOutButton, useUser } from "@clerk/clerk-react";
 import SubscriptionPlan from "./SubscriptionPlan/SubscriptionPlan";
-import NotFound from "../../NotFound";
 import { useStateContext } from "../../StateContext";
 import { useAdminStateContext } from "./AdminStateContext";
+import NotFound from "../../NotFound";
 
 
 const AdminAccount = () => {
@@ -27,6 +27,9 @@ const AdminAccount = () => {
           /><span>{user.firstName}</span></div>}
           <SignOutButton>
             <IoLogOutOutline
+              onClick={() => {
+                localStorage.setItem('loginusertype', 'user')
+              }}
               cursor={'pointer'}
               size={25}
               style={{ position: 'fixed', top: 30, right: 60 }}
@@ -39,15 +42,16 @@ const AdminAccount = () => {
             {isPlanActiveState ?
               <section id={styles['admin-routes']}>
                 <Routes>
-                  <Route index element={<Navigate to={'/admin'} />} />
-                  <Route path="/admin" element={<Home />} />
+                  <Route index path="/" element={<Home />} />
+                  <Route index path="/admin" element={<Home />} />
                   <Route path="/admin/sales" element={<h1>Sales</h1>} />
                   <Route path="/admin/edit-profile" element={<ProfileManager />} />
                   <Route path="/admin/add-product" element={<AddProduct />} />
                   <Route path="/admin/edit-product/" element={<EditProduct />} />
                   <Route path="/admin/edit-product/:id" element={<EditProductDetails />} />
                   <Route path="/admin/edit-bank" element={<h1>Edit bank account</h1>} />
-                  <Route path="*" element={<NotFound />} />
+                  <Route path="/admin/*" element={<NotFound />} />
+                  <Route path="*" element={<><Navigate to={'/admin'} /></>} />
                 </Routes>
               </section> :
               <SubscriptionPlan
@@ -57,9 +61,6 @@ const AdminAccount = () => {
           <span>e-cart</span>
         </div>}
       </SignedIn>
-      <SignedOut>
-        <Navigate to={'/admin'} />
-      </SignedOut>
     </>
   )
 }

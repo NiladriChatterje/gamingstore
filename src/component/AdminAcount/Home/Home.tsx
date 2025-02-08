@@ -1,6 +1,13 @@
+import { Navigate } from 'react-router-dom';
 import styles from './Home.module.css';
+import { useUser } from '@clerk/clerk-react';
 
 const Home = () => {
+    const { isSignedIn } = useUser();
+
+    if (!isSignedIn)
+        <Navigate to={'/user'} />
+
     return (
         <div id={styles['container']}>
             <section id={styles['top-layer']}>

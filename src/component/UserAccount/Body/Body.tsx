@@ -6,7 +6,6 @@ import { IoIosCloseCircle } from 'react-icons/io'
 import upcomingData from './upcomingData.ts'
 import UpcomingDataMap from './UpcomingDataMap.tsx'
 
-
 const style1: MotionStyle = {
   height: '250px', width: '250px',
   borderTopLeftRadius: '50%',

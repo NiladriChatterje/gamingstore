@@ -8,6 +8,7 @@ export type OrderType = {
 const ProductContext = createContext<Partial<ProductContextType>>({});
 
 export const UserStateContext = ({ children }: { children: ReactNode }) => {
+    const [lastRoute, setLastRoute] = useState<string>(() => localStorage.getItem('last-route') || "")
     const [qty, setQty] = useState(() => 1);
     const [ItemIDCount, setItemIDCount] = useState<object & { id?: number }>(() => { });
     const [totalPrice, setTotalPrice] = useState<number>(Number(localStorage.getItem('totalPrice')) || 0);
@@ -48,6 +49,8 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
     return (<ProductContext.Provider
         value={
             {
+                lastRoute,
+                setLastRoute,
                 navRef,
                 totalPrice,
                 setTotalPrice,
