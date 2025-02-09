@@ -1,14 +1,12 @@
 import { useContext, createContext, useState, ReactNode } from 'react';
-import { ProductContextType } from './declarations/ProductContextType';
+import { ProductContextType } from '@declarations/ProductContextType';
 
-
-
-const Global = createContext<Partial<ProductContextType>>({});
+const GlobalProvider = createContext<Partial<ProductContextType>>({});
 
 export const StateContext = ({ children }: { children: ReactNode }) => {
     const [defaultLoginAdminOrUser, setDefaultLoginAdminOrUser] = useState<string>(localStorage.getItem("loginusertype") || "user");
 
-    return (<Global.Provider
+    return (<GlobalProvider.Provider
         value={
             {
                 defaultLoginAdminOrUser,
@@ -16,7 +14,7 @@ export const StateContext = ({ children }: { children: ReactNode }) => {
             }
         }>
         {children}
-    </Global.Provider>)
+    </GlobalProvider.Provider>)
 }
 
-export const useStateContext = () => useContext(Global);
+export const useStateContext = () => useContext(GlobalProvider);

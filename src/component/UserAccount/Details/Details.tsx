@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
-import { useUserStateContext } from '../UserStateContext.tsx';
-import { useStateContext } from '../../../StateContext.tsx';
-import { data } from '../Products/data.ts'
+import { useUserStateContext } from '../UserStateContext';
+import { useStateContext } from '@/StateContext';
+import { data } from '../Products/data'
 import styles from './Details.module.css';
 import UpcomingData from '../Body/upcomingData';
 import { OrderType } from '../../../declarations/ProductContextType';
 import toast from 'react-hot-toast';
+
 
 const Details = () => {
   const [counter, setCounter] = useState(() => 1);
