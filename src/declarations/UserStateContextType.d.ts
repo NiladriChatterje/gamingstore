@@ -8,7 +8,7 @@ export declare type ProductContextType = {
     lastRoute: string;
     setLastRoute: React.Dispatch<React.SetStateAction<string>>,
     slide: boolean,
-    setSlide: React.Dispatch<React.setStateAction<boolean>>,
+    setSlide: React.Dispatch<React.SetStateAction<boolean>>,
     navRef: LegacyRef<HTMLElement>;
     totalPrice: number;
     setTotalPrice: React.Dispatch<React.SetStateAction<number>>;

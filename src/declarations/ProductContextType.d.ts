@@ -5,6 +5,6 @@ export declare type OrderType = {
 }
 
 export declare type ProductContextType = {
-    defaultLoginAdminOrUser: string = 'user' | 'admin';
+    defaultLoginAdminOrUser: string;
     setDefaultLoginAdminOrUser: React.Dispatch<React.SetStateAction<string>>;
 };
