@@ -2,9 +2,9 @@ import { useState } from "react";
 import styles from './Payment.module.css';
 import Loader from "./Loader.tsx";
 import { useUserStateContext } from "../UserStateContext.tsx";
-import Checkout from "../../../utils/Checkout.tsx";
+import Checkout from "@/utils/Checkout.tsx";
 import { SignedIn, SignedOut, SignIn, useSignIn } from "@clerk/clerk-react";
-import { useStateContext } from "../../../StateContext.tsx";
+import { useStateContext } from "@/StateContext.tsx";
 
 
 function Payment() {

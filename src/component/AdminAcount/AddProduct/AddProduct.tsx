@@ -6,9 +6,9 @@ import { MdConfirmationNumber, MdDeleteSweep, MdModelTraining, MdOutlineProducti
 import toast from "react-hot-toast";
 import { FaRupeeSign } from "react-icons/fa";
 import { ImUpload } from "react-icons/im";
+import { EanUpcIsbnType, currency } from "@declarations/UserStateContextType";
 
-enum EanUpcIsbn { EAN = "EAN", UPC = "UPC", ISBN = "ISBN", ASIN = "ASIN", GTIN = "GTIN", OTHERS = "OTHERS" }
-enum currency { INR = "INR", YEN = "YEN", USD = "USD" }
+
 
 type productPriceType = {
     currency: currency;
@@ -19,8 +19,8 @@ type productPriceType = {
 interface productType {
     productName: string;
     imagesBase64: { size: number; extension: string; base64: string }[];
-    eanUpcIsbnGtinAsinType: EanUpcIsbn;
-    eanUpcIsbnGtinAsinNumber: string;
+    EanUpcIsbnTypeGtinAsinType: EanUpcIsbnType;
+    EanUpcIsbnTypeGtinAsinNumber: string;
     modelNumber?: string;
     quantity: number;
     seller: string[];//type will be adminType
@@ -36,7 +36,7 @@ const AddProduct = () => {
     const [productName, setProductName] = useState<string>(() => '')
     const [images, setImages] = useState<File[]>(() => ([]));
     const [quantity, setQuantity] = useState<number>(0)
-    const [eanUpcType, setEacUpcType] = useState<EanUpcIsbn>(() => EanUpcIsbn.EAN);
+    const [eanUpcType, setEacUpcType] = useState<EanUpcIsbnType>(() => EanUpcIsbnType.EAN);
     const [price, setPrice] = useState<number>(() => 0);
     const [discount, setDiscount] = useState<number>(() => 0);
     const [keyword, setKeyword] = useState<string>(() => '');
@@ -76,8 +76,8 @@ const AddProduct = () => {
                 if (base64Images.length === images.length) {
                     const formData: productType = {
                         productName: productName,
-                        eanUpcIsbnGtinAsinType: eanUpcType,
-                        eanUpcIsbnGtinAsinNumber: eanUpc,
+                        EanUpcIsbnTypeGtinAsinType: eanUpcType,
+                        EanUpcIsbnTypeGtinAsinNumber: eanUpc,
                         quantity,
                         price: {
                             currency: currency.INR,
@@ -185,18 +185,18 @@ const AddProduct = () => {
                             <article
                                 style={{ display: 'flex', gap: 10, width: '100%', position: 'relative' }}>
                                 <div style={{ maxWidth: 100, backgroundColor: 'rgba(255, 255, 255, 0.963)', flexGrow: 1 }}
-                                    data-section={'eanUpcIsbnGtinAsinType'}
+                                    data-section={'EanUpcIsbnTypeGtinAsinType'}
                                     className={styles['input-containers']}>
                                     <IoIosArrowDropdownCircle cursor={'pointer'}
                                         onClick={() => setToggleEacUpcType(prev => !prev)}
                                     />
                                     <input name='eanUpcType' value={eanUpcType} disabled />
                                     {toggleEacUpcType && <section className={`${toggleEacUpcType ? '' : styles['product-identification-list']}`}>
-                                        <dl onClick={() => { setEacUpcType(EanUpcIsbn.EAN); setToggleEacUpcType(false) }}>EAN</dl>
-                                        <dl onClick={() => { setEacUpcType(EanUpcIsbn.UPC); setToggleEacUpcType(false) }}>UPC</dl>
-                                        <dl onClick={() => { setEacUpcType(EanUpcIsbn.ISBN); setToggleEacUpcType(false) }}>ISBN</dl>
-                                        <dl onClick={() => { setEacUpcType(EanUpcIsbn.ASIN); setToggleEacUpcType(false) }}>ASIN</dl>
-                                        <dl onClick={() => { setEacUpcType(EanUpcIsbn.GTIN); setToggleEacUpcType(false) }}>GTIN</dl>
+                                        <dl onClick={() => { setEacUpcType(EanUpcIsbnType.EAN); setToggleEacUpcType(false) }}>EAN</dl>
+                                        <dl onClick={() => { setEacUpcType(EanUpcIsbnType.UPC); setToggleEacUpcType(false) }}>UPC</dl>
+                                        <dl onClick={() => { setEacUpcType(EanUpcIsbnType.ISBN); setToggleEacUpcType(false) }}>ISBN</dl>
+                                        <dl onClick={() => { setEacUpcType(EanUpcIsbnType.ASIN); setToggleEacUpcType(false) }}>ASIN</dl>
+                                        <dl onClick={() => { setEacUpcType(EanUpcIsbnType.GTIN); setToggleEacUpcType(false) }}>GTIN</dl>
                                     </section>}
                                 </div>
                                 <div

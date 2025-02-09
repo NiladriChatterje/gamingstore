@@ -1,7 +1,20 @@
 import React, { LegacyRef, RefObject } from 'react'
 
-export declare type OrderType = {
-    id: number; name: string; price: number; image: string; desc: string; count: number;
+export enum EanUpcIsbnType { EAN = "EAN", UPC = "UPC", ISBN = "ISBN", ASIN = "ASIN", GTIN = "GTIN", OTHERS = "OTHERS" }
+export enum currency { INR = "INR", YEN = "YEN", USD = "USD" }
+
+export declare type ProductType = {
+    _id: string;
+    productName: string;
+    eanUpcIsbnGtinAsinType: EanUpcIsbnType;
+    price: number;
+    image?: FileList;
+    modelNumber?: string;
+    seller: string;
+    productDescription: string;
+    quantity: number;
+    keywords: string[];
+    discount: number;
 }
 
 export declare type ProductContextType = {
@@ -12,8 +25,8 @@ export declare type ProductContextType = {
     navRef: LegacyRef<HTMLElement>;
     totalPrice: number;
     setTotalPrice: React.Dispatch<React.SetStateAction<number>>;
-    data: OrderType[];
-    setData: React.Dispatch<React.SetStateAction<OrderType[]>>;
+    data: ProductType[];
+    setData: React.Dispatch<React.SetStateAction<ProductType[]>>;
     oneItem: boolean;
     setOneItem: React.Dispatch<React.SetStateAction<boolean>>;
     qty: number;
@@ -21,5 +34,5 @@ export declare type ProductContextType = {
     ItemIDCount: object & { id?: number };
     setItemIDCount: React.Dispatch<React.SetStateAction<object>>;
     incDecQty: (counter: number, id: number | string) => void;
-    addItemToOrderList: (item: OrderType) => void;
+    addItemToOrderList: (item: ProductType) => void;
 };

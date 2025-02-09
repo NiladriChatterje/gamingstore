@@ -1,5 +1,5 @@
 import React, { useContext, createContext, useState, useRef, ReactNode } from 'react';
-import { OrderType, ProductContextType } from '@declarations/UserStateContextType';
+import { ProductType, ProductContextType } from '@declarations/UserStateContextType';
 
 
 const ProductContext = createContext<Partial<ProductContextType>>({});
@@ -9,21 +9,21 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
     const [qty, setQty] = useState(() => 1);
     const [ItemIDCount, setItemIDCount] = useState<object & { id?: number }>(() => { });
     const [totalPrice, setTotalPrice] = useState<number>(Number(localStorage.getItem('totalPrice')) || 0);
-    const [data, setData] = useState<OrderType[]>(() => JSON.parse(localStorage.getItem('orders') as string) || [] as OrderType[]);
+    const [data, setData] = useState<ProductType[]>(() => JSON.parse(localStorage.getItem('orders') as string) as ProductType[] || [] as ProductType[]);
     const [slide, setSlide] = useState<boolean>(false);
     const [oneItem, setOneItem] = useState<boolean>((localStorage.getItem("isOneItem")) === 'false' ? false : true);
 
     const navRef = useRef<HTMLElement | null>(null);
 
     React.useEffect(() => {
-        let x = data?.reduce((acc: number, cur: OrderType) => acc + cur.price * cur.count, 0)
+        let x = data?.reduce((acc: number, cur: ProductType) => acc + cur.price * cur.count, 0)
         setTotalPrice(x);
         localStorage.setItem('totalPrice', totalPrice.toString());
         localStorage.setItem('orders', JSON.stringify(data));
 
     }, [data]);
 
-    function addItemToOrderList(item: OrderType) {
+    function addItemToOrderList(item: ProductType) {
         let DataFound = data?.find(i => i.id === item.id)
         if (DataFound !== undefined) {
             let x = DataFound?.count;
@@ -36,7 +36,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
 
 
     function incDecQty(counter: number, id: number | string) {
-        let foundItem: OrderType | any = data?.find((i) => i.id === id);
+        let foundItem: ProductType | any = data?.find((i) => i.id === id);
         let foundItemIndex: number = data?.findIndex(i => i.id === id);
 
         data?.splice(foundItemIndex, 1, { ...foundItem, count: counter });

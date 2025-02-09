@@ -5,7 +5,7 @@ import { useStateContext } from '@/StateContext';
 import { data } from '../Products/data'
 import styles from './Details.module.css';
 import UpcomingData from '../Body/upcomingData';
-import { OrderType } from '../../../declarations/ProductContextType';
+import { ProductType } from '@declarations/ProductContextType';
 import toast from 'react-hot-toast';
 
 
@@ -57,7 +57,7 @@ const Details = () => {
                 style={{ marginRight: 10 }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  addItemToOrderList?.(item as OrderType)
+                  addItemToOrderList?.(item as ProductType)
                   setItemIDCount?.({ count: item?.count, id: item?.id })
                   toast.success(`Product added to cart Successfully`)
                 }}
@@ -69,7 +69,7 @@ const Details = () => {
                   localStorage.setItem("isOneItem", "true");
                   setOneItem?.(true);
                   setDefaultLoginAdminOrUser?.('user');
-                  const foundData = data?.find((item: OrderType) => item.id === parseInt(id));
+                  const foundData = data?.find((item: ProductType) => item.id === parseInt(id));
                   let oneProduct = { name: foundData?.name, price: foundData?.price, qty: counter }
                   localStorage.setItem('oneProduct', JSON.stringify(oneProduct));
                   navigate('/user/Payment');

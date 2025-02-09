@@ -2,12 +2,12 @@ import { HiShoppingCart } from 'react-icons/hi';
 import { useUserStateContext } from '../UserStateContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { OrderType } from '../../../declarations/ProductContextType';
+import { ProductType } from '@declarations/ProductContextType';
 import { forwardRef, Ref } from 'react';
 import styles from './ProductDetails.module.css';
 
 const ProductDetails = ({ item }: {
-  item: OrderType;
+  item: ProductType;
 }, ref: Ref<HTMLDivElement>) => {
   const { addItemToOrderList, setItemIDCount } = useUserStateContext();
   const navigate = useNavigate();

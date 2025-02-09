@@ -5,7 +5,7 @@ import { OrderList } from '../components';
 import { useUserStateContext } from '../UserStateContext';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { useStateContext } from '../../../StateContext';
+import { useStateContext } from '@/StateContext';
 
 
 const OrderListItem = () => {

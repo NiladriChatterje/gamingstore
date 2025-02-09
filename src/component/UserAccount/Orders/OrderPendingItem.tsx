@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import styles from './Orders.module.css'
 import { useUserStateContext } from '../UserStateContext';
+import { ProductType } from '@/declarations/ProductContextType';
 
-const OrderPendingItem = ({ item }: { item: any }) => {
+const OrderPendingItem = ({ item }: { item: ProductType }) => {
   const [counter, setCounter] = useState<number>(() => 1);
   const { data, setData, incDecQty, ItemIDCount } = useUserStateContext();
 
@@ -20,7 +21,7 @@ const OrderPendingItem = ({ item }: { item: any }) => {
   return (
     <section
       className={styles['order-items']}>
-      <span>{item}</span>
+      <span>{item?.name}</span>
       <section
         style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
         <section id={styles.counter_container}>

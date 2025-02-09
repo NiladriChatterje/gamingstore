@@ -2,9 +2,10 @@ import { useUser, SignIn } from '@clerk/clerk-react'
 import styles from './Orders.module.css'
 import { useEffect, useState } from 'react';
 import OrderPendingItem from './OrderPendingItem';
+import { ProductType } from '@/declarations/UserStateContextType';
 
 const Orders = () => {
-    const [orders, setOrders] = useState<any[]>(() => [1, 2, 3, 5, 6, 6, 6, 8]);
+    const [orders, setOrders] = useState<ProductType[]>(() => [1, 2, 3, 5, 6, 6, 6, 8] as unknown as ProductType[]);
 
     const { isSignedIn } = useUser();
 
@@ -41,7 +42,7 @@ const Orders = () => {
                 <section
                     className={styles['order-sub-container']}>
                     {orders?.map((item, i) => {
-                        return <OrderPendingItem key={i} item={item} />
+                        return <OrderPendingItem key={item?.id ?? i} item={item} />
                     })}
                 </section>
             </fieldset>
@@ -61,7 +62,7 @@ const Orders = () => {
                     {orders?.map((item, i) => {
                         return <section key={i}
                             className={styles['order-items']}>
-                            {item}
+                            {item.name || "ok"}
                         </section>
                     })}
                 </section>
