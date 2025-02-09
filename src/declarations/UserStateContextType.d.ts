@@ -8,6 +8,7 @@ export declare type ProductType = {
     productName: string;
     eanUpcIsbnGtinAsinType: EanUpcIsbnType;
     price: number;
+    imagesBase64?: { size: number; extension: string; base64: string }[];
     image?: FileList;
     modelNumber?: string;
     seller: string;

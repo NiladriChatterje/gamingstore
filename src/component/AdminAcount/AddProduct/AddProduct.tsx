@@ -9,13 +9,6 @@ import { ImUpload } from "react-icons/im";
 import { EanUpcIsbnType, currency } from "@declarations/UserStateContextType";
 
 
-
-type productPriceType = {
-    currency: currency;
-    pdtPrice: number;
-    discountPercentage: number;
-}
-
 interface productType {
     productName: string;
     imagesBase64: { size: number; extension: string; base64: string }[];
@@ -24,7 +17,9 @@ interface productType {
     modelNumber?: string;
     quantity: number;
     seller: string[];//type will be adminType
-    price: productPriceType;
+    price: number;
+    discount: number;
+    currency: currency;
     keywords: string[]
 }
 const keywordsSet = new Set<string>();
@@ -79,11 +74,9 @@ const AddProduct = () => {
                         EanUpcIsbnTypeGtinAsinType: eanUpcType,
                         EanUpcIsbnTypeGtinAsinNumber: eanUpc,
                         quantity,
-                        price: {
-                            currency: currency.INR,
-                            pdtPrice: price,
-                            discountPercentage: 0
-                        },
+                        currency: currency.INR,
+                        price: price,
+                        discount: 0,
                         keywords: keywordArray,
                         imagesBase64: [...base64Images],
                         seller: []
