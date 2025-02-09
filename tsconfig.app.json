@@ -26,6 +26,9 @@
             ],
             "@declarations/*": [
                 "src/declarations/*"
+            ],
+            "@enums/*": [
+                "src/enums/*"
             ]
         },
         /* Linting */

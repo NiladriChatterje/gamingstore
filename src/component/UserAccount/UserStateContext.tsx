@@ -16,7 +16,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
     const navRef = useRef<HTMLElement | null>(null);
 
     React.useEffect(() => {
-        let x = data?.reduce((acc: number, cur: ProductType) => acc + cur.price * cur.count, 0)
+        let x = data?.reduce((acc: number, cur: ProductType) => acc + cur.price * cur.quantity, 0)
         setTotalPrice(x);
         localStorage.setItem('totalPrice', totalPrice.toString());
         localStorage.setItem('orders', JSON.stringify(data));
@@ -24,20 +24,20 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
     }, [data]);
 
     function addItemToOrderList(item: ProductType) {
-        let DataFound = data?.find(i => i.id === item.id)
+        let DataFound = data?.find(i => i._id === item._id)
         if (DataFound !== undefined) {
-            let x = DataFound?.count;
+            let x = DataFound?.quantity;
             x += 1;
-            incDecQty(x, item.id);
+            incDecQty(x, item._id);
         }
 
-        if (DataFound === undefined) setData([...data, { ...item, count: 1 }]);
+        if (DataFound === undefined) setData([...data, { ...item, quantity: 1 }]);
     }
 
 
     function incDecQty(counter: number, id: number | string) {
-        let foundItem: ProductType | any = data?.find((i) => i.id === id);
-        let foundItemIndex: number = data?.findIndex(i => i.id === id);
+        let foundItem: ProductType | any = data?.find((i) => i._id === id);
+        let foundItemIndex: number = data?.findIndex(i => i._id === id);
 
         data?.splice(foundItemIndex, 1, { ...foundItem, count: counter });
         setData([...data]);

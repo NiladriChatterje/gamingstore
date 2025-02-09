@@ -1,7 +1,5 @@
 import React, { LegacyRef, RefObject } from 'react'
-
-export enum EanUpcIsbnType { EAN = "EAN", UPC = "UPC", ISBN = "ISBN", ASIN = "ASIN", GTIN = "GTIN", OTHERS = "OTHERS" }
-export enum currency { INR = "INR", YEN = "YEN", USD = "USD" }
+import { EanUpcIsbnType } from '@/enums/enums';
 
 export declare type ProductType = {
     _id: string;

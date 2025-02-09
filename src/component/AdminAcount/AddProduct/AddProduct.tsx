@@ -6,7 +6,7 @@ import { MdConfirmationNumber, MdDeleteSweep, MdModelTraining, MdOutlineProducti
 import toast from "react-hot-toast";
 import { FaRupeeSign } from "react-icons/fa";
 import { ImUpload } from "react-icons/im";
-import { EanUpcIsbnType, currency } from "@declarations/UserStateContextType";
+import { EanUpcIsbnType, currency } from "@/enums/enums";
 
 
 interface productType {
