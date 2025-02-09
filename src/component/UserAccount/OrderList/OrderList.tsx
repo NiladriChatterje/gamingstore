@@ -3,7 +3,7 @@ import styles from './OrderList.module.css'
 import { AiFillCloseCircle } from 'react-icons/ai'
 import { useUserStateContext } from '../UserStateContext';
 
-export default function OrderList({ id, image, price, count }: { id: number; image: string; price: number; count: number }) {
+export default function OrderList({ id, image, price, count }: { id: string; image: string; price: number; count: number }) {
     const { data, setData, incDecQty, ItemIDCount } = useUserStateContext();
     const [counter, setCounter] = React.useState<number>(() => count)
 
@@ -23,7 +23,7 @@ export default function OrderList({ id, image, price, count }: { id: number; ima
 
         <AiFillCloseCircle
             onClick={() => {
-                const temp = data?.filter(i => i.id !== id)
+                const temp = data?.filter(i => i._id !== id)
                 setData?.(temp ? [...temp] : [])
             }}
             style={{ color: 'black', position: 'absolute', top: 40, right: 10, cursor: 'pointer' }} />

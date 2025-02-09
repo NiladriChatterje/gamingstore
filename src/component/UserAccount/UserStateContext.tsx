@@ -7,7 +7,7 @@ const ProductContext = createContext<Partial<ProductContextType>>({});
 export const UserStateContext = ({ children }: { children: ReactNode }) => {
     const [lastRoute, setLastRoute] = useState<string>(() => localStorage.getItem('last-route') || "")
     const [qty, setQty] = useState(() => 1);
-    const [ItemIDCount, setItemIDCount] = useState<object & { id?: number }>(() => { });
+    const [ItemIDCount, setItemIDCount] = useState<object & { id?: string }>(() => { });
     const [totalPrice, setTotalPrice] = useState<number>(Number(localStorage.getItem('totalPrice')) || 0);
     const [data, setData] = useState<ProductType[]>(() => JSON.parse(localStorage.getItem('orders') as string) as ProductType[] || [] as ProductType[]);
     const [slide, setSlide] = useState<boolean>(false);

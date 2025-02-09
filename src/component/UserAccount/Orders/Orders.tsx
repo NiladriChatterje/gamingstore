@@ -42,7 +42,7 @@ const Orders = () => {
                 <section
                     className={styles['order-sub-container']}>
                     {orders?.map((item, i) => {
-                        return <OrderPendingItem key={item?.id ?? i} item={item} />
+                        return <OrderPendingItem key={item?._id ?? i} item={item} />
                     })}
                 </section>
             </fieldset>
@@ -62,7 +62,7 @@ const Orders = () => {
                     {orders?.map((item, i) => {
                         return <section key={i}
                             className={styles['order-items']}>
-                            {item.name || "ok"}
+                            {item.productName || "ok"}
                         </section>
                     })}
                 </section>

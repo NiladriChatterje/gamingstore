@@ -30,7 +30,7 @@ export declare type ProductContextType = {
     setOneItem: React.Dispatch<React.SetStateAction<boolean>>;
     qty: number;
     setQty: React.Dispatch<React.SetStateAction<number>>;
-    ItemIDCount: object & { id?: number };
+    ItemIDCount: object & { id?: string };
     setItemIDCount: React.Dispatch<React.SetStateAction<object>>;
     incDecQty: (counter: number, id: number | string) => void;
     addItemToOrderList: (item: ProductType) => void;
