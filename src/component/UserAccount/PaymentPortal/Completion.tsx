@@ -4,7 +4,7 @@ import { useUserStateContext } from "../UserStateContext.tsx";
 import { BsBagCheckFill } from 'react-icons/bs'
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './Completion.module.css';
-import { OrderType } from "../../../ProductContextType";
+import { OrderType } from "../../../declarations/ProductContextType";
 
 function Completion() {
     const navigate = useNavigate();

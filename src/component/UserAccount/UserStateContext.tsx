@@ -1,9 +1,6 @@
 import React, { useContext, createContext, useState, useRef, ReactNode } from 'react';
-import { ProductContextType } from './UserStateContextType';
+import { OrderType, ProductContextType } from '@declarations/UserStateContextType';
 
-export type OrderType = {
-    id: number; name: string; price: number; image: string; desc: string; count: number;
-}
 
 const ProductContext = createContext<Partial<ProductContextType>>({});
 

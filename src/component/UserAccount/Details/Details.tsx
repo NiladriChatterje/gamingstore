@@ -5,7 +5,7 @@ import { useStateContext } from '../../../StateContext.tsx';
 import { data } from '../Products/data.ts'
 import styles from './Details.module.css';
 import UpcomingData from '../Body/upcomingData';
-import { OrderType } from '../../../ProductContextType';
+import { OrderType } from '../../../declarations/ProductContextType';
 import toast from 'react-hot-toast';
 
 const Details = () => {
@@ -68,7 +68,6 @@ const Details = () => {
                   localStorage.setItem("isOneItem", "true");
                   setOneItem?.(true);
                   setDefaultLoginAdminOrUser?.('user');
-                  localStorage.setItem('oneItem', 'true');
                   const foundData = data?.find((item: OrderType) => item.id === parseInt(id));
                   let oneProduct = { name: foundData?.name, price: foundData?.price, qty: counter }
                   localStorage.setItem('oneProduct', JSON.stringify(oneProduct));

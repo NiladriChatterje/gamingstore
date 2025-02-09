@@ -6,10 +6,16 @@
       "dom",
       "dom.iterable"
     ],
-    "baseUrl": "src",
+    "baseUrl": ".",
     "paths": {
       "@/*": [
-        "./*"
+        "src/*"
+      ],
+      "@component/*": [
+        "src/component/*"
+      ],
+      "@declarations/*": [
+        "src/declarations/*"
       ]
     },
   },

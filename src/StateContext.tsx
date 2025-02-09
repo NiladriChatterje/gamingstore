@@ -1,9 +1,7 @@
 import { useContext, createContext, useState, ReactNode } from 'react';
-import { ProductContextType } from './ProductContextType';
+import { ProductContextType } from './declarations/ProductContextType';
 
-export type OrderType = {
-    id: number; name: string; price: number; image: string; desc: string; count: number;
-}
+
 
 const Global = createContext<Partial<ProductContextType>>({});
 

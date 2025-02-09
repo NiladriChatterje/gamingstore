@@ -1,5 +1,5 @@
 #order-container,
-#order-sub-container {
+.order-sub-container {
     overflow: clip;
     display: flex;
     flex-direction: column;
@@ -9,16 +9,76 @@
     align-items: center;
 }
 
-#order-sub-container {
-    width: 50%;
-    height: 70%;
-    background-color: rgb(85, 14, 14);
-    gap: 25px;
+
+.order-sub-container {
+    width: 100%;
+    height: 280px;
+    overflow: clip auto;
+    justify-content: flex-start;
+    gap: 15px;
+}
+
+.order-items {
+    display: flex;
+    width: 95%;
+    background-color: white;
+    box-shadow: 0px 5px 10px -8px grey;
+    padding: 6px 10px;
+    border-radius: 8px;
+    justify-content: space-between;
+}
+
+.button {
+    border-style: none;
+    outline: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: rgb(59, 59, 96);
+}
+
+.button-invert {
+    background-color: rgb(252, 252, 252);
+    color: rgb(59, 59, 96);
+    font-weight: 700;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.order-items button:hover {
+    background-color: rgb(97, 97, 156);
+}
+
+.fieldset-style {
+    width: 55%;
+}
+
+#counter_container {
+    display: flex;
+    align-items: flex-start;
+}
+
+#counter_container button {
+    margin: 0 8px;
+    display: flex;
+    border-style: none;
+    border-radius: 5px;
+    padding: 2px 5px;
+    color: white;
+    font-size: small;
+    background-color: rgb(68, 68, 104);
+    cursor: pointer;
 }
 
 @media screen and (max-width:968px) {
     #order-sub-container {
         width: 100%;
         height: 90%;
+    }
+
+    .fieldset-style {
+        width: 85%;
     }
 }
