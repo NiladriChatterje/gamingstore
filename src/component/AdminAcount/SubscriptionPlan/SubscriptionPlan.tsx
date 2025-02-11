@@ -29,10 +29,10 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                admin: admin?.id,
+                                adminId: admin?.id,
                                 plan: Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_1),
                                 _payment_id, _order_id, _payment_signature,
-                                document_id: admin._id
+                                admin_document_id: admin._id
                             }),
                         });
                         const data = await response.json()
