@@ -4,6 +4,28 @@
     gap: 15px;
 }
 
+.category-containers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.span-category {
+    background-color: white;
+    color: black;
+    font-size: x-small;
+    padding: 1px 8px;
+    border-radius: 10px;
+    border: 2px solid white;
+    cursor: pointer;
+}
+
+.span-category-selected {
+    background-color: rgba(83, 83, 83, 0.936) !important;
+    color: white !important;
+    font-weight: 700;
+}
+
 #form-container input {
     padding: 10px;
     font-size: 0.70em;

@@ -24,10 +24,12 @@ interface productType {
 }
 const keywordsSet = new Set<string>();
 
+const ProductCategories: string[] = ['clothing', 'food-n-Groceries', 'gadgets', 'home-goods', 'toys'];
 
 const AddProduct = () => {
     const [modelNumber, setModelNumber] = useState<string>(() => '');
     const [eanUpc, setEacUpc] = useState<string>(() => '')
+    const [category, setCategory] = useState<string>(() => ProductCategories[0])
     const [productName, setProductName] = useState<string>(() => '')
     const [images, setImages] = useState<File[]>(() => ([]));
     const [quantity, setQuantity] = useState<number>(0)
@@ -47,6 +49,7 @@ const AddProduct = () => {
     const modelNumberRef = useRef<HTMLDivElement>(null);
     const ImageInputRef = useRef<HTMLInputElement>(null);
     const imageCarouselContainerRef = useRef<HTMLDivElement>(null);
+    const spanCategoryRef = useRef<HTMLSpanElement[]>([]);
 
     async function handleSubmitPdt(e: FormEvent) {
         e.preventDefault();
@@ -174,6 +177,24 @@ const AddProduct = () => {
                             </div>
                         </section>
                         <section>
+                            <label>Category</label>
+                            <div
+                                data-section={'product-category'}
+                                className={styles['category-containers']}>
+                                {ProductCategories?.map((item, i) => (
+                                    <span
+                                        className={styles['span-category']}
+                                        ref={el => { if (el) spanCategoryRef.current.push(el) }} key={i} onClick={() => {
+                                            setCategory(item);
+                                            for (let i of spanCategoryRef.current)
+                                                i.classList.remove(styles['span-category-selected']);
+
+                                            spanCategoryRef.current[i].classList.add(styles['span-category-selected'])
+                                        }}>{item}</span>
+                                ))}
+                            </div>
+                        </section>
+                        <section>
                             <label>EAN|UPC|GTIN|ISBN|ASIN|OTHERS</label>
                             <article
                                 style={{ display: 'flex', gap: 10, width: '100%', position: 'relative' }}>
@@ -205,36 +226,37 @@ const AddProduct = () => {
                             </article>
 
                         </section>
-                        <section>
-                            <label>Model Number</label>
-                            <div style={{ display: 'flex', gap: 15 }}>
-                                <div
-                                    data-section={'isGadget'}
-                                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
-                                    className={styles['input-containers']}>
-                                    <input
-                                        onChange={e => {
-                                            setChecked(e.target.checked)
-                                        }}
-                                        name={'is-gadget'} type='checkbox'
-                                    />
-                                    <label>Gadget</label>
+                        {category === "gadgets" &&
+                            (<section>
+                                <label>Model Number</label>
+                                <div style={{ display: 'flex', gap: 15 }}>
+                                    <div
+                                        data-section={'isGadget'}
+                                        style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                                        className={styles['input-containers']}>
+                                        <input
+                                            onChange={e => {
+                                                setChecked(e.target.checked)
+                                            }}
+                                            name={'is-gadget'} type='checkbox'
+                                        />
+                                        <label>Gadget</label>
+                                    </div>
+                                    <div
+                                        ref={modelNumberRef}
+                                        data-section={'modelNumber'}
+                                        style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
+                                        className={styles['input-containers']}>
+                                        <MdModelTraining />
+                                        <input value={modelNumber}
+                                            onChange={e => {
+                                                setModelNumber(e.target.value)
+                                            }}
+                                            name={'model-number'} placeholder={'model number'} type='text'
+                                        />
+                                    </div>
                                 </div>
-                                <div
-                                    ref={modelNumberRef}
-                                    data-section={'modelNumber'}
-                                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
-                                    className={styles['input-containers']}>
-                                    <MdModelTraining />
-                                    <input value={modelNumber}
-                                        onChange={e => {
-                                            setModelNumber(e.target.value)
-                                        }}
-                                        name={'model-number'} placeholder={'model number'} type='text'
-                                    />
-                                </div>
-                            </div>
-                        </section>
+                            </section>)}
                         <section
                             style={{ display: 'flex', gap: 15 }}>
                             <div>

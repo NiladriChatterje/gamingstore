@@ -111,22 +111,21 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
             return userEnrolled
         }
 
-        function mainCheck() {
+        async function mainCheck() {
             if (isLoaded) {
                 // check from sanity if user has an existing 
                 // subscription plan or not
-                checkAdminEnrolled().then(result => {
-                    console.log(result)
-                    if (result.length > 0 && result[0]?.SubscriptionPlan) {
-                        let lastPlan = result[0].SubscriptionPlan.at(-1);
-                        const today = new Date().getTime();
-                        const expirationDay = new Date(lastPlan?.planSchemeList?.expireDate || new Date()).getTime()
+                const result = await checkAdminEnrolled();
+                console.log(result)
+                if (result.length > 0 && result[0]?.SubscriptionPlan) {
+                    let lastPlan = result[0].SubscriptionPlan.at(-1);
+                    const today = new Date().getTime();
+                    const expirationDay = new Date(lastPlan?.planSchemeList?.expireDate || new Date()).getTime()
 
-                        if (expirationDay - today > 0)
-                            setIsPlanActive(true)
-                    }
-                    setAdmin?.(result[0]);
-                })
+                    if (expirationDay - today > 0)
+                        setIsPlanActive(true)
+                }
+                setAdmin?.(result[0]);
             }
         }
 
