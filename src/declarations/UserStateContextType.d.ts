@@ -1,11 +1,14 @@
 import React, { LegacyRef, RefObject } from 'react'
-import { EanUpcIsbnType } from '@/enums/enums';
+import { currency, EanUpcIsbnType } from '@enums/enums';
 
 export declare type ProductType = {
-    _id: string;
+    _id?: string;
     productName: string;
+    category: string;
     eanUpcIsbnGtinAsinType: EanUpcIsbnType;
+    eanUpcNumber: string;
     price: number;
+    currency?: currency;
     imagesBase64?: { size: number; extension: string; base64: string }[];
     image?: FileList;
     modelNumber?: string;
@@ -14,6 +17,7 @@ export declare type ProductType = {
     quantity: number;
     keywords: string[];
     discount: number;
+    seller?: string[]
 }
 
 export declare type ProductContextType = {

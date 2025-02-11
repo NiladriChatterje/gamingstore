@@ -7,21 +7,8 @@ import toast from "react-hot-toast";
 import { FaRupeeSign } from "react-icons/fa";
 import { ImUpload } from "react-icons/im";
 import { EanUpcIsbnType, currency } from "@/enums/enums";
+import { ProductType } from "@declarations/UserStateContextType";
 
-
-interface productType {
-    productName: string;
-    imagesBase64: { size: number; extension: string; base64: string }[];
-    EanUpcIsbnTypeGtinAsinType: EanUpcIsbnType;
-    EanUpcIsbnTypeGtinAsinNumber: string;
-    modelNumber?: string;
-    quantity: number;
-    seller: string[];//type will be adminType
-    price: number;
-    discount: number;
-    currency: currency;
-    keywords: string[]
-}
 const keywordsSet = new Set<string>();
 
 const ProductCategories: string[] = ['clothing', 'food-n-Groceries', 'gadgets', 'home-goods', 'toys'];
@@ -31,6 +18,7 @@ const AddProduct = () => {
     const [eanUpc, setEacUpc] = useState<string>(() => '')
     const [category, setCategory] = useState<string>(() => ProductCategories[0])
     const [productName, setProductName] = useState<string>(() => '')
+    const [productDescription, setProductDescription] = useState<string>(() => '')
     const [images, setImages] = useState<File[]>(() => ([]));
     const [quantity, setQuantity] = useState<number>(0)
     const [eanUpcType, setEacUpcType] = useState<EanUpcIsbnType>(() => EanUpcIsbnType.EAN);
@@ -72,17 +60,19 @@ const AddProduct = () => {
                     })
 
                 if (base64Images.length === images.length) {
-                    const formData: productType = {
+                    const formData: ProductType = {
                         productName: productName,
-                        EanUpcIsbnTypeGtinAsinType: eanUpcType,
-                        EanUpcIsbnTypeGtinAsinNumber: eanUpc,
+                        category,
+                        eanUpcIsbnGtinAsinType: eanUpcType,
+                        eanUpcNumber: eanUpc,
                         quantity,
                         currency: currency.INR,
                         price: price,
                         discount: 0,
                         keywords: keywordArray,
                         imagesBase64: [...base64Images],
-                        seller: []
+                        seller: [] as unknown as string,
+                        productDescription: productDescription
                     }
                     if (checked) {
                         if (!modelNumber) {
@@ -467,6 +457,24 @@ const AddProduct = () => {
                                             setDiscount(Number(e.target.value))
                                         }}
                                         name={'discount'} placeholder={'discount (%)'} type='number'
+                                    />
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <label>Discount :</label>
+                            <div>
+                                <div
+                                    data-section={'product-description'}
+                                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)', height: 'max-content' }}
+                                    className={styles['input-containers']}>
+                                    <textarea
+                                        style={{ border: 'none', width: '100%', outline: 'none', resize: 'none', height: 150 }}
+                                        value={productDescription}
+                                        onChange={e => {
+                                            setProductDescription(e.target.value)
+                                        }}
+                                        name={'productDescription'} placeholder={'Give a brief about the product (optional)'}
                                     />
                                 </div>
                             </div>
