@@ -11,24 +11,25 @@ import OTPModal from "./OTPModal";
 import { FaCity, FaFileInvoiceDollar } from "react-icons/fa";
 import { SiFreelancermap } from 'react-icons/si';
 import { RiLandscapeFill } from 'react-icons/ri';
-// import { useUserStateContext } from '../UserStateContext';
+import { useUserStateContext } from '../UserStateContext';
 
 const ProfileUpdateUser = () => {
 
+    const { userData } = useUserStateContext();
     const { user } = useUser();
 
-    console.log('user =>', admin)
+    console.log('user =>', userData)
 
     const [disable, setDisable] = useState<boolean>(true);
     const [toggleCountryCode, setToggleCountryCode] = useState<boolean>(false);
-    const [gstin, setGstin] = useState<string>(admin?.gstin);
-    const [username, setUsername] = useState<string>(admin?.firstName);
-    const [pinCode, setpinCode] = useState<string>(admin?.address?.pinCode);
-    const [country, setCountry] = useState<string>(admin?.address?.country);
-    const [state, setState] = useState<string>(admin?.address?.state);
-    const [county, setCounty] = useState<string>(admin?.address?.county);
-    const [email, setEmail] = useState<string>(admin?.email);
-    const [phone, setPhone] = useState<string>(admin?.phone);
+    const [gstin, setGstin] = useState<string>(userData?.gstin);
+    const [username, setUsername] = useState<string>(userData?.firstName);
+    const [pinCode, setpinCode] = useState<string>(userData?.address?.pinCode);
+    const [country, setCountry] = useState<string>(userData?.address?.country);
+    const [state, setState] = useState<string>(userData?.address?.state);
+    const [county, setCounty] = useState<string>(userData?.address?.county);
+    const [email, setEmail] = useState<string>(userData?.email);
+    const [phone, setPhone] = useState<string>(userData?.phone);
     const [OTP, setOTP] = useState<number>(0);
     const modalRef = useRef<HTMLDialogElement>(null);
 
@@ -68,15 +69,25 @@ const ProfileUpdateUser = () => {
     }
 
     async function handleUpdate() {
-        const result = await sanityClient?.patch(admin._id).set({
-            gstin, AddressObjectType: {
-                pinCode,
-                county, country, state
-            }, email, phone: Number(phone)
-        }).commit();
-        // e.preventDefault();
-        console.log(result)
-        toast.success('new records updated!');
+        /*
+        await fetch("http://localhost:5004/user/:id",{
+        method:"PUT",
+        body:JSON.stringify({userId:userData.id, documentId:userData._id,
+        
+        })
+        })
+        */
+
+
+        // const result = await sanityClient?.patch(userData._id).set({
+        //     gstin, AddressObjectType: {
+        //         pinCode,
+        //         county, country, state
+        //     }, email, phone: Number(phone)
+        // }).commit();
+        // // e.preventDefault();
+        // console.log(result)
+        // toast.success('new records updated!');
         setDisable(true)
     }
 
@@ -128,7 +139,7 @@ const ProfileUpdateUser = () => {
                             </div>
                             <input value={phone}
                                 onChange={e => { setPhone(e.target.value) }}
-                                name={'phone'} placeholder={admin?.phone || 'xxx-xxx-xxxx'} type='tel'
+                                name={'phone'} placeholder={userData?.phone || 'xxx-xxx-xxxx'} type='tel'
                                 maxLength={10} minLength={10}
                                 disabled={disable} />
                         </div>
@@ -153,7 +164,7 @@ const ProfileUpdateUser = () => {
                                 onChange={e => { setEmail(e.target.value) }}
                                 name={'email'}
                                 disabled={disable}
-                                placeholder={admin?.email ?? 'example@domain.com'} />
+                                placeholder={userData?.email ?? 'example@domain.com'} />
                         </div>
                         <div
                             id={styles['verify-span-btn']}
@@ -175,7 +186,7 @@ const ProfileUpdateUser = () => {
                                     <input
                                         value={pinCode}
                                         onChange={e => setpinCode(e.target.value)}
-                                        name={'pinCode'} placeholder={admin.AddressObjectType?.pinCode ?? 'PIN code'}
+                                        name={'pinCode'} placeholder={userData.AddressObjectType?.pinCode ?? 'PIN code'}
                                         maxLength={6} minLength={6}
                                         type='text' disabled={disable} />
                                 </div>
@@ -188,7 +199,7 @@ const ProfileUpdateUser = () => {
                                     <input
                                         value={county}
                                         onChange={e => { setCounty(e.target.value) }}
-                                        name={'county'} placeholder={admin.AddressObjectType?.county ?? 'county'} type='text' disabled={disable} />
+                                        name={'county'} placeholder={userData.AddressObjectType?.county ?? 'county'} type='text' disabled={disable} />
                                 </div>
                             </section>
                             <section>
@@ -201,7 +212,7 @@ const ProfileUpdateUser = () => {
                                         onChange={e => {
                                             setCountry(e.target.value)
                                         }}
-                                        name={'country'} placeholder={admin.AddressObjectType?.country ?? 'country'} type='text'
+                                        name={'country'} placeholder={userData.AddressObjectType?.country ?? 'country'} type='text'
                                         disabled={disable} />
                                 </div>
                             </section>
@@ -214,7 +225,7 @@ const ProfileUpdateUser = () => {
                                         onChange={e => {
                                             setState(e.target.value)
                                         }}
-                                        name={'state'} placeholder={admin.AddressObjectType?.state ?? 'state'} type='text'
+                                        name={'state'} placeholder={userData.AddressObjectType?.state ?? 'state'} type='text'
                                         disabled={disable} />
                                 </div>
                             </section>

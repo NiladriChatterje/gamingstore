@@ -51,6 +51,8 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
     return (<ProductContext.Provider
         value={
             {
+                userData,
+                setUserData,
                 lastRoute,
                 setLastRoute,
                 navRef,

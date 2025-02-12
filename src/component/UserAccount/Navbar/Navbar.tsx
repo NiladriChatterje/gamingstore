@@ -13,8 +13,10 @@ import { FcAbout } from "react-icons/fc";
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 
 
-const navItems = [{ Img: FaHome, name: 'Home' }, { Img: MdProductionQuantityLimits, name: 'Product' },
-{ Img: FaShopify, name: 'Orders' }, { Img: FcAbout, name: 'About' }];
+const navItems = [{ Img: FaHome, name: 'Home', link: '' },
+{ Img: MdProductionQuantityLimits, name: 'Product', link: 'Product' },
+{ Img: FaShopify, name: 'Orders', link: 'Orders' }, { Img: FaShopify, name: 'Profile', link: 'profile-update' },
+{ Img: FcAbout, name: 'About', link: 'About' }];
 
 const Navbar = () => {
   const [userLogin, setUserLoginDiv] = useState<boolean>(true);
@@ -36,7 +38,7 @@ const Navbar = () => {
       <div
         className={styles['nav-routes']}
         id={navActive ? styles['navitems-active'] : styles['navitems-inactive']}>
-        {navItems?.map((item, i) => <Link to={`${item.name === "Home" ? '' : `/user/${item.name}`}`} className={styles['text']} key={i}>
+        {navItems?.map((item, i) => <Link to={`/user/${item.link}`} className={styles['text']} key={i}>
           <item.Img className={styles['nav-list-icons']} />
           {item.name}</Link>)}
       </div>
