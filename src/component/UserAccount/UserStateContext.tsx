@@ -5,6 +5,7 @@ import { ProductType, ProductContextType } from '@declarations/UserStateContextT
 const ProductContext = createContext<Partial<ProductContextType>>({});
 
 export const UserStateContext = ({ children }: { children: ReactNode }) => {
+    const [userData, setUserData] = useState();
     const [lastRoute, setLastRoute] = useState<string>(() => localStorage.getItem('last-route') || "")
     const [qty, setQty] = useState(() => 1);
     const [ItemIDCount, setItemIDCount] = useState<object & { id?: string }>(() => { });
@@ -16,11 +17,15 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
     const navRef = useRef<HTMLElement | null>(null);
 
     React.useEffect(() => {
+        //for user data fetch operation
+    }, []);
+
+
+    React.useEffect(() => {
         let x = data?.reduce((acc: number, cur: ProductType) => acc + cur.price * cur.quantity, 0)
         setTotalPrice(x);
         localStorage.setItem('totalPrice', totalPrice.toString());
         localStorage.setItem('orders', JSON.stringify(data));
-
     }, [data]);
 
     function addItemToOrderList(item: ProductType) {

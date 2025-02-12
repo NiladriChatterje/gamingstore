@@ -2,7 +2,7 @@ import React, { LegacyRef, RefObject } from 'react'
 import { currency, EanUpcIsbnType } from '@enums/enums';
 
 export declare type ProductType = {
-    _id?: string;
+    _id: string;
     productName: string;
     category: string;
     eanUpcIsbnGtinAsinType: EanUpcIsbnType;
@@ -20,7 +20,13 @@ export declare type ProductType = {
     seller?: string[]
 }
 
+export declare type UserType = {
+
+}
+
 export declare type ProductContextType = {
+    userData: any;
+    setUserData: React.Dispatch<React.SetStateAction<any>>;
     lastRoute: string;
     setLastRoute: React.Dispatch<React.SetStateAction<string>>,
     slide: boolean,
