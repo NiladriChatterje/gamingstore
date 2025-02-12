@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/clerk-react";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
@@ -24,7 +23,7 @@ const Checkout = ({ price, callback }: { price: number; callback?: Function }) =
     const navigate = useNavigate()
     const { defaultLoginAdminOrUser } = useStateContext()
 
-    const { user } = useUser()
+    // const { user } = useUser()
 
     const handlePayment = async (e: FormEvent, _callback?: Function) => {
         e.preventDefault();
@@ -63,11 +62,6 @@ const Checkout = ({ price, callback }: { price: number; callback?: Function }) =
                     response.razorpay_signature
                 )
                     navigate(`/user/completion/`);
-            },
-            prefill: {
-                name: user?.fullName || '',
-                email: user?.emailAddresses[0].emailAddress,
-                contact: "9330038859",
             },
             theme: {
                 color: "rgb(85, 88, 117)",
