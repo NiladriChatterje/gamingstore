@@ -86,8 +86,6 @@ const AddProduct = () => {
             imagesBase64: [...base64Images],
             seller: [] as unknown as string,
             productDescription: productDescription,
-            created_at: new Date(),
-            update_at: new Date(),
           }
           if (checked) {
             if (!modelNumber) {

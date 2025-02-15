@@ -18,8 +18,6 @@ export declare type ProductType = {
   keywords: string[]
   discount: number
   seller?: string[]
-  created_at: Date
-  update_at: Date
 }
 
 export declare type UserType = {}

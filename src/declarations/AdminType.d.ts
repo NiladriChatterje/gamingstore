@@ -9,7 +9,7 @@ export declare interface AdminFieldsType {
   adminId: string | null | undefined
   email: string | null | undefined
   SubscriptionPlan?: subscription[] | undefined | null
-  AddressObjectType: {
+  address: {
     pinCode: string
     county: string
     country: string
