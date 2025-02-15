@@ -1,26 +1,13 @@
 {
   "compilerOptions": {
-    "lib": [
-      "es5",
-      "es6",
-      "dom",
-      "dom.iterable"
-    ],
+    "lib": ["es5", "es6", "dom", "dom.iterable"],
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@component/*": [
-        "src/component/*"
-      ],
-      "@declarations/*": [
-        "src/declarations/*"
-      ],
-      "@enums/*": [
-        "src/enums/*"
-      ]
-    },
+      "@/*": ["src/*"],
+      "@component/*": ["src/component/*"],
+      "@declarations/*": ["src/declarations/*"],
+      "@enums/*": ["src/enums/*"]
+    }
   },
   "files": [],
   "references": [

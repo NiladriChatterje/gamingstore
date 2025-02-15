@@ -1,5 +1,5 @@
 import { FormEvent, useState, KeyboardEvent, useRef, useEffect } from 'react'
-import styles from './EditProduct.module.css'
+import styles from './EditProductDetails.module.css'
 import { IoIosArrowDropdownCircle, IoIosPersonAdd } from 'react-icons/io'
 import { AiFillCloseCircle, AiFillProduct } from 'react-icons/ai'
 import {
@@ -11,7 +11,7 @@ import {
 import toast from 'react-hot-toast'
 import { FaRupeeSign } from 'react-icons/fa'
 import { ImUpload } from 'react-icons/im'
-import { EanUpcIsbnType, currency } from '@enums/enums'
+import { EanUpcIsbnType, currency } from '@/enums/enums'
 import { ProductType } from '@declarations/UserStateContextType'
 
 const keywordsSet = new Set<string>()
