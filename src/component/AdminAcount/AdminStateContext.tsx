@@ -5,11 +5,11 @@ import {
   useContext,
   useEffect,
 } from 'react'
-import type { AdminContextType } from './AdminContextType.d.ts'
+import type { AdminContextType } from '@declarations/AdminContextType.ts'
 import { createClient, SanityClient } from '@sanity/client'
-import { ProductType } from '@/declarations/UserStateContextType.js'
+import { ProductType } from '@/declarations/UserStateContextType.ts'
 import toast from 'react-hot-toast'
-import { AdminFieldsType } from '@/declarations/AdminType.js'
+import { AdminFieldsType } from '@/declarations/AdminType.ts'
 import { useUser } from '@clerk/clerk-react'
 
 const AdminContext = createContext<Partial<AdminContextType>>({})

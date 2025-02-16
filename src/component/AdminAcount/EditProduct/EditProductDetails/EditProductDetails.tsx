@@ -13,6 +13,7 @@ import { FaRupeeSign } from 'react-icons/fa'
 import { ImUpload } from 'react-icons/im'
 import { EanUpcIsbnType, currency } from '@/enums/enums'
 import { ProductType } from '@declarations/UserStateContextType'
+import { useParams } from 'react-router-dom'
 
 const keywordsSet = new Set<string>()
 
@@ -51,6 +52,22 @@ const AddProduct = () => {
   const ImageInputRef = useRef<HTMLInputElement>(null)
   const imageCarouselContainerRef = useRef<HTMLDivElement>(null)
   const spanCategoryRef = useRef<HTMLSpanElement[]>([])
+
+  const { product_id } = useParams<{ product_id?: string }>()
+
+  ;(async () => {
+    if (!product_id) {
+      window.history.back()
+      return
+    }
+    const result = await fetch(
+      `http://localhost:5001/fetch-product/${product_id}`,
+      {
+        method: 'GET',
+      },
+    )
+    console.log(result)
+  })()
 
   async function handleSubmitPdt(e: FormEvent) {
     e.preventDefault()

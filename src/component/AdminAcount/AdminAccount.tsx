@@ -63,7 +63,7 @@ const AdminAccount = () => {
                       element={<EditProduct />}
                     />
                     <Route
-                      path='/admin/edit-product/:id'
+                      path='/admin/edit-product/:product_id'
                       element={<EditProductDetails />}
                     />
                     <Route
