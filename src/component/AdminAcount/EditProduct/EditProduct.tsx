@@ -6,7 +6,7 @@ import { ProductType } from '@/declarations/UserStateContextType'
 
 const EditProduct = () => {
   const navigate = useNavigate()
-  const [products, setProducts] = useState<ProductType[] | any[]>(() => [
+  const [products, _setProducts] = useState<ProductType[] | any[]>(() => [
     1, 2, 3, 4, 5,
   ])
   const { admin, setEditProductForm } = useAdminStateContext()
