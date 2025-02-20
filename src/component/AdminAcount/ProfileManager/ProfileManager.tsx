@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import {  useRef, useState } from 'react'
 import styles from './ProfileManager.module.css'
 import { MdEdit } from 'react-icons/md'
 import { FaPhone, FaUser } from 'react-icons/fa6'
@@ -21,14 +21,14 @@ const ProfileManager = () => {
 
   const [disable, setDisable] = useState<boolean>(true)
   const [toggleCountryCode, setToggleCountryCode] = useState<boolean>(false)
-  const [gstin, setGstin] = useState<string>(admin?.gstin)
-  const [username, setUsername] = useState<string>(admin?.firstName)
-  const [pinCode, setpinCode] = useState<string>(admin?.address?.pinCode)
-  const [country, setCountry] = useState<string>(admin?.address?.country)
-  const [state, setState] = useState<string>(admin?.address?.state)
-  const [county, setCounty] = useState<string>(admin?.address?.county)
-  const [email, setEmail] = useState<string>(admin?.email)
-  const [phone, setPhone] = useState<string>(admin?.phone)
+  const [gstin, setGstin] = useState<string>(admin?.gstin ?? "")
+  const [username, setUsername] = useState<string>(admin?.firstName ?? "")
+  const [pinCode, setpinCode] = useState<string>(admin?.address?.pinCode ?? "")
+  const [country, setCountry] = useState<string>(admin?.address?.country ?? "")
+  const [state, setState] = useState<string>(admin?.address?.state ?? "")
+  const [county, setCounty] = useState<string>(admin?.address?.county ?? "")
+  const [email, setEmail] = useState<string>(admin?.email ?? "")
+  const [phone, setPhone] = useState<string>(admin?.phone ?? "")
   const [OTP, setOTP] = useState<number>(0)
   const modalRef = useRef<HTMLDialogElement>(null)
 
@@ -65,8 +65,11 @@ const ProfileManager = () => {
   }
 
   async function handleUpdate() {
-    const result = await sanityClient
-      ?.patch(admin._id)
+    // e.preventDefault(); 
+    // FormEvent is not prevented default behaviour here because toast.promise() cant access the event object.
+    try{
+      const result = await sanityClient
+      ?.patch(admin?._id)
       .set({
         gstin,
         address: {
@@ -78,16 +81,26 @@ const ProfileManager = () => {
         email,
         phone: Number(phone),
       })
-      .commit()
-    // e.preventDefault();
-    console.log(result)
-    toast.success('new records updated!')
-    setDisable(true)
+      .commit().catch(_err=>{
+        throw  Promise.reject();
+      })
+    console.log(result);
+    setDisable(true);
+    return Promise.resolve();
+    }catch(err){
+      throw  Promise.reject();
+    }
+    
+    
   }
 
   return (
     <div>
-      <form onSubmit={handleUpdate} id={styles['form-container']}>
+      <form 
+      onSubmit={e=>{
+        e.preventDefault();
+        handleUpdate()}} 
+        id={styles['form-container']}>
         <div id={styles['form-input-field-container']}>
           <div
             style={{
@@ -258,7 +271,7 @@ const ProfileManager = () => {
                     value={pinCode}
                     onChange={e => setpinCode(e.target.value)}
                     name={'pinCode'}
-                    placeholder={admin.address?.pinCode ?? 'PIN code'}
+                    placeholder={admin?.address?.pinCode ?? 'PIN code'}
                     maxLength={6}
                     minLength={6}
                     type='text'
@@ -282,7 +295,7 @@ const ProfileManager = () => {
                       setCounty(e.target.value)
                     }}
                     name={'county'}
-                    placeholder={admin.address?.county ?? 'county'}
+                    placeholder={admin?.address?.county ?? 'county'}
                     type='text'
                     disabled={disable}
                   />
@@ -304,7 +317,7 @@ const ProfileManager = () => {
                       setCountry(e.target.value)
                     }}
                     name={'country'}
-                    placeholder={admin.address?.country ?? 'country'}
+                    placeholder={admin?.address?.country ?? 'country'}
                     type='text'
                     disabled={disable}
                   />
@@ -326,7 +339,7 @@ const ProfileManager = () => {
                       setState(e.target.value)
                     }}
                     name={'state'}
-                    placeholder={admin.address?.state ?? 'state'}
+                    placeholder={admin?.address?.state ?? 'state'}
                     type='text'
                     disabled={disable}
                   />
@@ -362,10 +375,12 @@ const ProfileManager = () => {
             size={25}
             // type={'submit'}
             onClick={() => {
-              if (!disable) {
-                toast('updating...')
-                handleUpdate()
-              }
+              if (!disable) 
+                toast.promise(handleUpdate(),
+              {loading:'updating...',
+                success:"Profile Updated!",
+                error:"Updation failed!"})
+              
             }}
           />
         </section>

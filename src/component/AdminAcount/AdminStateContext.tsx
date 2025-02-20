@@ -6,49 +6,49 @@ import {
   useEffect,
 } from 'react'
 import type { AdminContextType } from '@declarations/AdminContextType.ts'
-import { createClient, SanityClient } from '@sanity/client'
 import { ProductType } from '@/declarations/UserStateContextType.ts'
 import toast from 'react-hot-toast'
 import { AdminFieldsType } from '@/declarations/AdminType.ts'
 import { useUser } from '@clerk/clerk-react'
+import { IoLocation } from 'react-icons/io5'
 
 const AdminContext = createContext<Partial<AdminContextType>>({})
 
-const sanityClient: SanityClient = createClient({
-  projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
-  token: import.meta.env.VITE_SANITY_TOKEN,
-  dataset: 'production',
-})
 
 export const AdminStateContext = ({ children }: { children: ReactNode }) => {
   const [admin, setAdmin] = useState<any>({})
   const [isPlanActiveState, setIsPlanActive] = useState<boolean>(true)
+  const [retry, setRetry] = useState<boolean>(true)
   const [editProductForm, setEditProductForm] = useState<ProductType | null>() // To fill up form fields when a product is about to edit
   const { user, isLoaded } = useUser()
 
   useEffect(() => {
     async function checkAdminEnrolled() {
-      let userEnrolled: AdminFieldsType[] = await sanityClient?.fetch(
-        `*[_type=='admin' && adminId=='${user?.id}']`,
-      )
-
-      if (userEnrolled && userEnrolled?.length === 0) {
-        toast('allowing location for inventory is important')
+      // const response: Response= await fetch(`http://localhost:5003/fetch-admin-data/${user?.id}`,{
+      //   method:'GET'
+      // });
+      
+      let userEnrolled:AdminFieldsType[] = [] as AdminFieldsType[] /* await response.json();*/
+      let toastLoadingId:string | undefined;
+      if (userEnrolled.length === 0) {
         navigator.geolocation.getCurrentPosition(
           async ({
             coords: { latitude, longitude },
           }: {
             coords: { latitude: number; longitude: number }
           }) => {
+  
             const userOps = async () => {
               try {
                 if (
                   !user?.phoneNumbers[0]?.phoneNumber &&
                   !userEnrolled[0]?.phone
-                )
-                  toast(
-                    '! Fill up phone number for notifications in profile-manager tab',
-                  )
+                ){
+                  if(toastLoadingId)
+                    toast.dismiss(toastLoadingId)
+                  toastLoadingId = toast(
+                    'Update phone number!',
+                  )}
                 const response = await fetch(
                   `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${
                     import.meta.env.VITE_GEOAPIFY_API
@@ -59,27 +59,18 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
                 )
                 const { features } = await response.json()
                 const placeResult = features[0]
-                console.log('reverse geocoding : ', placeResult)
-                let result = await sanityClient?.create({
-                  _type: 'admin',
-                  username: user?.firstName,
-                  adminId: user?.id,
-                  email: user?.emailAddresses[0].emailAddress,
-                  geoPoint: {
-                    lat: latitude,
-                    lng: longitude,
-                  },
-                  address: {
-                    pinCode: placeResult?.properties?.postcode,
-                    county: placeResult?.properties?.county,
-                    state: placeResult?.properties?.state,
-                    country: placeResult?.properties?.country,
-                  },
-                })
+                console.log('reverse geocoding : ', placeResult);
 
-                console.log('document created : ', result)
-                userEnrolled = [
-                  {
+
+                //creating admin document
+                const res:Response = await fetch(`http://localhost:5003/create-admin`,{
+                  method:'POST',
+                  headers:{
+                    'Content-Type':'application/json',
+                    'Accept':'application/json'
+                  },
+                  body:JSON.stringify({
+                    _type: 'admin',
                     username: user?.firstName,
                     adminId: user?.id,
                     email: user?.emailAddresses[0].emailAddress,
@@ -93,16 +84,50 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
                       state: placeResult?.properties?.state,
                       country: placeResult?.properties?.country,
                     },
-                    _id: result?._id,
+                  })
+                });
+
+                const result = await res.json();
+                if(!res.ok)
+                    throw new Error(result);
+
+                
+                userEnrolled = [
+                  {
+                    username: user?.firstName,
+                    adminId: user?.id,
+                    email: user?.emailAddresses[0].emailAddress,
+                    geoPoint: {
+                      lat: latitude,
+                      lng: longitude,
+                    },
+                    address: {
+                    pinCode: placeResult?.properties?.postcode,
+                      county: placeResult?.properties?.county,
+                      state: placeResult?.properties?.state,
+                      country: placeResult?.properties?.country,
+                    },
+                    _id: result?._id??"",
                   },
                 ]
               } catch (e: Error | any) {
                 toast.error(e.message)
-              }
+            }
             }
 
             await userOps()
           },
+          (error:GeolocationPositionError)=>{
+            const toastId = toast(<div><IoLocation /> allow location</div>)
+            const toastIdForMsg = toast.error(error.message);
+          
+
+            setTimeout(()=>{ 
+              toast.dismiss(toastId);
+              toast.dismiss(toastIdForMsg)
+              setRetry(prev=>!prev)},1000)
+           
+          }
         )
       }
 
@@ -112,23 +137,30 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
     async function mainCheck() {
       // check from sanity if user has an existing
       // subscription plan or not
-      const result = await checkAdminEnrolled()
-
-      console.log(result)
-      if (result.length > 0 && result[0]?.SubscriptionPlan) {
-        let lastPlan = result[0].SubscriptionPlan.at(-1)
-        const today = new Date().getTime()
-        const expirationDay = new Date(
-          lastPlan?.planSchemeList?.expireDate || new Date(),
-        ).getTime()
-
-        if (expirationDay - today > 0) setIsPlanActive(true)
+      try{
+        const result = await checkAdminEnrolled()
+        if(!result)
+            return;
+        console.log(result)
+        if (result.length > 0 && result[0]?.SubscriptionPlan) {
+          let lastPlan = result[0].SubscriptionPlan.at(-1)
+          const today = new Date().getTime()
+          const expirationDay = new Date(
+            lastPlan?.planSchemeList?.expireDate || new Date(),
+          ).getTime()
+  
+          if (expirationDay - today > 0) setIsPlanActive(true)
+        }
+      console.log(result[0])
+        setAdmin(result[0])
+      }catch(err){
+        toast.error("Failed!");
       }
-      setAdmin(result[0])
+      
     }
 
     if (user && isLoaded) mainCheck()
-  }, [user, isLoaded])
+  }, [user, isLoaded,retry])
 
   return (
     <AdminContext.Provider
@@ -139,7 +171,6 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         setIsPlanActive,
         admin,
         setAdmin,
-        sanityClient,
       }}
     >
       {children}

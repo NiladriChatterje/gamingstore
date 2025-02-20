@@ -1,4 +1,5 @@
 export declare interface AdminFieldsType {
+  _type?:string;
   _id: string;
   username: string | null | undefined;
   geoPoint: {

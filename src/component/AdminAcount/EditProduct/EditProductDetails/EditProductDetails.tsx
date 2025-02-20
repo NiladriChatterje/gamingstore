@@ -14,6 +14,7 @@ import { ImUpload } from 'react-icons/im'
 import { EanUpcIsbnType, currency } from '@/enums/enums'
 import { ProductType } from '@declarations/UserStateContextType'
 import { useParams } from 'react-router-dom'
+import { useAdminStateContext } from '@/component/AdminAcount/AdminStateContext'
 
 const keywordsSet = new Set<string>()
 
@@ -54,6 +55,7 @@ const AddProduct = () => {
   const spanCategoryRef = useRef<HTMLSpanElement[]>([])
 
   const { product_id } = useParams<{ product_id?: string }>()
+  const {admin} = useAdminStateContext()
 
   ;(async () => {
     if (!product_id) {
@@ -61,12 +63,13 @@ const AddProduct = () => {
       return
     }
     const result = await fetch(
-      `http://localhost:5001/fetch-product/${product_id}`,
+      `http://localhost:5002/${admin.adminId}/fetch-product/${product_id}`,
       {
         method: 'GET',
       },
     )
-    console.log(result)
+    const data = await result.json();
+    console.log("details of the product in editProductDetails page : "+data)
   })()
 
   async function handleSubmitPdt(e: FormEvent) {
