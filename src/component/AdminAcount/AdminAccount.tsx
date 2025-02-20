@@ -9,7 +9,7 @@ import {
 } from './component'
 import styles from './AdminAccount.module.css'
 import { IoLogOutOutline } from 'react-icons/io5'
-import { SignedIn, SignOutButton, useUser } from '@clerk/clerk-react'
+import {  SignOutButton, useUser } from '@clerk/clerk-react'
 import SubscriptionPlan from './SubscriptionPlan/SubscriptionPlan'
 import { useStateContext } from '@/StateContext'
 import { useAdminStateContext } from './AdminStateContext'
@@ -18,10 +18,11 @@ import NotFound from '@/NotFound'
 const AdminAccount = () => {
   const { defaultLoginAdminOrUser } = useStateContext()
   const { isPlanActiveState, setIsPlanActive } = useAdminStateContext()
-  const { user } = useUser()
+  const { user } = useUser();
+
+  
   return (
     <>
-      <SignedIn>
         {defaultLoginAdminOrUser === 'admin' && (
           <div id={styles['outer-container']}>
             {user?.imageUrl && (
@@ -94,7 +95,6 @@ const AdminAccount = () => {
             <span>e-cart</span>
           </div>
         )}
-      </SignedIn>
     </>
   )
 }
