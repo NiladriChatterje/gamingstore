@@ -10,7 +10,7 @@ import { ProductType } from '@/declarations/UserStateContextType.ts'
 import toast from 'react-hot-toast'
 import { AdminFieldsType } from '@/declarations/AdminType.ts'
 import { useUser } from '@clerk/clerk-react'
-import { IoLocation } from 'react-icons/io5'
+import { IoCaretDownCircleSharp, IoLocation } from 'react-icons/io5'
 
 const AdminContext = createContext<Partial<AdminContextType>>({})
 
@@ -47,7 +47,9 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
                   if(toastLoadingId)
                     toast.dismiss(toastLoadingId)
                   toastLoadingId = toast(
-                    'Update phone number!',
+                    'Update phone number!',{
+                      position:'bottom-left',style:{width:320,background:'white'}
+                    }
                   )}
                 const response = await fetch(
                   `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${
@@ -111,16 +113,26 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
                   },
                 ]
               } catch (e: Error | any) {
-                toast.error(e.message)
+                toast.error(e.message,{
+                  position:'bottom-left',style:{width:320,background:'white'}
+                });
+                toast.loading(<div style={{display:'flex',alignItems:'center'}}>Retry creating account 
+                <IoCaretDownCircleSharp 
+                cursor={'pointer'}
+                  size={20}
+                  onClick={()=>{setRetry(prev=>!prev);toast.dismiss()}} /></div>,{duration:Infinity,
+                    position:"bottom-right"
+                  })
             }
             }
 
             await userOps()
           },
           (error:GeolocationPositionError)=>{
-            const toastId = toast(<div><IoLocation /> allow location</div>)
+            const toastId = toast(<div><IoLocation /> allow location</div>,{
+              position:'bottom-left',style:{width:320,background:'white'}
+            })
             const toastIdForMsg = toast.error(error.message);
-          
 
             setTimeout(()=>{ 
               toast.dismiss(toastId);
