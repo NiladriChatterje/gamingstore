@@ -15,7 +15,7 @@ const EditProduct = () => {
         fetch(`http://localhost:5002/${admin.adminId}/fetch-products`, {
           method: 'GET',
         }).then(async (result:Response)=>result.json()).then(data=>{
-          console.log("products of current admin : "+data)
+          console.log("products of current admin : ",data)
           setProducts(data)
         })
        

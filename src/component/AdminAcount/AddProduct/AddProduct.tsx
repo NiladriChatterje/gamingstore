@@ -9,7 +9,7 @@ import {
   MdOutlineProductionQuantityLimits,
 } from 'react-icons/md'
 import toast from 'react-hot-toast'
-import { FaRupeeSign } from 'react-icons/fa'
+import { FaPercentage, FaRupeeSign } from 'react-icons/fa'
 import { ImUpload } from 'react-icons/im'
 import { EanUpcIsbnType, currency } from '@/enums/enums'
 import { ProductType } from '@declarations/UserStateContextType'
@@ -572,7 +572,7 @@ const AddProduct = () => {
                   style={{ backgroundColor: 'rgba(255, 255, 255, 0.963)' }}
                   className={styles['input-containers']}
                 >
-                  <FaRupeeSign />
+                  <FaPercentage />
                   <input
                     value={discount}
                     onChange={e => {

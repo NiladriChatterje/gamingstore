@@ -1,4 +1,5 @@
 /// <reference types="vite-plugin-svgr/client" />
+import PreLoader from '@/PreLoader'
 import {
   createContext,
   ReactNode,
@@ -86,12 +87,12 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
             },
           })
         });
-        console.log(res)
+
         const result = await res.text();
         if(!res.ok)
             throw new Error(result); 
       }
-      catch(err:any){
+      catch(err:Error|any){
         toast.dismiss();
         toast.error(err.message,{
           position:'bottom-left',style:{width:320,background:'white'}
@@ -99,11 +100,12 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         toast.loading(<div style={{display:'flex',alignItems:'center'}}>Retry creating account</div>,{
           icon:<IoCaretDownCircleSharp 
           cursor={'pointer'}
-            size={20}
+            size={25}
             onClick={()=>{setRetry(prev=>!prev);toast.dismiss()}} />,
           duration:Infinity,
             position:"bottom-right"
-          })
+          });
+          setLoadingState(false);
           return;
       }
 
@@ -147,11 +149,11 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         },
         (error:GeolocationPositionError)=>{
           const toastId = toast(<div>allow location</div>,{
-            position:'bottom-left',style:{width:320,background:'white'},
+            position:'bottom-left',style:{width:320,background:'white',fontSize:'small'},
             icon:<IoLocation size={25} />
           })
           const toastIdForMsg = toast.error(error.message,{
-            position:'bottom-left',style:{width:320,background:'white'}
+            position:'bottom-left',style:{width:320,background:'white',fontSize:'small'}
           });
 
           setTimeout(()=>{ 
@@ -190,17 +192,18 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         setAdmin(result[0]);     
 
       }catch(err:Error|any){
+        setLoadingState(false)
         toast.dismiss();
         toast.error(err.message,{
-          position:'bottom-left',style:{width:320,background:'white'}
+          position:'bottom-left',style:{width:320,background:'white',fontSize:'small'}
         });
-        toast.loading(<div style={{display:'flex',alignItems:'center'}}>Retry creating account</div>,{
+        toast.loading(<div style={{display:'flex',alignItems:'center',width:180,fontSize:'small'}}>Retry creating account</div>,{
           icon:<IoCaretDownCircleSharp 
           cursor={'pointer'}
-            size={20}
-            onClick={()=>{setRetry(prev=>!prev);toast.dismiss()}} />,
+            size={25}
+            onClick={()=>{setRetry(prev=>!prev);toast.dismiss();setLoadingState(true)}} />,
           duration:Infinity,
-            position:"bottom-right"
+            position:"bottom-right",
           })
       }
     }
@@ -210,7 +213,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
 
 
   if(loadingState)
-    return (<div>Loading...</div>)
+    return (<PreLoader />)
 
   if(!admin){
     console.log("<admin> : ",admin)
