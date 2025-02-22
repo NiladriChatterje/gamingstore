@@ -12,8 +12,9 @@ import { ProductType } from '@/declarations/UserStateContextType.ts'
 import toast from 'react-hot-toast'
 import { AdminFieldsType } from '@/declarations/AdminType.ts'
 import { useUser } from '@clerk/clerk-react'
-import { IoCaretDownCircleSharp, IoLocation } from 'react-icons/io5';
+import {  IoLocation } from 'react-icons/io5';
 import  ServiceUnavailable from '@/assets/serviceUavailable.svg'
+import { MdReplayCircleFilled } from 'react-icons/md'
 
 const AdminContext = createContext<Partial<AdminContextType>>({})
 
@@ -98,7 +99,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
           position:'bottom-left',style:{width:320,background:'white'}
         });
         toast.loading(<div style={{display:'flex',alignItems:'center'}}>Retry creating account</div>,{
-          icon:<IoCaretDownCircleSharp 
+          icon:<MdReplayCircleFilled 
           cursor={'pointer'}
             size={25}
             onClick={()=>{setRetry(prev=>!prev);toast.dismiss()}} />,
@@ -198,7 +199,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
           position:'bottom-left',style:{width:320,background:'white',fontSize:'small'}
         });
         toast.loading(<div style={{display:'flex',alignItems:'center',width:180,fontSize:'small'}}>Retry creating account</div>,{
-          icon:<IoCaretDownCircleSharp 
+          icon:<MdReplayCircleFilled 
           cursor={'pointer'}
             size={25}
             onClick={()=>{setRetry(prev=>!prev);toast.dismiss();setLoadingState(true)}} />,
