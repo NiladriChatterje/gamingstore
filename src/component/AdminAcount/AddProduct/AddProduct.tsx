@@ -385,7 +385,7 @@ const AddProduct = () => {
                   />
                 </div>
               </div>
-              <div>
+              <div style={{flexGrow:1}}>
                 <label>Price :</label>
                 <div
                   data-section={'price'}
