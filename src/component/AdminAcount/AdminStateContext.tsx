@@ -11,8 +11,8 @@ import type { AdminContextType } from '@declarations/AdminContextType.ts'
 import { ProductType } from '@/declarations/UserStateContextType.ts'
 import toast from 'react-hot-toast'
 import { AdminFieldsType } from '@/declarations/AdminType.ts'
-import { useUser } from '@clerk/clerk-react'
-import {  IoLocation } from 'react-icons/io5';
+import { SignOutButton, useUser } from '@clerk/clerk-react'
+import {  IoLocation, IoLogOutOutline } from 'react-icons/io5';
 import  ServiceUnavailable from '@/assets/serviceUavailable.svg'
 import { MdReplayCircleFilled } from 'react-icons/md'
 
@@ -74,7 +74,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
           body:JSON.stringify({
             _type: 'admin',
             username: user?.firstName,
-            adminId: user?.id,
+            _id: user?.id,
             email: user?.emailAddresses[0].emailAddress,
             geoPoint: {
               lat: latitude,
@@ -120,7 +120,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         setAdmin({
           _type: 'admin',
           username: user?.firstName,
-          adminId: user?.id,
+          _id: user?.id,
           email: user?.emailAddresses[0].emailAddress,
           geoPoint: {
             lat: latitude,
@@ -222,6 +222,16 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
       <div style={{position:'fixed',top:0,left:0,width:'100%',height:'100dvh',
         display:'flex',alignItems:'center',justifyContent:'center', objectFit:'contain'
       }}>
+         <SignOutButton>
+              <IoLogOutOutline
+                onClick={() => {
+                  localStorage.setItem('loginusertype', 'user')
+                }}
+                cursor={'pointer'}
+                size={25}
+                style={{ position: 'fixed', top: 30, right: 60 }}
+              />
+            </SignOutButton>
         <img height={'100%'} src={ServiceUnavailable} alt="" />
 
       </div>

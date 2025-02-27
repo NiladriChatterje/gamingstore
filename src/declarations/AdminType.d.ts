@@ -1,13 +1,12 @@
 export declare interface AdminFieldsType {
   _type?:string;
-  _id?: string;
+  _id: string;
   username: string | null | undefined;
   geoPoint: {
     lat: number;
     lng: number;
   }
   phone?: number;
-  adminId: string | null | undefined;
   email: string | null | undefined;
   SubscriptionPlan?: subscription[] | undefined | null;
   address: {
