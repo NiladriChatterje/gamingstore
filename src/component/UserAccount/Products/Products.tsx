@@ -1,25 +1,35 @@
-import styles from './Products.module.css';
-import { data } from './data.js';
-import ProductDetails from '../ProductDetails/ProductDetails.tsx';
-import { useEffect, useRef } from 'react';
-import { ProductType } from '../../../StateContext.tsx';
+import styles from "./Products.module.css";
+import ProductDetails from "../ProductDetails/ProductDetails.tsx";
+import { useEffect, useRef, useState } from "react";
+import { ProductType } from "@declarations/UserStateContextType";
 
 const Products = () => {
-    const ProductRef = useRef<HTMLDivElement[]>([]);
+  const [productData, setPdtData] = useState<ProductType[]>(() => []);
+  const ProductRef = useRef<HTMLDivElement[]>([]);
 
-    useEffect(() => {
-        console.log(ProductRef.current)
-    }, []);
+  useEffect(() => {
+    fetch(`http//localhost:5002/fetch-all-products`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setPdtData(data);
+      });
+    console.log(ProductRef.current);
+  }, []);
 
-    return (
-        <div
-            id={styles['pdt_container']}>
-            {data.map((item: ProductType) => <ProductDetails
-                key={item.id}
-                ref={(el: HTMLDivElement) => { ProductRef.current?.push(el) }}
-                item={item} />)}
-        </div>
-    );
-}
+  return (
+    <div id={styles["pdt_container"]}>
+      {productData.map((item: ProductType) => (
+        <ProductDetails
+          key={item._id}
+          ref={(el: HTMLDivElement) => {
+            ProductRef.current?.push(el);
+          }}
+          item={item}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default Products;
