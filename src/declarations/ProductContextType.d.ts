@@ -9,7 +9,7 @@ export declare type ProductType = {
   price: number;
   currency?: currency;
   imagesBase64?: { size: number; extension: string; base64: string }[];
-  image?: FileList;
+  image?: File[];
   modelNumber?: string;
   productDescription: string;
   quantity: number;

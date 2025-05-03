@@ -1,8 +1,27 @@
 import styles from "./Products.module.css";
 import ProductDetails from "../ProductDetails/ProductDetails.tsx";
 import { useEffect, useRef, useState } from "react";
-import { ProductType } from "@declarations/UserStateContextType";
+import { ProductType } from "@declarations/ProductContextType";
+import { FaSearch } from "react-icons/fa";
 
+const pdts = [
+  {
+    productName: "xbox",
+    category: "gaming",
+    eanUpcIsbnGtinAsinType: "EAN",
+    eanUpcNumber: 45645416,
+    price: 3364.02,
+    currency: "INR",
+    imagesBase64: [{ size: 452, extension: "jpg", base64: "" }],
+
+    modelNumber: "MADOL565G",
+    productDescription: "best selling product",
+    quantity: 45,
+    keywords: ["gaming", "joystick", "pc", "gadgets"],
+    discount: 10,
+    seller: ["Nil"],
+  },
+];
 const Products = () => {
   const [productData, setPdtData] = useState<ProductType[]>(() => []);
   const ProductRef = useRef<HTMLDivElement[]>([]);
@@ -18,17 +37,23 @@ const Products = () => {
   }, []);
 
   return (
-    <div id={styles["pdt_container"]}>
-      {productData.map((item: ProductType) => (
-        <ProductDetails
-          key={item._id}
-          ref={(el: HTMLDivElement) => {
-            ProductRef.current?.push(el);
-          }}
-          item={item}
-        />
-      ))}
-    </div>
+    <section>
+      <div>
+        <input />
+        <FaSearch size={25} />
+      </div>
+      <div id={styles["pdt_container"]}>
+        {productData.map((item: ProductType) => (
+          <ProductDetails
+            key={item._id}
+            ref={(el: HTMLDivElement) => {
+              ProductRef.current?.push(el);
+            }}
+            item={item}
+          />
+        ))}
+      </div>
+    </section>
   );
 };
 
