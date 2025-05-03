@@ -191,8 +191,12 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         const result: AdminFieldsType[] = await checkAdminEnrolled();
 
         if (result.length === 0) return;
-        if (result.length > 0 && result[0]?.SubscriptionPlan) {
-          let lastPlan = result[0].SubscriptionPlan.at(-1);
+        if (
+          result.length > 0 &&
+          result[0]?.SubscriptionPlan &&
+          result[0]?.SubscriptionPlan?.length !== 0
+        ) {
+          let lastPlan = result[0].SubscriptionPlan?.at(-1);
           const today = new Date().getTime();
           const expirationDay = new Date(
             lastPlan?.planSchemeList?.expireDate || new Date()

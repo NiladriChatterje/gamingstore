@@ -1,11 +1,11 @@
 export declare interface AdminFieldsType {
-  _type?:string;
+  _type?: string;
   _id: string;
   username: string | null | undefined;
   geoPoint: {
     lat: number;
     lng: number;
-  }
+  };
   phone?: number;
   email: string | null | undefined;
   SubscriptionPlan?: subscription[] | undefined | null;
@@ -14,7 +14,7 @@ export declare interface AdminFieldsType {
     county: string;
     country: string;
     state: string;
-  }
+  };
 }
 
 type subscription = {
@@ -23,7 +23,7 @@ type subscription = {
   paymentSignature: string;
   activePlan: number;
   planSchemeList: planSchemeList;
-}
+};
 
 interface planSchemeList {
   activeDate: Date;

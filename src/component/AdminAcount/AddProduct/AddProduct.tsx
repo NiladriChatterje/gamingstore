@@ -69,7 +69,7 @@ const AddProduct = () => {
     }
 
     const base64Images: { size: number; extension: string; base64: string }[] =
-      [];
+      [] as { size: number; extension: string; base64: string }[];
 
     for (let image of images) {
       const fileReader = new FileReader();
@@ -510,7 +510,7 @@ const AddProduct = () => {
                         const arrayBuffer = await image?.arrayBuffer();
 
                         if (arrayBuffer) {
-                          const blob = new Blob([new Uint8Array(arrayBuffer)]);
+                          const blob = new Blob([arrayBuffer]);
                           const url = URL.createObjectURL(blob);
                           urlPreview.push(url);
                           imageToUrlPreviewMap.set(image, url);
