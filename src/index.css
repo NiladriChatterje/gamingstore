@@ -1,8 +1,8 @@
 body {
   margin: 0;
+  padding: 0;
   scroll-behavior: smooth;
   font-family: "PT Sans", "DM Sans", sans-serif;
-  font-size: 0.72em;
   width: 100%;
   background-size: cover;
   -webkit-tap-highlight-color: transparent;
@@ -15,7 +15,10 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
+*,*::after,*::before{
+  box-sizing: border-box;
+  font-size: 0.95rem;
+}
 *::selection {
   background-color: rgba(87, 87, 129, 0.892);
   color: white;

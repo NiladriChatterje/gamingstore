@@ -38,6 +38,38 @@ const pdts: ProductType[] = [
     discount: 10,
     seller: ["Nil"],
   },
+  {
+    _id: "3",
+    productName: "xbox",
+    category: "gaming",
+    eanUpcIsbnGtinAsinType: "EAN",
+    eanUpcNumber: "45645416",
+    price: 3364.02,
+    currency: "INR",
+    imagesBase64: [{ size: 452, extension: "jpg", base64: "" }],
+    modelNumber: "MADOL565G",
+    productDescription: "best selling product",
+    quantity: 45,
+    keywords: ["gaming", "joystick", "pc", "gadgets"],
+    discount: 10,
+    seller: ["Nil"],
+  },
+  {
+    _id: "4",
+    productName: "xbox",
+    category: "gaming",
+    eanUpcIsbnGtinAsinType: "EAN",
+    eanUpcNumber: "45645416",
+    price: 3364.02,
+    currency: "INR",
+    imagesBase64: [{ size: 452, extension: "jpg", base64: "" }],
+    modelNumber: "MADOL565G",
+    productDescription: "best selling product",
+    quantity: 45,
+    keywords: ["gaming", "joystick", "pc", "gadgets"],
+    discount: 10,
+    seller: ["Nil"],
+  },
 ];
 const Products = () => {
   const [productData, setPdtData] = useState<ProductType[]>(() => []);
@@ -54,10 +86,10 @@ const Products = () => {
   }, []);
 
   return (
-    <section>
-      <div>
-        <input />
-        <FaSearch size={25} />
+    <section id={styles['product-container-wrapper']}>
+      <div id={styles['search-bar']}>
+        <input type="text" />
+        <FaSearch size={15} />
       </div>
       <div id={styles["pdt_container"]}>
         {pdts.map((item: ProductType) => (
