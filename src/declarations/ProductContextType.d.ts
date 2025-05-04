@@ -1,7 +1,7 @@
 import React, { LegacyRef, RefObject } from "react";
 
 export declare type ProductType = {
-  _id?: string;
+  _id: string;
   productName: string;
   category: string;
   eanUpcIsbnGtinAsinType: EanUpcIsbnType;

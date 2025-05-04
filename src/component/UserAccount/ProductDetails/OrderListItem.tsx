@@ -16,9 +16,8 @@ const OrderListItem = () => {
   return (
     <>
       <motion.div
-        className={`${styles["slider-container"]} ${
-          slide ? "" : styles["hide-slider"]
-        }`}
+        className={`${styles["slider-container"]} ${slide ? "" : styles["hide-slider"]
+          }`}
       >
         <div className={styles[`slider`]}>
           <AiOutlineArrowRight
@@ -39,8 +38,8 @@ const OrderListItem = () => {
           {data?.map((item, i) => (
             <OrderList
               key={i}
-              id={item._id ?? "" + i}
-              images={item?.image ?? ([] as File[])}
+              _id={item._id}
+              images={item?.imagesBase64}
               price={item.price}
               count={item.quantity}
             />

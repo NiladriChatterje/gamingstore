@@ -20,6 +20,6 @@ export declare type ProductContextType = {
   setQty: React.Dispatch<React.SetStateAction<number>>;
   ItemIDCount: object & { id?: string };
   setItemIDCount: React.Dispatch<React.SetStateAction<object>>;
-  incDecQty: (counter: number, id: number | string) => void;
+  incDecQty: (counter: number, id: string) => void;
   addItemToOrderList: (item: ProductType) => void;
 };

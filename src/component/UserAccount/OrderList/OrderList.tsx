@@ -4,47 +4,34 @@ import { AiFillCloseCircle } from "react-icons/ai";
 import { useUserStateContext } from "../UserStateContext";
 
 export default function OrderList({
-  id,
+  _id,
   images,
   price,
   count,
 }: {
-  id: string;
-  images: File[];
+  _id: string;
+  images: { size: number; base64: string; extension: string }[] | undefined;
   price: number;
   count: number;
 }) {
   const { data, setData, incDecQty, ItemIDCount } = useUserStateContext();
   const [counter, setCounter] = React.useState<number>(() => count);
-  const [imageUrl, setImageUrl] = React.useState<string[]>(
-    () => [] as string[]
-  );
+
   React.useEffect(() => {
-    incDecQty?.(counter, id);
+    incDecQty?.(counter, _id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [counter]);
 
   React.useEffect(() => {
-    if (id === ItemIDCount?.id) setCounter(count);
+    if (_id === ItemIDCount?.id) setCounter(count);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ItemIDCount]);
-
-  React.useEffect(() => {
-    images.map((image) => {
-      const fileReader = new FileReader();
-      fileReader.onload = () => {
-        setImageUrl([...imageUrl, fileReader.result as string]);
-      };
-      fileReader.readAsDataURL(image);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div className={styles["orderList-container"]}>
       <AiFillCloseCircle
         onClick={() => {
-          const temp = data?.filter((i) => i._id !== id);
+          const temp = data?.filter((i) => i._id !== _id);
           setData?.(temp ? [...temp] : []);
         }}
         style={{
@@ -62,8 +49,8 @@ export default function OrderList({
           display: "flex",
         }}
       >
-        {imageUrl.map((imgUrl, i) => (
-          <img src={imgUrl} key={i} alt={id} />
+        {images?.map((img, i) => (
+          <img src={img?.base64} key={i} alt={_id} />
         ))}
       </div>
 

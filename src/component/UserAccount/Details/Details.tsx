@@ -7,7 +7,7 @@ import UpcomingData from "../Body/upcomingData";
 import { ProductType } from "@declarations/ProductContextType";
 import toast from "react-hot-toast";
 
-const data: any[] = [];
+const data: ProductType[] = [];
 
 const Details = () => {
   const [counter, setCounter] = useState(() => 1);
@@ -15,8 +15,8 @@ const Details = () => {
   const navigate = useNavigate();
 
   const [item] = useState(
-    data?.find((i) => id && i.id === parseInt(id)) ||
-      UpcomingData?.find((i) => id && i.id === parseInt(id))
+    data?.find((i) => id && i._id === id) ||
+    UpcomingData?.find((i) => id && i._id === id)
   );
   const ImgRef = useRef<HTMLImageElement>(null);
   const { addItemToOrderList, setItemIDCount, setOneItem } =
@@ -25,26 +25,25 @@ const Details = () => {
 
   return (
     <div id={styles.details__container}>
-      <img
+      {item?.imagesBase64 && <img
         style={{ objectFit: "contain", width: 300 }}
         ref={ImgRef}
         onMouseMove={(e) => {
           if (ImgRef.current)
-            ImgRef.current.style.transform = `translate(${e.movementX * 5}px,${
-              e.movementY * 5
-            }px)`;
+            ImgRef.current.style.transform = `translate(${e.movementX * 5}px,${e.movementY * 5
+              }px)`;
         }}
         onMouseLeave={() => {
           if (ImgRef.current)
             ImgRef.current.style.transform = `translate(0px,0px)`;
         }}
-        src={item?.image}
-        alt={item?.name}
-      />
+        src={item?.imagesBase64[0].base64}
+        alt={item?.productName}
+      />}
       <section id={styles["product-details"]}>
-        <h1>{item?.name}</h1>
+        <h1>{item?.productName}</h1>
         <section id={styles["product-infos"]}>
-          <article>{item?.desc}</article>
+          <article>{item?.productDescription}</article>
           <span>₹ {item?.price}</span>
           <div>
             {id && parseInt(id) < 100 && (
@@ -72,7 +71,7 @@ const Details = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     addItemToOrderList?.(item as ProductType);
-                    setItemIDCount?.({ count: item?.count, id: item?.id });
+                    setItemIDCount?.({ count: item?.quantity, id: item?._id });
                     toast.success(`Product added to cart Successfully`);
                   }}
                 >
@@ -91,7 +90,7 @@ const Details = () => {
                       (item: ProductType) => item._id === id
                     );
                     let oneProduct = {
-                      name: foundData?.name,
+                      name: foundData?.productName,
                       price: foundData?.price,
                       qty: counter,
                     };

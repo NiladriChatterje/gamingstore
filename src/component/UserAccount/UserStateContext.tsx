@@ -6,9 +6,10 @@ import React, {
   ReactNode,
 } from "react";
 import {
-  ProductType,
   ProductContextType,
 } from "@declarations/UserStateContextType";
+import { ProductType } from "@/declarations/ProductContextType";
+
 
 const ProductContext = createContext<Partial<ProductContextType>>({});
 
@@ -19,7 +20,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
   );
   const [qty, setQty] = useState(() => 1);
   const [ItemIDCount, setItemIDCount] = useState<object & { id?: string }>(
-    () => {}
+    () => { }
   );
   const [totalPrice, setTotalPrice] = useState<number>(
     Number(localStorage.getItem("totalPrice")) || 0
@@ -61,7 +62,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
     if (DataFound === undefined) setData([...data, { ...item, quantity: 1 }]);
   }
 
-  function incDecQty(counter: number, id: number | string) {
+  function incDecQty(counter: number, id: string) {
     let foundItem: ProductType | any = data?.find((i) => i._id === id);
     let foundItemIndex: number = data?.findIndex((i) => i._id === id);
 
