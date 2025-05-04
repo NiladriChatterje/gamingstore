@@ -3,6 +3,7 @@ import ProductDetails from "../ProductDetails/ProductDetails.tsx";
 import { useEffect, useRef, useState } from "react";
 import { ProductType } from "@declarations/ProductContextType";
 import { FaSearch } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 const pdts: ProductType[] = [
   {
@@ -74,21 +75,40 @@ const pdts: ProductType[] = [
 const Products = () => {
   const [productData, setPdtData] = useState<ProductType[]>(() => []);
   const ProductRef = useRef<HTMLDivElement[]>([]);
+  const [search, setSearch] = useState<string>(() => '');
 
   useEffect(() => {
-    fetch(`http//localhost:5002/fetch-all-products`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setPdtData(data);
-      });
-    console.log(ProductRef.current);
+    // fetch(`http//localhost:5002/fetch-all-products`)
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     console.log(data);
+    //     setPdtData(data);
+    //   });
+    // console.log(ProductRef.current);
   }, []);
+
+  useEffect(() => {
+    let timeoutId: number | string | NodeJS.Timeout | undefined;
+    if (search.length > 3) {
+      timeoutId = setTimeout(() => {
+        // fetch(`http://localhost:5005/search?s=${search}`, {
+
+        // });
+        toast(search);
+      }, 3000)
+
+
+    }
+
+    return () => { clearTimeout(timeoutId) }
+  }, [search])
 
   return (
     <section id={styles['product-container-wrapper']}>
       <div id={styles['search-bar']}>
-        <input type="text" />
+        <input
+          placeholder="atleast 3 characters"
+          onInput={e => setSearch(e.currentTarget.value)} type="text" />
         <FaSearch size={15} />
       </div>
       <div id={styles["pdt_container"]}>
