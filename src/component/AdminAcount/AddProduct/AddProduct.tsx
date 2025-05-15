@@ -15,21 +15,19 @@ import { EanUpcIsbnType, currency } from "@/enums/enums";
 import { ProductType } from "@declarations/ProductContextType";
 import { useAdminStateContext } from "../AdminStateContext";
 import { v7 as uuid7 } from "uuid";
+import { ProductCategories } from "@enums/enums";
 
 const keywordsSet = new Set<string>();
 
-const ProductCategories: string[] = [
-  "clothing",
-  "food-n-Groceries",
-  "gadgets",
-  "home-goods",
-  "toys",
-];
+const ProductCategoriesArr: string[] = [ProductCategories.CLOTH, ProductCategories.FOOD,
+ProductCategories.GADGETS, ProductCategories.GROCERIES, ProductCategories.HOME_GOODS,
+ProductCategories.TOYS
+]
 
 const AddProduct = () => {
   const [modelNumber, setModelNumber] = useState<string>(() => "");
   const [eanUpc, setEacUpc] = useState<string>(() => "");
-  const [category, setCategory] = useState<string>(() => ProductCategories[0]);
+  const [category, setCategory] = useState<string>(() => ProductCategories.CLOTH);
   const [productName, setProductName] = useState<string>(() => "");
   const [productDescription, setProductDescription] = useState<string>(
     () => ""
@@ -200,7 +198,7 @@ const AddProduct = () => {
                 data-section={"product-category"}
                 className={styles["category-containers"]}
               >
-                {ProductCategories?.map((item, i) => (
+                {ProductCategoriesArr?.map((item, i) => (
                   <span
                     className={styles["span-category"]}
                     ref={(el) => {
