@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { ProductType } from "@declarations/ProductContextType";
 import { FaSearch } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { v7 as uuid7 } from 'uuid'
 
 const pdts: ProductType[] = [
   {
-    _id: "1",
+    _id: `product_${uuid7()}`,
     productName: "xbox",
     category: "gaming",
     eanUpcIsbnGtinAsinType: "EAN",
@@ -91,9 +92,12 @@ const Products = () => {
     let timeoutId: number | string | NodeJS.Timeout | undefined;
     if (search.length > 3) {
       timeoutId = setTimeout(() => {
-        // fetch(`http://localhost:5005/search?s=${search}`, {
-
-        // });
+        fetch(`http://localhost:5005/search?s=${search}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "text/plain"
+          }
+        });
         toast(search);
       }, 3000)
 
