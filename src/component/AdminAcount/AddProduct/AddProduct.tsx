@@ -12,8 +12,9 @@ import toast from "react-hot-toast";
 import { FaPercentage, FaRupeeSign } from "react-icons/fa";
 import { ImUpload } from "react-icons/im";
 import { EanUpcIsbnType, currency } from "@/enums/enums";
-import { ProductType } from "@declarations/UserStateContextType";
+import { ProductType } from "@declarations/ProductContextType";
 import { useAdminStateContext } from "../AdminStateContext";
+import { v7 as uuid7 } from "uuid";
 
 const keywordsSet = new Set<string>();
 
@@ -95,6 +96,7 @@ const AddProduct = () => {
             imagesBase64: [...base64Images],
             seller: [admin._id] as string[],
             productDescription: productDescription,
+            _id: `product_${uuid7()}`
           };
           if (checked) {
             if (!modelNumber) {
@@ -246,11 +248,10 @@ const AddProduct = () => {
                   <input name="eanUpcType" value={eanUpcType} disabled />
                   {toggleEacUpcType && (
                     <section
-                      className={`${
-                        toggleEacUpcType
-                          ? ""
-                          : styles["product-identification-list"]
-                      }`}
+                      className={`${toggleEacUpcType
+                        ? ""
+                        : styles["product-identification-list"]
+                        }`}
                     >
                       <dl
                         onClick={() => {

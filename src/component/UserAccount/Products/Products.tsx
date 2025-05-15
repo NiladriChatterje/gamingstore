@@ -115,6 +115,14 @@ const Products = () => {
           onInput={e => setSearch(e.currentTarget.value)} type="text" />
         <FaSearch size={15} />
       </div>
+      <div>
+        <section>
+          <span>All</span>
+          <span>Groceries</span>
+          <span>Gaming</span>
+          <span>Clothes</span>
+        </section>
+      </div>
       <div id={styles["pdt_container"]}>
         {pdts.map((item: ProductType) => (
           <ProductDetails
