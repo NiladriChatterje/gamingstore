@@ -15,7 +15,9 @@ import { EanUpcIsbnType, currency } from "@/enums/enums";
 import { ProductType } from "@declarations/ProductContextType";
 import { useAdminStateContext } from "../AdminStateContext";
 import { v7 as uuid7 } from "uuid";
-import { ProductCategories } from "@enums/enums";
+import { ProductCategories } from "@/enums/enums";
+import { AdminFieldsType } from "@/declarations/AdminType";
+import jwt from 'jsonwebtoken';
 
 const keywordsSet = new Set<string>();
 
@@ -58,7 +60,7 @@ const AddProduct = () => {
   const imageCarouselContainerRef = useRef<HTMLDivElement>(null);
   const spanCategoryRef = useRef<HTMLSpanElement[]>([]);
 
-  const { admin } = useAdminStateContext();
+  const { admin }: { admin?: AdminFieldsType } = useAdminStateContext();
 
   async function handleSubmitPdt(e: FormEvent) {
     e.preventDefault();
@@ -92,7 +94,7 @@ const AddProduct = () => {
             discount: 0,
             keywords: keywordArray,
             imagesBase64: [...base64Images],
-            seller: [admin._id] as string[],
+            seller: [admin?._id] as string[],
             productDescription: productDescription,
             _id: `product_${uuid7()}`
           };
@@ -103,11 +105,14 @@ const AddProduct = () => {
             }
             formData.modelNumber = modelNumber;
           }
-
+          let signedAdminId
+          if (admin)
+            signedAdminId = jwt.sign(admin._id, import.meta.env.VITE_SECRET_KEY)
           const response = await fetch("http://localhost:5002/add-product", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "Authorization": `Bearer ${signedAdminId}`
             },
             body: JSON.stringify(formData),
           });

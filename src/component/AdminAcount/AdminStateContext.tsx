@@ -8,7 +8,7 @@ import {
   useEffect,
 } from "react";
 import type { AdminContextType } from "@declarations/AdminContextType.ts";
-import { ProductType } from "@/declarations/UserStateContextType.ts";
+import { ProductType } from "@/declarations/ProductContextType";
 import toast from "react-hot-toast";
 import { AdminFieldsType } from "@/declarations/AdminType.ts";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
@@ -53,8 +53,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         if (toastLoadingId) toast.dismiss(toastLoadingId);
 
         const responseGeo = await fetch(
-          `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${
-            import.meta.env.VITE_GEOAPIFY_API
+          `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${import.meta.env.VITE_GEOAPIFY_API
           }`,
           {
             method: "GET",

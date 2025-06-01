@@ -67,6 +67,23 @@ const ProfileManager = () => {
   async function handleUpdate() {
     // e.preventDefault();
     // FormEvent is not prevented default behaviour here because toast.promise() cant access the event object.
+    if (phone.length !== 10 && gstin.length !== 14) {
+      toast.error("Phone & GSTIN wrong!")
+      return Promise.reject();
+    }
+
+    if (phone.length !== 10) {
+      toast.error('invalid phone-number');
+      return Promise.reject();
+    }
+    if (gstin.length !== 14) {
+      toast.error('invalid GSTIN!');
+      return Promise.reject();
+    }
+    if (phone.length !== 10 || gstin.length !== 14) {
+      toast.error("Form not submitted!")
+      return Promise.reject();
+    }
     try {
       const response = await fetch("http://localhost:5003/update-info", {
         headers: {
@@ -165,9 +182,8 @@ const ProfileManager = () => {
                 />
                 {!disable && (
                   <section
-                    className={`${
-                      toggleCountryCode ? "" : styles["country-code-list"]
-                    }`}
+                    className={`${toggleCountryCode ? "" : styles["country-code-list"]
+                      }`}
                   >
                     <dl
                       onClick={() => {
@@ -204,6 +220,7 @@ const ProfileManager = () => {
                 maxLength={10}
                 minLength={10}
                 disabled={disable}
+                required
               />
             </div>
             <div id={styles["verify-span-btn"]}>
@@ -358,9 +375,9 @@ const ProfileManager = () => {
             style={{
               backgroundColor: "rgb(52, 48, 105)",
               borderRadius: 5,
-              padding: "5px 10px",
+              padding: "2px 10px",
             }}
-            size={25}
+            size={30}
             onClick={() => {
               setDisable((prev) => !prev);
             }}
@@ -371,10 +388,9 @@ const ProfileManager = () => {
             style={{
               backgroundColor: "rgb(52, 48, 105)",
               borderRadius: 5,
-              padding: "5px 10px",
+              padding: "2px 10px",
             }}
-            size={25}
-            // type={'submit'}
+            size={30}
             onClick={() => {
               if (!disable)
                 toast.promise(handleUpdate(), {
