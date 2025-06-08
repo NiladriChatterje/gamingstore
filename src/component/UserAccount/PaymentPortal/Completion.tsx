@@ -8,13 +8,13 @@ import { ProductType } from "@declarations/ProductContextType";
 
 function Completion() {
     const navigate = useNavigate();
-    const { setData, setTotalPrice, oneItem } = useUserStateContext();
+    const { setData, setTotalPrice, isOneItem } = useUserStateContext();
     const params = useParams();
 
     useEffect(() => {
         try {
             console.log(params)
-            if (!oneItem) {
+            if (!isOneItem) {
                 localStorage.removeItem("orders");
                 setTotalPrice?.(0);
                 setData?.([] as ProductType[]);

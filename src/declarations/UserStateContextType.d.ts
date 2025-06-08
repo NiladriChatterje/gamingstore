@@ -17,7 +17,7 @@ export declare type ProductContextType = {
   setTotalPrice: React.Dispatch<React.SetStateAction<number>>;
   orderData: ProductType[];
   setOrderData: React.Dispatch<React.SetStateAction<ProductType[]>>;
-  oneItem: boolean;
+  isOneItem: boolean;
   setOneItem: React.Dispatch<React.SetStateAction<boolean>>;
   qty: number;
   setQty: React.Dispatch<React.SetStateAction<number>>;

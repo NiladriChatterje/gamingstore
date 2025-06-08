@@ -33,7 +33,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
       ([] as ProductType[])
   );
   const [slide, setSlide] = useState<boolean>(false);
-  const [oneItem, setOneItem] = useState<boolean>(
+  const [isOneItem, setOneItem] = useState<boolean>(
     localStorage.getItem("isOneItem") === "false" ? false : true
   );
   const [singleProductDetail, setSingleProductDetail] = useState<ProductType>();
@@ -90,7 +90,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
         setSlide,
         slide,
         setOrderData,
-        oneItem,
+        isOneItem,
         setOneItem,
         qty,
         setQty,
