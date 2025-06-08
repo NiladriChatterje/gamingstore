@@ -19,7 +19,7 @@ import { MdReplayCircleFilled } from "react-icons/md";
 const AdminContext = createContext<Partial<AdminContextType>>({});
 
 export const AdminStateContext = ({ children }: { children: ReactNode }) => {
-  const [admin, setAdmin] = useState<AdminFieldsType | unknown>(
+  const [admin, setAdmin] = useState<AdminFieldsType | undefined>(
     () => undefined
   );
   const [isPlanActiveState, setIsPlanActive] = useState<boolean>(true);
@@ -130,22 +130,23 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
       }
 
       //if the document created successfully
-      setAdmin({
-        _type: "admin",
-        username: user?.firstName,
-        _id: user?.id,
-        email: user?.emailAddresses[0].emailAddress,
-        geoPoint: {
-          lat: latitude,
-          lng: longitude,
-        },
-        address: {
-          pinCode: placeResult?.properties?.postcode,
-          county: placeResult?.properties?.county,
-          state: placeResult?.properties?.state,
-          country: placeResult?.properties?.country,
-        },
-      });
+      if (user?.id)
+        setAdmin({
+          _type: "admin",
+          username: user?.firstName,
+          _id: user?.id,
+          email: user?.emailAddresses[0].emailAddress,
+          geoPoint: {
+            lat: latitude,
+            lng: longitude,
+          },
+          address: {
+            pinCode: placeResult?.properties?.postcode,
+            county: placeResult?.properties?.county,
+            state: placeResult?.properties?.state,
+            country: placeResult?.properties?.country,
+          },
+        });
     };
     //userOps definition end
 
