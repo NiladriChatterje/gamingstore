@@ -4,12 +4,12 @@ import Loader from "./Loader.tsx";
 import { useUserStateContext } from "../UserStateContext.tsx";
 import Checkout from "../../../utils/Checkout.tsx";
 import { SignedIn, SignedOut, SignIn, useSignIn } from "@clerk/clerk-react";
-import { useStateContext } from "@/StateContext.tsx";
+import { useStateContext } from "../../../StateContext.tsx";
 
 
 function Payment() {
     const [oneProduct, _] = useState<{ name: string; qty: number; price: number }>(JSON.parse(localStorage.getItem('oneProduct') ?? '{}'));
-    const { oneItem, data, totalPrice } = useUserStateContext();
+    const { oneItem, data, totalPrice, userData } = useUserStateContext();
 
     const { setDefaultLoginAdminOrUser } = useStateContext()
 
@@ -32,7 +32,13 @@ function Payment() {
                                     <div className={styles['pdt-details']}><span>Unit Price: </span><span>₹ {oneProduct?.price}</span></div>
                                 </section>
                                 <div className={`${styles['pdt-details']} ${styles['single-pdt-total']}`}>
-                                    <Checkout price={oneProduct.price * oneProduct.qty} />
+                                    <Checkout price={oneProduct.price * oneProduct.qty}
+                                        callback={async (payment_id: string,
+                                            razorpay_signature: string,
+                                            razorpay_order_id: string,
+                                        ) => {
+                                            await fetch(`http://localhost:5006/`);
+                                        }} />
                                     <span>Total: </span><span>₹ {oneProduct?.price * oneProduct?.qty}</span></div>
                             </div> :
                                 <section id={styles['table']}>

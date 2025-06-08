@@ -11,10 +11,10 @@ import {
 import toast from 'react-hot-toast'
 import { FaRupeeSign } from 'react-icons/fa'
 import { ImUpload } from 'react-icons/im'
-import { EanUpcIsbnType, currency } from '@/enums/enums'
-import { ProductType } from '@declarations/UserStateContextType'
+import { EanUpcIsbnType, currency } from '../../../../enums/enums'
+import { ProductType } from '../../../../declarations/ProductContextType'
 import { useParams } from 'react-router-dom'
-import { useAdminStateContext } from '@/component/AdminAcount/AdminStateContext'
+import { useAdminStateContext } from '../../../../component/AdminAcount/AdminStateContext'
 
 const keywordsSet = new Set<string>()
 
@@ -37,6 +37,8 @@ const AddProduct = () => {
   const [eanUpcType, setEacUpcType] = useState<EanUpcIsbnType>(
     () => EanUpcIsbnType.EAN,
   )
+
+  const [product, setProduct] = useState<ProductType[]>([]);
   const [price, setPrice] = useState<number>(() => 0)
   const [discount, setDiscount] = useState<number>(() => 0)
   const [keyword, setKeyword] = useState<string>(() => '')
@@ -55,21 +57,30 @@ const AddProduct = () => {
   const spanCategoryRef = useRef<HTMLSpanElement[]>([])
 
   const { product_id } = useParams<{ product_id?: string }>()
-  const {admin} = useAdminStateContext()
+  const { admin } = useAdminStateContext();
 
-  ;(async () => {
+  (async () => {
     if (!product_id) {
       window.history.back()
       return
     }
-    const result = await fetch(
-      `http://localhost:5002/${admin.adminId}/fetch-product/${product_id}`,
-      {
-        method: 'GET',
-      },
-    )
-    const data = await result.json();
-    console.log("details of the product in editProductDetails page : "+data)
+
+    try {
+      const result = await fetch(
+        `http://localhost:5002/fetch-product/${product_id}`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${admin?._id ?? ''}`
+          }
+        },
+      )
+      const data: ProductType[] = await result.json();
+      setProduct(data);
+      console.log("details of the product in editProductDetails page : " + data)
+    } catch (e) {
+
+    }
   })()
 
   async function handleSubmitPdt(e: FormEvent) {
@@ -84,7 +95,7 @@ const AddProduct = () => {
 
     for (let image of images) {
       const fileReader = new FileReader()
-      fileReader.addEventListener('loadend', async () => {
+      fileReader.addEventListener('load', async () => {
         if (fileReader.result)
           base64Images.push({
             size: image.size,
@@ -94,6 +105,7 @@ const AddProduct = () => {
 
         if (base64Images.length === images.length) {
           const formData: ProductType = {
+            _id: product[0]._id,
             productName: productName,
             category,
             eanUpcIsbnGtinAsinType: eanUpcType,
@@ -104,7 +116,7 @@ const AddProduct = () => {
             discount: 0,
             keywords: keywordArray,
             imagesBase64: [...base64Images],
-            seller: [] as unknown as string,
+            seller: [],
             productDescription: productDescription,
           }
           if (checked) {
@@ -115,10 +127,12 @@ const AddProduct = () => {
             formData.modelNumber = modelNumber
           }
 
-          const response = await fetch('http://localhost:5000/add-product', {
-            method: 'POST',
+
+          const response = await fetch('http://localhost:5002/update-product', {
+            method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',
+              'Authorization': `Bearer ${admin?._id}`
             },
             body: JSON.stringify(formData),
           })
@@ -257,11 +271,10 @@ const AddProduct = () => {
                   <input name='eanUpcType' value={eanUpcType} disabled />
                   {toggleEacUpcType && (
                     <section
-                      className={`${
-                        toggleEacUpcType
-                          ? ''
-                          : styles['product-identification-list']
-                      }`}
+                      className={`${toggleEacUpcType
+                        ? ''
+                        : styles['product-identification-list']
+                        }`}
                     >
                       <dl
                         onClick={() => {

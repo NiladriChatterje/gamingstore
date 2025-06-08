@@ -2,7 +2,7 @@ import { useUser, SignIn } from '@clerk/clerk-react'
 import styles from './Orders.module.css'
 import { useEffect, useState } from 'react';
 import OrderPendingItem from './OrderPendingItem';
-import { ProductType } from '@/declarations/UserStateContextType';
+import { ProductType } from '@/declarations/ProductContextType';
 
 const Orders = () => {
     const [orders, setOrders] = useState<ProductType[]>(() => [1, 2, 3, 5, 6, 6, 6, 8] as unknown as ProductType[]);

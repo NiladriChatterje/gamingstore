@@ -16,8 +16,8 @@ function App() {
 
   return (
     <div className="App">
-      <Toaster 
-      containerStyle={{ fontSize: '0.65em', fontWeight: 900 }} />
+      <Toaster
+        containerStyle={{ fontSize: '0.65em', fontWeight: 900 }} />
       {loading ? <PreLoader /> : <>
         {(defaultLoginAdminOrUser === 'admin' && user !== null) ?
           <AdminAccountRoot /> : (

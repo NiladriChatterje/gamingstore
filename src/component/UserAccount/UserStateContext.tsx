@@ -9,12 +9,13 @@ import {
   ProductContextType,
 } from "@declarations/UserStateContextType";
 import { ProductType } from "@/declarations/ProductContextType";
+import { UserType } from "@/declarations/UserType";
 
 
 const ProductContext = createContext<Partial<ProductContextType>>({});
 
 export const UserStateContext = ({ children }: { children: ReactNode }) => {
-  const [userData, setUserData] = useState();
+  const [userData, setUserData] = useState<UserType>();
   const [lastRoute, setLastRoute] = useState<string>(
     () => localStorage.getItem("last-route") || ""
   );

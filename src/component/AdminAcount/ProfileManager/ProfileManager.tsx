@@ -22,13 +22,13 @@ const ProfileManager = () => {
   const [disable, setDisable] = useState<boolean>(true);
   const [toggleCountryCode, setToggleCountryCode] = useState<boolean>(false);
   const [gstin, setGstin] = useState<string>(admin?.gstin ?? "");
-  const [username, setUsername] = useState<string>(admin?.firstName ?? "");
+  const [username, setUsername] = useState<string>(admin?.username ?? "");
   const [pinCode, setpinCode] = useState<string>(admin?.address?.pinCode ?? "");
   const [country, setCountry] = useState<string>(admin?.address?.country ?? "");
   const [state, setState] = useState<string>(admin?.address?.state ?? "");
   const [county, setCounty] = useState<string>(admin?.address?.county ?? "");
   const [email, setEmail] = useState<string>(admin?.email ?? "");
-  const [phone, setPhone] = useState<string>(admin?.phone ?? "");
+  const [phone, setPhone] = useState<string>(admin?.phone as unknown as string ?? "");
   const [OTP, setOTP] = useState<number>(0);
   const modalRef = useRef<HTMLDialogElement>(null);
 
@@ -215,7 +215,7 @@ const ProfileManager = () => {
                   setPhone(e.target.value);
                 }}
                 name={"phone"}
-                placeholder={admin?.phone || "xxx-xxx-xxxx"}
+                placeholder={admin?.phone as unknown as string ?? "xxx-xxx-xxxx"}
                 type="tel"
                 maxLength={10}
                 minLength={10}

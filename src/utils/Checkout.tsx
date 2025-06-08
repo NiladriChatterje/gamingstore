@@ -4,11 +4,11 @@ import { useRazorpay, RazorpayOrderOptions } from 'react-razorpay'
 import { CurrencyCode } from 'react-razorpay/dist/constants/currency'
 import { useStateContext } from '../StateContext'
 import { useNavigate } from 'react-router-dom'
-import {io} from 'socket.io-client';
+// import { io } from 'socket.io-client';
 
-const socket = io("http://localhost:5002",{
-  transports:["polling","websocket","webtransport"]
-})
+// const socket = io("http://localhost:5002",{
+//   transports:["polling","websocket","webtransport"]
+// })
 
 const PayButtonStyle = {
   padding: '5px 20px',
@@ -20,13 +20,13 @@ const PayButtonStyle = {
   borderStyle: 'none',
   color: 'white',
   backgroundColor: 'rgb(85, 88, 117)',
- }
+}
 
 const Checkout = ({
   price,
   callback,
 }: {
-  price: number
+  price: number;
   callback?: Function
 }) => {
   const { error, Razorpay } = useRazorpay()
