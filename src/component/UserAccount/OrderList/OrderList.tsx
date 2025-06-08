@@ -7,15 +7,15 @@ export default function OrderList({
   _id,
   images,
   price,
-  count,
+  quantity,
 }: {
   _id: string;
   images: { size: number; base64: string; extension: string }[] | undefined;
   price: number;
-  count: number;
+  quantity: number;
 }) {
-  const { data, setData, incDecQty, ItemIDCount } = useUserStateContext();
-  const [counter, setCounter] = React.useState<number>(() => count);
+  const { orderData, setOrderData, incDecQty, ItemIDCount } = useUserStateContext();
+  const [counter, setCounter] = React.useState<number>(() => quantity);
 
   React.useEffect(() => {
     incDecQty?.(counter, _id);
@@ -23,7 +23,7 @@ export default function OrderList({
   }, [counter]);
 
   React.useEffect(() => {
-    if (_id === ItemIDCount?.id) setCounter(count);
+    if (_id === ItemIDCount?.id) setCounter(quantity);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ItemIDCount]);
 
@@ -31,8 +31,8 @@ export default function OrderList({
     <div className={styles["orderList-container"]}>
       <AiFillCloseCircle
         onClick={() => {
-          const temp = data?.filter((i) => i._id !== _id);
-          setData?.(temp ? [...temp] : []);
+          const temp = orderData?.filter((i) => i._id !== _id);
+          setOrderData?.(temp ? [...temp] : []);
         }}
         style={{
           color: "black",
@@ -49,13 +49,12 @@ export default function OrderList({
           display: "flex",
         }}
       >
-        {images?.map((img, i) => (
-          <img src={img?.base64} key={i} alt={_id} />
-        ))}
+
+        {images && images.length > 0 && <img src={images[0].base64} alt={_id} />}
       </div>
 
       <span>Rs. {price}</span>
-      <div id={styles["count"]}>
+      <div id={styles["quantity"]}>
         <button
           onClick={() => {
             if (counter <= 1) return 1;

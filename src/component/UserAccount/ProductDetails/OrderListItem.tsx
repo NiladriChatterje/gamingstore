@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { useStateContext } from "../../../StateContext";
 
 const OrderListItem = () => {
-  const { data, totalPrice, slide, setSlide, setOneItem } =
+  const { orderData, totalPrice, slide, setSlide, setOneItem } =
     useUserStateContext();
   const { setDefaultLoginAdminOrUser } = useStateContext();
   const navigate = useNavigate();
@@ -35,13 +35,13 @@ const OrderListItem = () => {
               zIndex: 20,
             }}
           />
-          {data?.map((item, i) => (
+          {orderData?.map((item, i) => (
             <OrderList
               key={i}
               _id={item._id}
               images={item?.imagesBase64}
-              price={item.price}
-              count={item.quantity}
+              price={item.price.pdtPrice}
+              quantity={item.quantity}
             />
           ))}
           <motion.button

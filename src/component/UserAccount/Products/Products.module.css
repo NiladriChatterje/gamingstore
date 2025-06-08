@@ -1,11 +1,30 @@
 #pdt_container {
   padding: 35px 0;
   width: 70%;
-  height: 500px;
+  height: 450px;
   display: flex;
   overflow-y: auto;
   flex-wrap: wrap;
   justify-content: center;
+}
+#pagination{
+  padding: 15px 0;
+}
+#category-list{
+   display: flex;
+   gap: 25px;
+}
+#category-list > span{
+  padding: 2px 10px;
+  font-size: 0.69em;
+  border: 3px solid white;
+  background-color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#category-list >span:hover{
+  background-color: rgb(35, 35, 75);
+  color: white;
 }
 #search-bar{
   width: 350px;

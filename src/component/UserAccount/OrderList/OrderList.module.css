@@ -1,4 +1,4 @@
-#count {
+#quantity {
     display: flex;
     gap: 5px;
     width: 100%;
@@ -6,7 +6,7 @@
     justify-content: center;
 }
 
-#count>button {
+#quantity>button {
     border-style: none;
     outline: none;
     border-radius: 10px;
@@ -35,7 +35,7 @@ hr {
     width: 100%;
 }
 
-#count>button:hover {
+#quantity>button:hover {
     background-color: rgb(58, 58, 116);
     color: white;
 }

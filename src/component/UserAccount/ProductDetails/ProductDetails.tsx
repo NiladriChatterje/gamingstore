@@ -14,7 +14,7 @@ const ProductDetails = (
   },
   ref: Ref<HTMLDivElement>
 ) => {
-  const { addItemToOrderList, setItemIDCount } = useUserStateContext();
+  const { addItemToOrderList, setItemIDCount, setSingleProductDetail } = useUserStateContext();
   const navigate = useNavigate();
 
   return (
@@ -22,6 +22,7 @@ const ProductDetails = (
       ref={ref}
       onClick={(e) => {
         e.stopPropagation();
+        setSingleProductDetail?.(item);
         navigate(`/user/Product/Details/${item._id}`);
       }}
       style={{ position: "relative", cursor: "pointer" }}
@@ -29,7 +30,7 @@ const ProductDetails = (
       id={styles.card}
     >
       {item.imagesBase64 && (
-        <img src={item.imagesBase64[0]?.base64 ?? ""} alt="" />
+        <img src={item.imagesBase64[0]?.base64 ?? ""} alt={item.productName} />
       )}
       <h3>{item?.productName}</h3>
       <p>
@@ -47,7 +48,7 @@ const ProductDetails = (
       >
         Add to Cart <HiShoppingCart />
       </button>
-      <h2>₹{item?.price}</h2>
+      <h2>₹{item?.price?.pdtPrice}</h2>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import styles from '../ProductDetails/ProductDetails.module.css'
 import { useNavigate } from 'react-router-dom'
 
-interface ItemType { id: number; image: string; desc: string; name: string; price: number }
+interface ItemType { _id: string; image: string; desc: string; name: string; price: number }
 
 const UpcomingDataMap = (item: ItemType) => {
   const navigate = useNavigate();
@@ -10,10 +10,10 @@ const UpcomingDataMap = (item: ItemType) => {
     <div
       onClick={(e) => {
         e.stopPropagation();
-        navigate(`/user/Product/Details/${item.id}`)
+        navigate(`/user/Product/Details/${item._id}`)
       }}
       style={{ position: 'relative', cursor: 'pointer' }}
-      key={item.id}
+      key={item._id}
       id={styles['card']}
     >
 

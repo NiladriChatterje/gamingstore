@@ -43,9 +43,7 @@ const Body = () => {
       <motion.div id={styles['container']}
         initial={{ x: 150 }}
         animate={{ x: 0 }}>
-        <motion.div id={styles['first-container']}
-          initial={{ opacity: 0, transform: 'scale(0,0)' }}
-          whileInView={{ opacity: 1, transform: 'scale(1,1)' }}>
+        <div id={styles['first-container']}>
           <div>
             <h1>
               XBOX Controller
@@ -65,7 +63,7 @@ const Body = () => {
               EXPLORE
             </button>
           </div>
-        </motion.div>
+        </div>
 
         <motion.div id={styles['second-container']} ref={secondContRef}>
           <motion.div
@@ -109,7 +107,7 @@ const Body = () => {
 
           }}
         >
-          {upcomingData?.map(item => <UpcomingDataMap key={item.id} id={item.id} image={item.image} price={item.price} name={item.name} desc={item.desc} />)}
+          {upcomingData?.map(item => <UpcomingDataMap key={item._id} _id={item._id} image={(item.imagesBase64 && item.imagesBase64[0]?.base64) ?? ''} price={item.price.pdtPrice} name={item.productName} desc={item.productDescription} />)}
           <IoIosCloseCircle
             onClick={() => {
               setToggle(false);

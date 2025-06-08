@@ -89,7 +89,11 @@ const AddProduct = () => {
             eanUpcNumber: eanUpc,
             quantity,
             currency: currency.INR,
-            price: price,
+            price: {
+              pdtPrice: price,
+              discountPercentage: discount,
+              currency: 'INR'
+            },
             discount: 0,
             keywords: keywordArray,
             imagesBase64: [...base64Images],

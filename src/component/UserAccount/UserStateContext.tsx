@@ -16,6 +16,7 @@ const ProductContext = createContext<Partial<ProductContextType>>({});
 
 export const UserStateContext = ({ children }: { children: ReactNode }) => {
   const [userData, setUserData] = useState<UserType>();
+  const [_, setRefreshApp] = useState<boolean>(() => false);
   const [lastRoute, setLastRoute] = useState<string>(
     () => localStorage.getItem("last-route") || ""
   );
@@ -26,7 +27,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
   const [totalPrice, setTotalPrice] = useState<number>(
     Number(localStorage.getItem("totalPrice")) || 0
   );
-  const [data, setData] = useState<ProductType[]>(
+  const [orderData, setOrderData] = useState<ProductType[]>(
     () =>
       (JSON.parse(localStorage.getItem("orders") as string) as ProductType[]) ||
       ([] as ProductType[])
@@ -35,40 +36,44 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
   const [oneItem, setOneItem] = useState<boolean>(
     localStorage.getItem("isOneItem") === "false" ? false : true
   );
+  const [singleProductDetail, setSingleProductDetail] = useState<ProductType>();
 
   const navRef = useRef<HTMLElement | null>(null);
 
   React.useEffect(() => {
-    //for user data fetch operation
+    //for user orderData fetch operation
   }, []);
 
   React.useEffect(() => {
-    let x = data?.reduce(
-      (acc: number, cur: ProductType) => acc + cur.price * cur.quantity,
+    const localTotalPrice = orderData?.reduce(
+      (acc: number, cur: ProductType) => acc + cur.price.pdtPrice * cur.quantity,
       0
     );
-    setTotalPrice(x);
+    setTotalPrice(localTotalPrice);
     localStorage.setItem("totalPrice", totalPrice.toString());
-    localStorage.setItem("orders", JSON.stringify(data));
-  }, [data]);
+    localStorage.setItem("orders", JSON.stringify(orderData));
+  }, [orderData]);
 
   function addItemToOrderList(item: ProductType) {
-    let DataFound = data?.find((i) => i._id === item._id);
-    if (DataFound !== undefined) {
-      let x = DataFound?.quantity;
+    let addToCart = orderData?.find((i) => i._id === item._id);
+    if (addToCart !== undefined) {
+      let x = addToCart?.quantity;
       x += 1;
       if (item._id) incDecQty(x, item._id);
     }
 
-    if (DataFound === undefined) setData([...data, { ...item, quantity: 1 }]);
+    if (addToCart === undefined) setOrderData([...orderData, { ...item, quantity: 1 }]);
   }
 
   function incDecQty(counter: number, id: string) {
-    let foundItem: ProductType | any = data?.find((i) => i._id === id);
-    let foundItemIndex: number = data?.findIndex((i) => i._id === id);
+    let foundItem: ProductType | undefined = orderData?.find((i) => i._id === id);
+    if (foundItem)
+      foundItem.quantity = counter;
+    setRefreshApp(prev => !prev);
+    // let foundItemIndex: number = orderData?.findIndex((i) => i._id === id);
 
-    data?.splice(foundItemIndex, 1, { ...foundItem, count: counter });
-    setData([...data]);
+    // orderData?.splice(foundItemIndex, 1, { ...foundItem, count: counter });
+    // setOrderData([...orderData]);
   }
 
   return (
@@ -81,10 +86,10 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
         navRef,
         totalPrice,
         setTotalPrice,
-        data,
+        orderData,
         setSlide,
         slide,
-        setData,
+        setOrderData,
         oneItem,
         setOneItem,
         qty,
@@ -93,6 +98,8 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
         setItemIDCount,
         incDecQty,
         addItemToOrderList,
+        singleProductDetail,
+        setSingleProductDetail
       }}
     >
       {children}

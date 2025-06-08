@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useUserStateContext } from "../UserStateContext";
 import { useStateContext } from "../../../StateContext";
 import styles from "./Details.module.css";
-import UpcomingData from "../Body/upcomingData";
 import { ProductType } from "@declarations/ProductContextType";
 import toast from "react-hot-toast";
 
@@ -14,18 +13,16 @@ const Details = () => {
   const { id } = useParams<string>();
   const navigate = useNavigate();
 
-  const [item] = useState(
-    data?.find((i) => id && i._id === id) ||
-    UpcomingData?.find((i) => id && i._id === id)
-  );
   const ImgRef = useRef<HTMLImageElement>(null);
-  const { addItemToOrderList, setItemIDCount, setOneItem } =
+
+  //user Context
+  const { addItemToOrderList, setItemIDCount, setOneItem, singleProductDetail } =
     useUserStateContext();
   const { setDefaultLoginAdminOrUser } = useStateContext();
 
   return (
     <div id={styles.details__container}>
-      {item?.imagesBase64 && <img
+      {singleProductDetail?.imagesBase64 && <img
         style={{ objectFit: "contain", width: 300 }}
         ref={ImgRef}
         onMouseMove={(e) => {
@@ -37,16 +34,16 @@ const Details = () => {
           if (ImgRef.current)
             ImgRef.current.style.transform = `translate(0px,0px)`;
         }}
-        src={item?.imagesBase64[0].base64}
-        alt={item?.productName}
+        src={singleProductDetail?.imagesBase64[0].base64}
+        alt={singleProductDetail?.productName}
       />}
       <section id={styles["product-details"]}>
-        <h1>{item?.productName}</h1>
+        <h1>{singleProductDetail?.productName}</h1>
         <section id={styles["product-infos"]}>
-          <article>{item?.productDescription}</article>
-          <span>₹ {item?.price}</span>
+          <article>{singleProductDetail?.productDescription}</article>
+          <span>₹ {singleProductDetail?.price.pdtPrice}</span>
           <div>
-            {id && parseInt(id) < 100 && (
+            {singleProductDetail && singleProductDetail?.quantity > 0 && (
               <section id={styles.counter_container}>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <button
@@ -65,13 +62,13 @@ const Details = () => {
               </section>
             )}
             <section id={styles.counter_container}>
-              {id && parseInt(id) < 100 && (
+              {singleProductDetail && singleProductDetail?.quantity > 0 && (
                 <button
                   style={{ marginRight: 10 }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    addItemToOrderList?.(item as ProductType);
-                    setItemIDCount?.({ count: item?.quantity, id: item?._id });
+                    addItemToOrderList?.(singleProductDetail as ProductType);
+                    setItemIDCount?.({ count: singleProductDetail?.quantity, id: singleProductDetail?._id });
                     toast.success(`Product added to cart Successfully`);
                   }}
                 >
@@ -79,7 +76,7 @@ const Details = () => {
                 </button>
               )}
 
-              {id && parseInt(id) < 100 && (
+              {singleProductDetail && singleProductDetail?.quantity > 0 && (
                 <button
                   onClick={(e) => {
                     e.stopPropagation();

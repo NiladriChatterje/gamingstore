@@ -4,6 +4,8 @@ import { ProductType } from "./ProductContextType";
 import { UserType } from "./UserType";
 
 export declare type ProductContextType = {
+  singleProductDetail: ProductType;
+  setSingleProductDetail: React.Dispatch<React.SetStateAction<ProductType | undefined>>;
   userData: UserType;
   setUserData: React.Dispatch<React.SetStateAction<UserType | undefined>>;
   lastRoute: string;
@@ -13,8 +15,8 @@ export declare type ProductContextType = {
   navRef: LegacyRef<HTMLElement>;
   totalPrice: number;
   setTotalPrice: React.Dispatch<React.SetStateAction<number>>;
-  data: ProductType[];
-  setData: React.Dispatch<React.SetStateAction<ProductType[]>>;
+  orderData: ProductType[];
+  setOrderData: React.Dispatch<React.SetStateAction<ProductType[]>>;
   oneItem: boolean;
   setOneItem: React.Dispatch<React.SetStateAction<boolean>>;
   qty: number;

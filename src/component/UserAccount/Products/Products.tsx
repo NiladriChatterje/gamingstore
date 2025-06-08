@@ -4,89 +4,26 @@ import { useEffect, useRef, useState } from "react";
 import { ProductType } from "@declarations/ProductContextType";
 import { FaSearch } from "react-icons/fa";
 import toast from "react-hot-toast";
-import { v7 as uuid7 } from 'uuid'
 
-const pdts: ProductType[] = [
-  {
-    _id: `product_${uuid7()}`,
-    productName: "xbox",
-    category: "gaming",
-    eanUpcIsbnGtinAsinType: "EAN",
-    eanUpcNumber: "45645416",
-    price: 3364.02,
-    currency: "INR",
-    imagesBase64: [{ size: 452, extension: "jpg", base64: "" }],
-
-    modelNumber: "MADOL565G",
-    productDescription: "best selling product",
-    quantity: 45,
-    keywords: ["gaming", "joystick", "pc", "gadgets"],
-    discount: 10,
-    seller: ["Nil"],
-  },
-  {
-    _id: "2",
-    productName: "xbox",
-    category: "gaming",
-    eanUpcIsbnGtinAsinType: "EAN",
-    eanUpcNumber: "45645416",
-    price: 3364.02,
-    currency: "INR",
-    imagesBase64: [{ size: 452, extension: "jpg", base64: "" }],
-    modelNumber: "MADOL565G",
-    productDescription: "best selling product",
-    quantity: 45,
-    keywords: ["gaming", "joystick", "pc", "gadgets"],
-    discount: 10,
-    seller: ["Nil"],
-  },
-  {
-    _id: "3",
-    productName: "xbox",
-    category: "gaming",
-    eanUpcIsbnGtinAsinType: "EAN",
-    eanUpcNumber: "45645416",
-    price: 3364.02,
-    currency: "INR",
-    imagesBase64: [{ size: 452, extension: "jpg", base64: "" }],
-    modelNumber: "MADOL565G",
-    productDescription: "best selling product",
-    quantity: 45,
-    keywords: ["gaming", "joystick", "pc", "gadgets"],
-    discount: 10,
-    seller: ["Nil"],
-  },
-  {
-    _id: "4",
-    productName: "xbox",
-    category: "gaming",
-    eanUpcIsbnGtinAsinType: "EAN",
-    eanUpcNumber: "45645416",
-    price: 3364.02,
-    currency: "INR",
-    imagesBase64: [{ size: 452, extension: "jpg", base64: "" }],
-    modelNumber: "MADOL565G",
-    productDescription: "best selling product",
-    quantity: 45,
-    keywords: ["gaming", "joystick", "pc", "gadgets"],
-    discount: 10,
-    seller: ["Nil"],
-  },
-];
 const Products = () => {
   const [productData, setPdtData] = useState<ProductType[]>(() => []);
+  const [page, setPage] = useState<number>(() => 1);
   const ProductRef = useRef<HTMLDivElement[]>([]);
   const [search, setSearch] = useState<string>(() => '');
 
   useEffect(() => {
-    // fetch(`http//localhost:5002/fetch-all-products`)
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     console.log(data);
-    //     setPdtData(data);
-    //   });
+    fetch(`http://localhost:5002/fetch-all-products/${page}`)
+      .then((res) => {
+        if (!res.ok)
+          throw new Error();
+        return res.json()
+      })
+      .then((data) => {
+        console.log(`data`, data);
+        setPdtData(data);
+      }).catch(err => console.log(err));
     // console.log(ProductRef.current);
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     let timeoutId: number | string | NodeJS.Timeout | undefined;
@@ -116,7 +53,7 @@ const Products = () => {
         <FaSearch size={15} />
       </div>
       <div>
-        <section>
+        <section id={styles['category-list']}>
           <span>All</span>
           <span>Groceries</span>
           <span>Gaming</span>
@@ -124,7 +61,7 @@ const Products = () => {
         </section>
       </div>
       <div id={styles["pdt_container"]}>
-        {pdts.map((item: ProductType) => (
+        {productData.map((item: ProductType) => (
           <ProductDetails
             key={item._id}
             ref={(el: HTMLDivElement) => {
@@ -133,6 +70,9 @@ const Products = () => {
             item={item}
           />
         ))}
+      </div>
+      <div id={styles['pagination']}>
+        Page
       </div>
     </section>
   );
