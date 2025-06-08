@@ -1,5 +1,5 @@
 /// <reference types="vite-plugin-svgr/client" />
-import PreLoader from "@/PreLoader";
+import PreLoader from "../../PreLoader";
 import {
   createContext,
   ReactNode,
@@ -8,12 +8,12 @@ import {
   useEffect,
 } from "react";
 import type { AdminContextType } from "@declarations/AdminContextType.ts";
-import { ProductType } from "@/declarations/ProductContextType";
+import { ProductType } from "../../declarations/ProductContextType";
 import toast from "react-hot-toast";
-import { AdminFieldsType } from "@/declarations/AdminType.ts";
+import { AdminFieldsType } from "../../declarations/AdminType.ts";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
 import { IoLocation, IoLogOutOutline } from "react-icons/io5";
-import ServiceUnavailable from "@/assets/serviceUavailable.svg";
+import ServiceUnavailable from "../../assets/serviceUavailable.svg";
 import { MdReplayCircleFilled } from "react-icons/md";
 
 const AdminContext = createContext<Partial<AdminContextType>>({});

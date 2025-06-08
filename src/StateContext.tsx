@@ -1,7 +1,10 @@
-import { useContext, createContext, useState, ReactNode } from 'react';
-import { ProductContextType } from '@declarations/ProductContextType';
+import React, { useContext, createContext, useState, ReactNode } from 'react';
+type LoginContext = {
+    defaultLoginAdminOrUser: string;
+    setDefaultLoginAdminOrUser: React.Dispatch<React.SetStateAction<string>>;
+}
 
-const GlobalProvider = createContext<Partial<ProductContextType>>({});
+const GlobalProvider = createContext<Partial<LoginContext>>({});
 
 export const StateContext = ({ children }: { children: ReactNode }) => {
     const [defaultLoginAdminOrUser, setDefaultLoginAdminOrUser] = useState<string>(localStorage.getItem("loginusertype") || "user");

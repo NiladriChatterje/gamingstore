@@ -4,7 +4,7 @@ import './ClerkStyle.css'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { useStateContext } from '@/StateContext';
+import { useStateContext } from '../../../StateContext';
 import { useUserStateContext } from '../UserStateContext';
 import { BsFillBagPlusFill } from 'react-icons/bs';
 import { FaHome, FaShopify } from "react-icons/fa";

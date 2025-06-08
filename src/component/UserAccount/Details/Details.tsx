@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useUserStateContext } from "../UserStateContext";
-import { useStateContext } from "@/StateContext";
+import { useStateContext } from "../../../StateContext";
 import styles from "./Details.module.css";
 import UpcomingData from "../Body/upcomingData";
 import { ProductType } from "@declarations/ProductContextType";

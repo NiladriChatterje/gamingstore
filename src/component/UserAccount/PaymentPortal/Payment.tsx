@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from './Payment.module.css';
 import Loader from "./Loader.tsx";
 import { useUserStateContext } from "../UserStateContext.tsx";
-import Checkout from "@/utils/Checkout.tsx";
+import Checkout from "../../../utils/Checkout.tsx";
 import { SignedIn, SignedOut, SignIn, useSignIn } from "@clerk/clerk-react";
 import { useStateContext } from "@/StateContext.tsx";
 
@@ -43,10 +43,10 @@ function Payment() {
                                     </header>
                                     <div>
                                         {data?.map(item => (
-                                            <div key={item.id} >
-                                                <span className={styles['first-column']} >{item?.name}</span>
-                                                <span className={styles['second-column']}>{item?.count}</span>
-                                                <span className={styles['third-column']}>₹{item?.price * item?.count}</span>
+                                            <div key={item._id} >
+                                                <span className={styles['first-column']} >{item?.productName}</span>
+                                                <span className={styles['second-column']}>{item?.quantity}</span>
+                                                <span className={styles['third-column']}>₹{item?.price * item?.quantity}</span>
                                             </div>))}
                                     </div>
                                     <footer className={styles['single-pdt-total']}>
