@@ -4,7 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import {
     Body, About, Products,
     Details,
-    OrderListItem,
+    CartListContainer,
     Navbar,
     Orders,
     ProfileUpdateUser
@@ -16,7 +16,7 @@ const UserAccount = () => {
 
     return (
         <UserStateContext>
-            <OrderListItem />
+            <CartListContainer />
             <Navbar />
             <Routes>
                 <Route path={'/'} element={<Body />} />

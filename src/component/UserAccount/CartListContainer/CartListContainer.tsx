@@ -1,4 +1,4 @@
-import styles from "./OrderListItem.module.css";
+import styles from "./CartListContainer.module.css";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { motion } from "framer-motion";
 import { OrderList } from "../components";
@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useStateContext } from "../../../StateContext";
 
-const OrderListItem = () => {
+const CartListContainer = () => {
   const { orderData, totalPrice, slide, setSlide, setOneItem } =
     useUserStateContext();
   const { setDefaultLoginAdminOrUser } = useStateContext();
@@ -66,4 +66,4 @@ const OrderListItem = () => {
     </>
   );
 };
-export default OrderListItem;
+export default CartListContainer;

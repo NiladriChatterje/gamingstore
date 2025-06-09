@@ -4,15 +4,18 @@ import { useEffect, useRef, useState } from "react";
 import { ProductType } from "@declarations/ProductContextType";
 import { FaSearch } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { FaSquareCaretLeft, FaSquareCaretRight } from "react-icons/fa6";
+import { ProductCategories } from '@/enums/enums.ts'
 
 const Products = () => {
   const [productData, setPdtData] = useState<ProductType[]>(() => []);
   const [page, setPage] = useState<number>(() => 1);
+  const [category, setCategory] = useState<string>(() => ProductCategories.ALL);
   const ProductRef = useRef<HTMLDivElement[]>([]);
   const [search, setSearch] = useState<string>(() => '');
 
   useEffect(() => {
-    fetch(`http://localhost:5002/fetch-all-products/${page}`)
+    fetch(`http://localhost:5002/fetch-products/${category}/${page}`)
       .then((res) => {
         if (!res.ok)
           throw new Error();
@@ -23,7 +26,7 @@ const Products = () => {
         setPdtData(data);
       }).catch(err => console.log(err));
     // console.log(ProductRef.current);
-  }, [page]);
+  }, [page, category]);
 
   useEffect(() => {
     let timeoutId: number | string | NodeJS.Timeout | undefined;
@@ -54,10 +57,11 @@ const Products = () => {
       </div>
       <div>
         <section id={styles['category-list']}>
-          <span>All</span>
-          <span>Groceries</span>
-          <span>Gaming</span>
-          <span>Clothes</span>
+          <span onClick={() => { setCategory(ProductCategories.ALL) }}>All</span>
+          <span onClick={() => { setCategory(ProductCategories.GROCERIES) }}>Groceries</span>
+          <span onClick={() => { setCategory(ProductCategories.GADGETS) }}>Gadgets</span>
+          <span onClick={() => { setCategory(ProductCategories.CLOTH) }}>Clothes</span>
+          <span onClick={() => { setCategory(ProductCategories.TOYS) }}>Toys</span>
         </section>
       </div>
       <div id={styles["pdt_container"]}>
@@ -72,7 +76,8 @@ const Products = () => {
         ))}
       </div>
       <div id={styles['pagination']}>
-        Page
+        <FaSquareCaretLeft />
+        <FaSquareCaretRight />
       </div>
     </section>
   );
