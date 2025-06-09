@@ -1,9 +1,9 @@
 import React from "react";
-import styles from "./OrderList.module.css";
+import styles from "./CartProduct.module.css";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { useUserStateContext } from "../UserStateContext";
 
-export default function OrderList({
+export default function CartProduct({
   _id,
   images,
   price,
@@ -28,7 +28,7 @@ export default function OrderList({
   }, [ItemIDCount]);
 
   return (
-    <div className={styles["orderList-container"]}>
+    <div className={styles["CartProduct-container"]}>
       <AiFillCloseCircle
         onClick={() => {
           const temp = orderData?.filter((i) => i._id !== _id);

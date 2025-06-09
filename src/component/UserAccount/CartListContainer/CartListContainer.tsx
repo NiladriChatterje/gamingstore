@@ -1,7 +1,7 @@
 import styles from "./CartListContainer.module.css";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { motion } from "framer-motion";
-import { OrderList } from "../components";
+import { CartProduct } from "../components";
 import { useUserStateContext } from "../UserStateContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -36,7 +36,7 @@ const CartListContainer = () => {
             }}
           />
           {orderData?.map((item, i) => (
-            <OrderList
+            <CartProduct
               key={i}
               _id={item._id}
               images={item?.imagesBase64}

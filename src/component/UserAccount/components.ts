@@ -2,7 +2,7 @@ export { default as Navbar } from './Navbar/Navbar';
 export { default as Body } from './Body/Body';
 export { default as About } from './About/About';
 export { default as Products } from './Products/Products';
-export { default as OrderList } from './OrderList/OrderList';
+export { default as CartProduct } from './CartProduct/CartProduct';
 export { default as CartListContainer } from './CartListContainer/CartListContainer';
 export { default as Details } from './Details/Details';
 export { default as Orders } from './Orders/Orders';
