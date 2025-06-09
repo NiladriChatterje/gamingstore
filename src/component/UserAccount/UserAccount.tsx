@@ -3,7 +3,7 @@ import Completion from './PaymentPortal/Completion.tsx'
 import { Routes, Route, Navigate } from 'react-router-dom';
 import {
     Body, About, Products,
-    Details,
+    ProductDetail,
     CartListContainer,
     Navbar,
     Orders,
@@ -26,7 +26,7 @@ const UserAccount = () => {
                 <Route path={'/user/About'} element={<About />} />
                 <Route path={'/user/profile-update'} element={<ProfileUpdateUser />} />
                 <Route path={'/user/Product'} element={<Products />} />
-                <Route path={'/user/Product/Details/:id'} element={<Details />} />
+                <Route path={'/user/Product/ProductDetail/:id'} element={<ProductDetail />} />
                 <Route path={'/user/completion/'} element={<Completion />} />
                 <Route path="/admin/*" element={<Navigate to={'/user'} />} />
                 <Route path="*" element={<><NotFound /></>} />

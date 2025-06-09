@@ -21,13 +21,11 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
     () => localStorage.getItem("last-route") || ""
   );
   const [qty, setQty] = useState(() => 1);
-  const [ItemIDCount, setItemIDCount] = useState<object & { id?: string }>(
-    () => { }
-  );
+
   const [totalPrice, setTotalPrice] = useState<number>(
     Number(localStorage.getItem("totalPrice")) || 0
   );
-  const [orderData, setOrderData] = useState<ProductType[]>(
+  const [cartData, setOrderData] = useState<ProductType[]>(
     () =>
       (JSON.parse(localStorage.getItem("orders") as string) as ProductType[]) ||
       ([] as ProductType[])
@@ -41,39 +39,35 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
   const navRef = useRef<HTMLElement | null>(null);
 
   React.useEffect(() => {
-    //for user orderData fetch operation
+    //for user cartData fetch operation
   }, []);
 
   React.useEffect(() => {
-    const localTotalPrice = orderData?.reduce(
+    const localTotalPrice = cartData?.reduce(
       (acc: number, cur: ProductType) => acc + cur.price.pdtPrice * cur.quantity,
       0
     );
     setTotalPrice(localTotalPrice);
     localStorage.setItem("totalPrice", totalPrice.toString());
-    localStorage.setItem("orders", JSON.stringify(orderData));
-  }, [orderData]);
+    localStorage.setItem("orders", JSON.stringify(cartData));
+  }, [cartData]);
 
-  function addItemToOrderList(item: ProductType) {
-    let addToCart = orderData?.find((i) => i._id === item._id);
+  function addItemToCart(item: ProductType) {
+    let addToCart = cartData?.find((i) => i._id === item._id);
     if (addToCart !== undefined) {
       let x = addToCart?.quantity;
       x += 1;
       if (item._id) incDecQty(x, item._id);
     }
 
-    if (addToCart === undefined) setOrderData([...orderData, { ...item, quantity: 1 }]);
+    if (addToCart === undefined) setOrderData([...cartData, { ...item, quantity: 1 }]);
   }
 
   function incDecQty(counter: number, id: string) {
-    let foundItem: ProductType | undefined = orderData?.find((i) => i._id === id);
+    let foundItem: ProductType | undefined = cartData?.find((i) => i._id === id);
     if (foundItem)
       foundItem.quantity = counter;
     setRefreshApp(prev => !prev);
-    // let foundItemIndex: number = orderData?.findIndex((i) => i._id === id);
-
-    // orderData?.splice(foundItemIndex, 1, { ...foundItem, count: counter });
-    // setOrderData([...orderData]);
   }
 
   return (
@@ -86,7 +80,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
         navRef,
         totalPrice,
         setTotalPrice,
-        orderData,
+        cartData,
         setSlide,
         slide,
         setOrderData,
@@ -94,10 +88,8 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
         setOneItem,
         qty,
         setQty,
-        ItemIDCount,
-        setItemIDCount,
         incDecQty,
-        addItemToOrderList,
+        addItemToCart,
         singleProductDetail,
         setSingleProductDetail
       }}

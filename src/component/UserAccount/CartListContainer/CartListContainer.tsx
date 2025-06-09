@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { useStateContext } from "../../../StateContext";
 
 const CartListContainer = () => {
-  const { orderData, totalPrice, slide, setSlide, setOneItem } =
+  const { cartData, totalPrice, slide, setSlide, setOneItem } =
     useUserStateContext();
   const { setDefaultLoginAdminOrUser } = useStateContext();
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const CartListContainer = () => {
               zIndex: 20,
             }}
           />
-          {orderData?.map((item, i) => (
+          {cartData?.map((item, i) => (
             <CartProduct
               key={i}
               _id={item._id}

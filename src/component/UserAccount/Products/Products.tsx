@@ -1,17 +1,16 @@
 import styles from "./Products.module.css";
-import ProductDetails from "../ProductDetails/ProductDetails.tsx";
+import ProductsCard from "../ProductsCard/ProductsCard.tsx";
 import { useEffect, useRef, useState } from "react";
 import { ProductType } from "@declarations/ProductContextType";
 import { FaSearch } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { FaSquareCaretLeft, FaSquareCaretRight } from "react-icons/fa6";
-import { ProductCategories } from '@/enums/enums.ts'
+import { ProductCategories } from '../../../enums/enums.ts'
 
 const Products = () => {
   const [productData, setPdtData] = useState<ProductType[]>(() => []);
   const [page, setPage] = useState<number>(() => 1);
   const [category, setCategory] = useState<string>(() => ProductCategories.ALL);
-  const ProductRef = useRef<HTMLDivElement[]>([]);
   const [search, setSearch] = useState<string>(() => '');
 
   useEffect(() => {
@@ -25,7 +24,6 @@ const Products = () => {
         console.log(`data`, data);
         setPdtData(data);
       }).catch(err => console.log(err));
-    // console.log(ProductRef.current);
   }, [page, category]);
 
   useEffect(() => {
@@ -66,11 +64,8 @@ const Products = () => {
       </div>
       <div id={styles["pdt_container"]}>
         {productData.map((item: ProductType) => (
-          <ProductDetails
+          <ProductsCard
             key={item._id}
-            ref={(el: HTMLDivElement) => {
-              ProductRef.current?.push(el);
-            }}
             item={item}
           />
         ))}

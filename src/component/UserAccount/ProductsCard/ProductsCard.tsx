@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { ProductType } from "@declarations/ProductContextType";
 import { forwardRef, Ref } from "react";
-import styles from "./ProductDetails.module.css";
+import styles from "./ProductsCard.module.css";
 
-const ProductDetails = (
+const ProductsCard = (
   {
     item,
   }: {
@@ -14,7 +14,7 @@ const ProductDetails = (
   },
   ref: Ref<HTMLDivElement>
 ) => {
-  const { addItemToOrderList, setItemIDCount, setSingleProductDetail } = useUserStateContext();
+  const { addItemToCart, setSingleProductDetail } = useUserStateContext();
   const navigate = useNavigate();
 
   return (
@@ -23,7 +23,7 @@ const ProductDetails = (
       onClick={(e) => {
         e.stopPropagation();
         setSingleProductDetail?.(item);
-        navigate(`/user/Product/Details/${item._id}`);
+        navigate(`/user/Product/ProductDetail/${item._id}`);
       }}
       style={{ position: "relative", cursor: "pointer" }}
       key={item._id}
@@ -41,8 +41,7 @@ const ProductDetails = (
       <button
         onClick={(e) => {
           e.stopPropagation();
-          addItemToOrderList?.(item);
-          setItemIDCount?.({ count: item.quantity, id: item._id });
+          addItemToCart?.(item);
           toast("Item added to Cart 🛒");
         }}
       >
@@ -53,4 +52,4 @@ const ProductDetails = (
   );
 };
 
-export default forwardRef(ProductDetails);
+export default forwardRef(ProductsCard);

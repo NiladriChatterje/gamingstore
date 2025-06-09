@@ -14,25 +14,18 @@ export default function CartProduct({
   price: number;
   quantity: number;
 }) {
-  const { orderData, setOrderData, incDecQty, ItemIDCount } = useUserStateContext();
+  const { cartData, setOrderData, incDecQty } = useUserStateContext();
   const [counter, setCounter] = React.useState<number>(() => quantity);
 
   React.useEffect(() => {
     incDecQty?.(counter, _id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [counter]);
-
-  React.useEffect(() => {
-    if (_id === ItemIDCount?.id) setCounter(quantity);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ItemIDCount]);
 
   return (
     <div className={styles["CartProduct-container"]}>
       <AiFillCloseCircle
         onClick={() => {
-          const temp = orderData?.filter((i) => i._id !== _id);
-          setOrderData?.(temp ? [...temp] : []);
+          setOrderData?.(cartData?.filter((i) => i._id !== _id) ?? []);
         }}
         style={{
           color: "black",

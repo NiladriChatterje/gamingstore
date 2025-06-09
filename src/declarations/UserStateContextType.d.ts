@@ -15,14 +15,12 @@ export declare type ProductContextType = {
   navRef: LegacyRef<HTMLElement>;
   totalPrice: number;
   setTotalPrice: React.Dispatch<React.SetStateAction<number>>;
-  orderData: ProductType[];
+  cartData: ProductType[];
   setOrderData: React.Dispatch<React.SetStateAction<ProductType[]>>;
   isOneItem: boolean;
   setOneItem: React.Dispatch<React.SetStateAction<boolean>>;
   qty: number;
   setQty: React.Dispatch<React.SetStateAction<number>>;
-  ItemIDCount: object & { id?: string };
-  setItemIDCount: React.Dispatch<React.SetStateAction<object>>;
   incDecQty: (counter: number, id: string) => void;
-  addItemToOrderList: (item: ProductType) => void;
+  addItemToCart: (item: ProductType) => void;
 };

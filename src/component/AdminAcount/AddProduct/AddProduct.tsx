@@ -174,11 +174,11 @@ const AddProduct = () => {
       id={styles["form-container"]}
     >
       <div id={styles["form-input-field-container"]}>
-        <section data-label="product-details">
+        <section data-label="product-ProductDetail">
           <fieldset
             style={{ display: "flex", flexDirection: "column", gap: "15px" }}
           >
-            <legend>Product Details</legend>
+            <legend>Product ProductDetail</legend>
             <section>
               <label>Product Name</label>
               <div

@@ -8,8 +8,8 @@
     justify-content: center;
 }
 
-#product-details h1,
-#product-details article {
+#product-ProductDetail h1,
+#product-ProductDetail article {
     color: rgb(57, 57, 100)
 }
 

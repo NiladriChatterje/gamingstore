@@ -9,7 +9,7 @@ import { useStateContext } from "../../../StateContext.tsx";
 
 function Payment() {
     const [oneProduct, _] = useState<{ name: string; qty: number; price: number }>(JSON.parse(localStorage.getItem('oneProduct') ?? '{}'));
-    const { isOneItem, orderData, totalPrice, userData } = useUserStateContext();
+    const { isOneItem, cartData, totalPrice, userData } = useUserStateContext();
 
     const { setDefaultLoginAdminOrUser } = useStateContext()
 
@@ -28,10 +28,10 @@ function Payment() {
                             {isOneItem ? <div id={styles['nam_price_container']}>
                                 <section id={styles['nam_price']}>
                                     <span>{oneProduct?.name}</span>
-                                    <div className={styles['pdt-details']}><span>Quantity: </span><span>{oneProduct?.qty}</span></div>
-                                    <div className={styles['pdt-details']}><span>Unit Price: </span><span>₹ {oneProduct?.price}</span></div>
+                                    <div className={styles['pdt-ProductDetail']}><span>Quantity: </span><span>{oneProduct?.qty}</span></div>
+                                    <div className={styles['pdt-ProductDetail']}><span>Unit Price: </span><span>₹ {oneProduct?.price}</span></div>
                                 </section>
-                                <div className={`${styles['pdt-details']} ${styles['single-pdt-total']}`}>
+                                <div className={`${styles['pdt-ProductDetail']} ${styles['single-pdt-total']}`}>
                                     <Checkout price={oneProduct.price * oneProduct.qty}
                                         callback={async (payment_id: string,
                                             razorpay_signature: string,
@@ -48,7 +48,7 @@ function Payment() {
                                         <th className={styles['third-column']}>Price</th>
                                     </header>
                                     <div>
-                                        {orderData?.map(item => (
+                                        {cartData?.map(item => (
                                             <div key={item._id} >
                                                 <span className={styles['first-column']} >{item?.productName}</span>
                                                 <span className={styles['second-column']}>{item?.quantity}</span>

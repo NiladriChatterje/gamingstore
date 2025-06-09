@@ -1,22 +1,21 @@
 import React, { useState } from 'react'
 import styles from './Orders.module.css'
 import { useUserStateContext } from '../UserStateContext';
-import { ProductType } from '@/declarations/UserStateContextType';
+import { ProductType } from '@/declarations/ProductContextType';
 
+
+//order page list
 const OrderPendingItem = ({ item }: { item: ProductType }) => {
   const [counter, setCounter] = useState<number>(() => 1);
-  const { data, setData, incDecQty, ItemIDCount } = useUserStateContext();
+  const { cartData, setOrderData, incDecQty } = useUserStateContext();
 
   React.useEffect(() => {
     incDecQty?.(counter, item._id)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [counter]);
 
   React.useEffect(() => {
-    if (item._id === ItemIDCount?.id)
-      setCounter(item.quantity ?? 0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ItemIDCount])
+    setCounter(item.quantity ?? 0);
+  }, [])
 
   return (
     <section

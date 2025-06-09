@@ -77,7 +77,7 @@ const AddProduct = () => {
       )
       const data: ProductType[] = await result.json();
       setProduct(data);
-      console.log("details of the product in editProductDetails page : " + data)
+      console.log("ProductDetail of the product in editProductDetails page : " + data)
     } catch (e) {
 
     }
@@ -198,11 +198,11 @@ const AddProduct = () => {
       id={styles['form-container']}
     >
       <div id={styles['form-input-field-container']}>
-        <section data-label='product-details'>
+        <section data-label='product-ProductDetail'>
           <fieldset
             style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}
           >
-            <legend>Product Details</legend>
+            <legend>Product ProductDetail</legend>
             <section>
               <label>Product Name</label>
               <div

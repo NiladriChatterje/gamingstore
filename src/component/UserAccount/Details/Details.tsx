@@ -2,13 +2,13 @@ import { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useUserStateContext } from "../UserStateContext";
 import { useStateContext } from "../../../StateContext";
-import styles from "./Details.module.css";
+import styles from "./ProductDetail.module.css";
 import { ProductType } from "@declarations/ProductContextType";
 import toast from "react-hot-toast";
 
 const data: ProductType[] = [];
 
-const Details = () => {
+const ProductDetail = () => {
   const [counter, setCounter] = useState(() => 1);
   const { id } = useParams<string>();
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Details = () => {
   const ImgRef = useRef<HTMLImageElement>(null);
 
   //user Context
-  const { addItemToOrderList, setItemIDCount, setOneItem, singleProductDetail } =
+  const { addItemToCart, setOneItem, singleProductDetail } =
     useUserStateContext();
   const { setDefaultLoginAdminOrUser } = useStateContext();
 
@@ -37,7 +37,7 @@ const Details = () => {
         src={singleProductDetail?.imagesBase64[0].base64}
         alt={singleProductDetail?.productName}
       />}
-      <section id={styles["product-details"]}>
+      <section id={styles["product-ProductDetail"]}>
         <h1>{singleProductDetail?.productName}</h1>
         <section id={styles["product-infos"]}>
           <article>{singleProductDetail?.productDescription}</article>
@@ -67,8 +67,7 @@ const Details = () => {
                   style={{ marginRight: 10 }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    addItemToOrderList?.(singleProductDetail as ProductType);
-                    setItemIDCount?.({ count: singleProductDetail?.quantity, id: singleProductDetail?._id });
+                    addItemToCart?.(singleProductDetail as ProductType);
                     toast.success(`Product added to cart Successfully`);
                   }}
                 >
@@ -109,4 +108,4 @@ const Details = () => {
   );
 };
 
-export default Details;
+export default ProductDetail;

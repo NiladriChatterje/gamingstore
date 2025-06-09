@@ -4,7 +4,7 @@ export enum ProductCategories {
     ALL = 'all',
     CLOTH = "clothing",
     FOOD = "food",
-    GROCERIES = "Groceries",
+    GROCERIES = "groceries",
     GADGETS = "gadgets",
     HOME_GOODS = "home-goods",
     TOYS = "toys",
