@@ -1,9 +1,8 @@
 import styles from "./Products.module.css";
 import ProductsCard from "../ProductsCard/ProductsCard.tsx";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductType } from "@declarations/ProductContextType";
 import { FaSearch } from "react-icons/fa";
-import toast from "react-hot-toast";
 import { FaSquareCaretLeft, FaSquareCaretRight } from "react-icons/fa6";
 import { ProductCategories } from '../../../enums/enums.ts'
 
@@ -35,8 +34,12 @@ const Products = () => {
           headers: {
             "Content-Type": "text/plain"
           }
-        });
-        toast(search);
+        }).then(res => res.json())
+          .then(data => {
+            console.log(`data from search : `, data);
+            setPdtData(data);
+          });
+
       }, 3000)
 
 
@@ -71,8 +74,13 @@ const Products = () => {
         ))}
       </div>
       <div id={styles['pagination']}>
-        <FaSquareCaretLeft />
-        <FaSquareCaretRight />
+        <FaSquareCaretLeft
+          cursor={'pointer'}
+          onClick={() => { if (page <= 1) return; setPage(prev => prev - 1) }} />
+
+        <FaSquareCaretRight
+          cursor={'pointer'}
+          onClick={() => setPage(prev => prev + 1)} />
       </div>
     </section>
   );
