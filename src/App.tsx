@@ -1,6 +1,6 @@
 import './App.css';
 import { useEffect, useState } from 'react';
-import { UserAccount, AdminAccountRoot } from './component';
+import { UserRootContext, AdminRootContext } from './component';
 import PreLoader from './PreLoader.tsx';
 import { Toaster } from 'react-hot-toast';
 import { useStateContext } from './StateContext.tsx';
@@ -20,8 +20,8 @@ function App() {
         containerStyle={{ fontSize: '0.65em', fontWeight: 900 }} />
       {loading ? <PreLoader /> : <>
         {(defaultLoginAdminOrUser === 'admin' && user !== null) ?
-          <AdminAccountRoot /> : (
-            <UserAccount />)}
+          <AdminRootContext /> : (
+            <UserRootContext />)}
       </>}
     </div>
   );

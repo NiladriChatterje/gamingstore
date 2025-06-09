@@ -3,14 +3,14 @@ import AdminAccount from "./AdminAccount"
 import { AdminStateContext } from "./AdminStateContext"
 
 
-const AdminAccountRoot = () => {
+const AdminRootContext = () => {
     return (
         <AdminStateContext>
             <SignedIn>
-            <AdminAccount />
+                <AdminAccount />
             </SignedIn>
         </AdminStateContext>
     )
 }
 
-export default AdminAccountRoot
+export default AdminRootContext

@@ -9,13 +9,23 @@ import {
     Orders,
     ProfileUpdateUser
 } from './components.ts';
-import { UserStateContext } from './UserStateContext.tsx';
+import { useUserStateContext } from './UserStateContext.tsx';
 import NotFound from '../../NotFound.tsx';
+import { useUser } from '@clerk/clerk-react';
+import { useEffect } from 'react';
 
 const UserAccount = () => {
 
+    //loading userData from Database if found or creating it
+    const { setUserData } = useUserStateContext();
+    const { user, isSignedIn } = useUser()
+    useEffect(() => {
+        if (isSignedIn) {
+            //fetch user data and if not found then create
+        }
+    }, [isSignedIn])
     return (
-        <UserStateContext>
+        <>
             <CartListContainer />
             <Navbar />
             <Routes>
@@ -31,7 +41,7 @@ const UserAccount = () => {
                 <Route path="/admin/*" element={<Navigate to={'/user'} />} />
                 <Route path="*" element={<><NotFound /></>} />
             </Routes>
-        </UserStateContext>
+        </>
     )
 }
 
