@@ -3,6 +3,7 @@ import Checkout from '../../../utils/Checkout';
 import styles from './SubscriptionPlan.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useAdminStateContext } from '../AdminStateContext';
+import { useAuth } from '@clerk/clerk-react';
 
 const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch<boolean> }) => {
     const { admin } = useAdminStateContext()
@@ -23,16 +24,24 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                 <Checkout
                     price={Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_1)}
                     callback={async (_payment_id: string, _payment_signature: string, _order_id: string) => {
-                        const response = await fetch('http://localhost:5000/save-subscription', {
+                        const response = await fetch('http://localhost:5000/admin-subscription', {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                "Authorization": `Bearer ${await useAuth().getToken()}`
                             },
                             body: JSON.stringify({
                                 _id: admin?._id,
-                                plan: Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_1),
-                                _payment_id, _order_id, _payment_signature,
-                                admin_document_id: admin?._id
+                                subscription: {
+                                    amount: Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_1),
+                                    transactionId: _payment_id,
+                                    orderId: _order_id,
+                                    paymentSignature: _payment_signature,
+                                    planSchemaList: {
+                                        activeDate: new Date(),
+                                        expireDate: new Date(new Date().getTime() + 175 * 24 * 60 * 60 * 1000)
+                                    }
+                                },
                             }),
                         });
                         const data = await response.json()
@@ -63,13 +72,15 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                         const response = await fetch('http://localhost:5000/save-subscription', {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                "Authorization": `Bearer ${await useAuth().getToken()}`
                             },
                             body: JSON.stringify({
                                 _id: admin?._id,
-                                plan: Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_2),
-                                _payment_id, _order_id, _payment_signature,
-                                document_id: admin?._id
+                                subscription: {
+                                    amount: Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_2),
+                                    _payment_id, _order_id, _payment_signature,
+                                },
                             }),
                         });
                         const data = await response.json();

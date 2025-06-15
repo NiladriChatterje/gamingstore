@@ -22,11 +22,11 @@ type subscription = {
   transactionId: string;
   orderId: string;
   paymentSignature: string;
-  activePlan: number;
-  planSchemeList: planSchemeList;
+  amount: number;
+  planSchemeList: plan;
 };
 
-interface planSchemeList {
+interface plan {
   activeDate: Date;
   expireDate: Date;
 }

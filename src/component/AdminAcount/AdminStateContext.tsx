@@ -11,7 +11,7 @@ import type { AdminContextType } from "@declarations/AdminContextType.ts";
 import { ProductType } from "../../declarations/ProductContextType";
 import toast from "react-hot-toast";
 import { AdminFieldsType } from "../../declarations/AdminType.ts";
-import { SignOutButton, useUser } from "@clerk/clerk-react";
+import { SignOutButton, useUser, useAuth } from "@clerk/clerk-react";
 import { IoLocation, IoLogOutOutline } from "react-icons/io5";
 import ServiceUnavailable from "../../assets/serviceUavailable.svg";
 import { MdReplayCircleFilled } from "react-icons/md";
@@ -26,13 +26,16 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
   const [loadingState, setLoadingState] = useState<boolean>(true);
   const [retry, setRetry] = useState<boolean>(true);
   const [editProductForm, setEditProductForm] = useState<ProductType | null>(); // To fill up form fields when a product is about to edit
-  const { user, isLoaded } = useUser();
+  const { user, isLoaded, isSignedIn } = useUser();
 
-  async function checkAdminEnrolled() {
+  async function checkAdminEnrolled(): Promise<AdminFieldsType | undefined> {
     const response: Response = await fetch(
       `http://localhost:5003/fetch-admin-data/${user?.id}`,
       {
         method: "GET",
+        headers: {
+          'Authorization': `Bearer ${await useAuth().getToken()}`
+        }
       }
     );
 
@@ -52,11 +55,15 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
       if (!user?.phoneNumbers[0]?.phoneNumber && !userEnrolled[0]?.phone) {
         if (toastLoadingId) toast.dismiss(toastLoadingId);
 
+        //address info fetch
         const responseGeo = await fetch(
           `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${import.meta.env.VITE_GEOAPIFY_API
           }`,
           {
             method: "GET",
+            headers: {
+              "Accept": "application/json"
+            }
           }
         );
         const { features } = await responseGeo.json();
@@ -64,14 +71,15 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         console.log("reverse geocoding : ", placeResult);
 
         try {
-          //creating admin document
+          //creating admin document if not found in sanity
           const res: Response = await fetch(
             `http://localhost:5003/create-admin`,
             {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
-                Accept: "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${await useAuth().getToken()}`
               },
               body: JSON.stringify({
                 _type: "admin",
@@ -180,7 +188,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
       );
     }
     setLoadingState(false);
-    return userEnrolled;
+    return userEnrolled[0];
   }
 
   useEffect(() => {
@@ -188,15 +196,15 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
       // check from sanity if user has an existing
       // subscription plan or not
       try {
-        const result: AdminFieldsType[] = await checkAdminEnrolled();
+        const result: AdminFieldsType | undefined = await checkAdminEnrolled();
 
-        if (result.length === 0) return;
+        if (result == null) return;
         if (
-          result.length > 0 &&
-          result[0]?.SubscriptionPlan &&
-          result[0]?.SubscriptionPlan?.length !== 0
+          result != null &&
+          result?.SubscriptionPlan &&
+          result?.SubscriptionPlan?.length !== 0
         ) {
-          let lastPlan = result[0].SubscriptionPlan?.at(-1);
+          let lastPlan = result.SubscriptionPlan?.at(-1);
           const today = new Date().getTime();
           const expirationDay = new Date(
             lastPlan?.planSchemeList?.expireDate || new Date()
@@ -204,7 +212,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
 
           if (expirationDay - today > 0) setIsPlanActive(true);
         }
-        setAdmin(result[0]);
+        setAdmin(result);
       } catch (err: Error | any) {
         setLoadingState(false);
         toast.dismiss();
@@ -242,8 +250,8 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
       }
     }
 
-    if (user && isLoaded) mainCheck();
-  }, [user, isLoaded, retry]);
+    if (user !== null && isLoaded && isSignedIn) mainCheck();
+  }, [user, isLoaded, retry, isSignedIn]);
 
   if (loadingState) return <PreLoader />;
 
