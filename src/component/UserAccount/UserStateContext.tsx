@@ -39,10 +39,6 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
   const navRef = useRef<HTMLElement | null>(null);
 
   React.useEffect(() => {
-    //for user cartData fetch operation
-  }, []);
-
-  React.useEffect(() => {
     const localTotalPrice = cartData?.reduce(
       (acc: number, cur: ProductType) => acc + cur.price.pdtPrice * cur.quantity,
       0
