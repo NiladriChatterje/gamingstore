@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useUserStateContext } from "../UserStateContext";
 import { useStateContext } from "../../../StateContext";
@@ -6,7 +6,6 @@ import styles from "./ProductDetail.module.css";
 import { ProductType } from "@declarations/ProductContextType";
 import toast from "react-hot-toast";
 
-const data: ProductType[] = [];
 
 const ProductDetail = () => {
   const [counter, setCounter] = useState(() => 1);
@@ -14,11 +13,36 @@ const ProductDetail = () => {
   const navigate = useNavigate();
 
   const ImgRef = useRef<HTMLImageElement>(null);
-
+  if (!id) {
+    navigate(-1);
+    return;
+  }
   //user Context
-  const { addItemToCart, setOneItem, singleProductDetail } =
+  const { addItemToCart, setIsOneItem, singleProductDetail, setSingleProductDetail } =
     useUserStateContext();
   const { setDefaultLoginAdminOrUser } = useStateContext();
+
+  useEffect(() => {
+    async function getProductDetailsFromApi(id: string) {
+      const result = await fetch(`http://localhost:5002/fetch-product-detail/:${id}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      if (result.status == 200)
+        setSingleProductDetail?.(await result.json() as ProductType);
+    }
+    if (!singleProductDetail)
+      getProductDetailsFromApi(id);
+  }, [singleProductDetail])
+
+  useEffect(() => {
+    if (singleProductDetail)
+      singleProductDetail.quantity = counter;
+
+    return () => { toast.dismiss() }
+  }, [counter])
 
   return (
     <div id={styles.details__container}>
@@ -41,7 +65,7 @@ const ProductDetail = () => {
         <h1>{singleProductDetail?.productName}</h1>
         <section id={styles["product-infos"]}>
           <article>{singleProductDetail?.productDescription}</article>
-          <span>₹ {singleProductDetail?.price.pdtPrice}</span>
+          <span>₹ {singleProductDetail?.price?.pdtPrice}</span>
           <div>
             {singleProductDetail && singleProductDetail?.quantity > 0 && (
               <section id={styles.counter_container}>
@@ -80,15 +104,17 @@ const ProductDetail = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     localStorage.setItem("isOneItem", "true");
-                    setOneItem?.(true);
+                    setIsOneItem?.(true);
                     setDefaultLoginAdminOrUser?.("user");
-                    const foundData = data?.find(
-                      (item: ProductType) => item._id === id
-                    );
-                    let oneProduct = {
-                      name: foundData?.productName,
-                      price: foundData?.price,
-                      qty: counter,
+
+                    const oneProduct = {
+                      _id: singleProductDetail?._id,
+                      productName: singleProductDetail?.productName,
+                      price: singleProductDetail?.price,
+                      productDescription: singleProductDetail?.productDescription,
+                      eanUpcNumber: singleProductDetail?.eanUpcNumber,
+                      quantity: counter,
+                      imagesBase64: singleProductDetail?.imagesBase64
                     };
                     localStorage.setItem(
                       "oneProduct",

@@ -5,18 +5,84 @@ import { useUserStateContext } from "../UserStateContext.tsx";
 import Checkout from "../../../utils/Checkout.tsx";
 import { SignedIn, SignedOut, SignIn, useAuth, useSignIn } from "@clerk/clerk-react";
 import { useStateContext } from "../../../StateContext.tsx";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { AiFillCloseCircle } from "react-icons/ai";
+import { RiMastercardFill, RiVisaFill } from "react-icons/ri";
+import { BsClipboard } from "react-icons/bs";
 
 
 function Payment() {
-    const [oneProduct, _] = useState<{ name: string; qty: number; price: number }>(JSON.parse(localStorage.getItem('oneProduct') ?? '{}'));
-    const { isOneItem, cartData, totalPrice, userData } = useUserStateContext();
-
+    const [oneProduct, _] = useState<{ _id: String; productName: string; quantity: number; price: number }>(JSON.parse(localStorage.getItem('oneProduct') ?? ''));
+    const { isOneItem, cartData, totalPrice, userData, singleProductDetail, setSingleProductDetail } = useUserStateContext();
+    const navigate = useNavigate();
     const { setDefaultLoginAdminOrUser } = useStateContext()
+
+
+    if ((cartData?.length == 0) && (singleProductDetail == undefined)) {
+        if (cartData?.length == 0)
+            toast('cart is empty! Redirecting to homepage.');
+        else
+            toast('No product selected! Redirecting to homepage.');
+        navigate('/');
+        return;
+    }
 
     const { isLoaded } = useSignIn();
     if (isLoaded) {
         localStorage.setItem('loginusertype', 'user')
         setDefaultLoginAdminOrUser?.('user')
+        // toast(
+        //     <div>
+        //         <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}><AiFillCloseCircle
+
+        //             onClick={() => toast.dismiss()}
+        //         /></div>
+        //         <table id={styles['razorpay-testdata-info']}>
+        //             <thead>
+        //                 <tr>
+        //                     <th>Card Net.</th>
+        //                     <th>Card No.</th>
+        //                     <th>CVV</th>
+        //                     <th>Expiration</th>
+        //                 </tr>
+        //             </thead>
+        //             <tbody>
+        //                 <tr>
+        //                     <td>MasterCard <RiMastercardFill /></td>
+        //                     <td style={{
+        //                         color: 'white', background: '#3b3b3b', padding: '2px 5px',
+        //                         borderRadius: 5
+        //                     }}>5267 3181 8797 5449 <BsClipboard
+        //                             cursor={'pointer'}
+        //                             onClick={() => {
+        //                                 navigator.clipboard.writeText("5267318187975449");
+        //                                 toast.success('Copied!')
+        //                             }} /></td>
+        //                     <td>&lt; Any &gt;</td>
+        //                     <td>&lt; Future date &gt;</td>
+        //                 </tr>
+
+        //                 <tr>
+        //                     <td>Visa <RiVisaFill /></td>
+        //                     <td style={{
+        //                         color: 'white', background: '#3b3b3b', padding: '2px 5px',
+        //                         borderRadius: 5
+        //                     }}> 4386 2894 0766 0153 <BsClipboard
+        //                             cursor={'pointer'}
+        //                             onClick={() => {
+        //                                 navigator.clipboard.writeText("4386289407660153");
+        //                                 toast.success('Copied!')
+        //                             }} /></td>
+        //                     <td>&lt; Any &gt;</td>
+        //                     <td>&lt; Future date &gt;</td>
+        //                 </tr>
+        //             </tbody>
+        //         </table>
+        //     </div>,
+        //     {
+        //         duration: Infinity
+        //     })
     }
     return (
 
@@ -27,33 +93,55 @@ function Payment() {
                         <div id={styles['product-list']}>
                             {isOneItem ? <div id={styles['nam_price_container']}>
                                 <section id={styles['nam_price']}>
-                                    <span>{oneProduct?.name}</span>
-                                    <div className={styles['pdt-ProductDetail']}><span>Quantity: </span><span>{oneProduct?.qty}</span></div>
-                                    <div className={styles['pdt-ProductDetail']}><span>Unit Price: </span><span>₹ {oneProduct?.price}</span></div>
+                                    <span>{singleProductDetail?.productName}</span>
+                                    <div className={styles['pdt-ProductDetail']}><span>Quantity: </span><span>{singleProductDetail?.quantity}</span></div>
+                                    <div className={styles['pdt-ProductDetail']}><span>Unit Price: </span><span>₹ {singleProductDetail?.price?.pdtPrice}</span></div>
                                 </section>
                                 <div className={`${styles['pdt-ProductDetail']} ${styles['single-pdt-total']}`}>
-                                    <Checkout price={oneProduct.price * oneProduct.qty}
+                                    <Checkout price={singleProductDetail != undefined ?
+                                        (singleProductDetail?.price?.pdtPrice * singleProductDetail?.quantity) : 0}
                                         callback={async (
                                             payment_id: string,
                                             razorpay_signature: string,
                                             razorpay_order_id: string,
                                         ) => {
-                                            await fetch(`http://localhost:5000/user-order`, {
-                                                method: 'PUT',
-                                                headers: {
-                                                    'Content-Type': `application/json`,
-                                                    'Authorization': `Bearer ${await useAuth().getToken()}`
-                                                },
-                                                body: JSON.stringify({
-                                                    customer: userData?._id,
-                                                    transactionId: payment_id,
-                                                    orderId: razorpay_order_id,
-                                                    paymentSignature: razorpay_signature,
-                                                    amount: oneProduct.price * oneProduct.qty
-                                                })
-                                            });
+                                            try {
+                                                const token = await useAuth().getToken()
+                                                if (singleProductDetail) {
+                                                    const response = await fetch(`http://localhost:5000/user-order`, {
+                                                        method: 'PUT',
+                                                        headers: {
+                                                            'Content-Type': `application/json`,
+                                                            'Authorization': `Bearer ${token}`
+                                                        },
+                                                        body: JSON.stringify({
+                                                            customer: userData?._id,
+                                                            product: singleProductDetail?._id,
+                                                            transactionId: payment_id,
+                                                            orderId: razorpay_order_id,
+                                                            paymentSignature: razorpay_signature,
+                                                            amount: singleProductDetail?.price?.pdtPrice * singleProductDetail?.quantity
+                                                        })
+                                                    });
+                                                    console.log(await response.json())
+                                                    if (response.ok) {
+                                                        localStorage.removeItem('oneProduct')
+                                                        setSingleProductDetail?.(undefined)
+                                                    }
+
+                                                }
+                                                else {
+                                                    toast('This Route is only accessible through proper workflow');
+                                                    return;
+                                                }
+                                            } catch (e) {
+
+                                            }
+
                                         }} />
-                                    <span>Total: </span><span>₹ {oneProduct?.price * oneProduct?.qty}</span></div>
+                                    <span>Total: </span><span>₹ {
+                                        singleProductDetail ?
+                                            (singleProductDetail?.price?.pdtPrice * singleProductDetail?.quantity) : 0}</span></div>
                             </div> :
                                 <section id={styles['table']}>
                                     <header>
@@ -70,7 +158,7 @@ function Payment() {
                                             </div>))}
                                     </div>
                                     <footer className={styles['single-pdt-total']}>
-                                        <Checkout price={isOneItem ? oneProduct.price * oneProduct.qty : totalPrice || 0} />
+                                        <Checkout price={isOneItem ? oneProduct.price * oneProduct.quantity : totalPrice || 0} />
                                         {/* <span className={styles['first-column']}>Amount: </span> */}
                                         <span className={styles['second-column']}>Amount: </span>
                                         <span className={styles['third-column']}>₹{totalPrice}</span>

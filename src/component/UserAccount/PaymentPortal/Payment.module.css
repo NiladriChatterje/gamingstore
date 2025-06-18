@@ -10,7 +10,13 @@
     width: 50%;
     height: 100%;
 }
-
+#razorpay-testdata-info{
+    table-layout: fixed;
+    text-align: left;
+}
+#razorpay-testdata-info td,#razorpay-testdata-info th{
+    border:1px solid black
+} 
 #loader-payment-card-container {
     width: 50%;
     height: 100%;

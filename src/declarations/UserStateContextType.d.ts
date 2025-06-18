@@ -18,7 +18,7 @@ export declare type ProductContextType = {
   cartData: ProductType[];
   setOrderData: React.Dispatch<React.SetStateAction<ProductType[]>>;
   isOneItem: boolean;
-  setOneItem: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOneItem: React.Dispatch<React.SetStateAction<boolean>>;
   qty: number;
   setQty: React.Dispatch<React.SetStateAction<number>>;
   incDecQty: (counter: number, id: string) => void;

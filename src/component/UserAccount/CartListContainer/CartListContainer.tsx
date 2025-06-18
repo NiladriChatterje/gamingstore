@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { useStateContext } from "../../../StateContext";
 
 const CartListContainer = () => {
-  const { cartData, totalPrice, slide, setSlide, setOneItem } =
+  const { cartData, totalPrice, slide, setSlide, setIsOneItem } =
     useUserStateContext();
   const { setDefaultLoginAdminOrUser } = useStateContext();
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const CartListContainer = () => {
               setDefaultLoginAdminOrUser?.("user");
               if (totalPrice !== 0) {
                 localStorage.setItem("isOneItem", "false");
-                setOneItem?.(false);
+                setIsOneItem?.(false);
                 navigate("/user/Payment");
                 if (setSlide) setSlide(false);
               } else toast("Cart is empty!");
