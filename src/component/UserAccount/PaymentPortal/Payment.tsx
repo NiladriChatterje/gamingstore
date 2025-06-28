@@ -17,6 +17,7 @@ function Payment() {
     const { isOneItem, cartData, totalPrice, userData, singleProductDetail, setSingleProductDetail } = useUserStateContext();
     const navigate = useNavigate();
     const { setDefaultLoginAdminOrUser } = useStateContext()
+    const { getToken } = useAuth();
 
 
     if ((cartData?.length == 0) && (singleProductDetail == undefined)) {
@@ -32,57 +33,58 @@ function Payment() {
     if (isLoaded) {
         localStorage.setItem('loginusertype', 'user')
         setDefaultLoginAdminOrUser?.('user')
-        // toast(
-        //     <div>
-        //         <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}><AiFillCloseCircle
+        toast(
+            <div>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}><AiFillCloseCircle
 
-        //             onClick={() => toast.dismiss()}
-        //         /></div>
-        //         <table id={styles['razorpay-testdata-info']}>
-        //             <thead>
-        //                 <tr>
-        //                     <th>Card Net.</th>
-        //                     <th>Card No.</th>
-        //                     <th>CVV</th>
-        //                     <th>Expiration</th>
-        //                 </tr>
-        //             </thead>
-        //             <tbody>
-        //                 <tr>
-        //                     <td>MasterCard <RiMastercardFill /></td>
-        //                     <td style={{
-        //                         color: 'white', background: '#3b3b3b', padding: '2px 5px',
-        //                         borderRadius: 5
-        //                     }}>5267 3181 8797 5449 <BsClipboard
-        //                             cursor={'pointer'}
-        //                             onClick={() => {
-        //                                 navigator.clipboard.writeText("5267318187975449");
-        //                                 toast.success('Copied!')
-        //                             }} /></td>
-        //                     <td>&lt; Any &gt;</td>
-        //                     <td>&lt; Future date &gt;</td>
-        //                 </tr>
+                    onClick={() => toast.dismiss()}
+                /></div>
+                <table id={styles['razorpay-testdata-info']}>
+                    <thead>
+                        <tr>
+                            <th>Card Net.</th>
+                            <th>Card No.</th>
+                            <th>CVV</th>
+                            <th>Expiration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>MasterCard <RiMastercardFill /></td>
+                            <td style={{
+                                color: 'white', background: '#3b3b3b', padding: '2px 5px',
+                                borderRadius: 5
+                            }}>5267 3181 8797 5449 <BsClipboard
+                                    cursor={'pointer'}
+                                    onClick={() => {
+                                        navigator.clipboard.writeText("5267318187975449");
+                                        toast.success('Copied!')
+                                    }} /></td>
+                            <td>&lt; Any &gt;</td>
+                            <td>&lt; Future date &gt;</td>
+                        </tr>
 
-        //                 <tr>
-        //                     <td>Visa <RiVisaFill /></td>
-        //                     <td style={{
-        //                         color: 'white', background: '#3b3b3b', padding: '2px 5px',
-        //                         borderRadius: 5
-        //                     }}> 4386 2894 0766 0153 <BsClipboard
-        //                             cursor={'pointer'}
-        //                             onClick={() => {
-        //                                 navigator.clipboard.writeText("4386289407660153");
-        //                                 toast.success('Copied!')
-        //                             }} /></td>
-        //                     <td>&lt; Any &gt;</td>
-        //                     <td>&lt; Future date &gt;</td>
-        //                 </tr>
-        //             </tbody>
-        //         </table>
-        //     </div>,
-        //     {
-        //         duration: Infinity
-        //     })
+                        <tr>
+                            <td>Visa <RiVisaFill /></td>
+                            <td style={{
+                                color: 'white', background: '#3b3b3b', padding: '2px 5px',
+                                borderRadius: 5
+                            }}> 4386 2894 0766 0153 <BsClipboard
+                                    cursor={'pointer'}
+                                    onClick={() => {
+                                        navigator.clipboard.writeText("4386289407660153");
+                                        toast.success('Copied!')
+                                    }} /></td>
+                            <td>&lt; Any &gt;</td>
+                            <td>&lt; Future date &gt;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>,
+            {
+                duration: 50000,
+                position: 'bottom-right'
+            })
     }
     return (
 
@@ -106,13 +108,13 @@ function Payment() {
                                             razorpay_order_id: string,
                                         ) => {
                                             try {
-                                                const token = await useAuth().getToken()
+                                                const token = await getToken()
                                                 if (singleProductDetail) {
                                                     const response = await fetch(`http://localhost:5000/user-order`, {
                                                         method: 'PUT',
                                                         headers: {
                                                             'Content-Type': `application/json`,
-                                                            'Authorization': `Bearer ${token}`
+                                                            Authorization: `Bearer ${token}`
                                                         },
                                                         body: JSON.stringify({
                                                             customer: userData?._id,

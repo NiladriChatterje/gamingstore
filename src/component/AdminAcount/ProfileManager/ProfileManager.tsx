@@ -85,7 +85,7 @@ const ProfileManager = () => {
       return Promise.reject();
     }
     try {
-      const response = await fetch("http://localhost:5003/update-info", {
+      const response = await fetch("http://localhost:5003/update-admin-info", {
         headers: {
           "content-type": "application/json",
         },

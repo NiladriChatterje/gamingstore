@@ -8,6 +8,7 @@ import { useAuth } from '@clerk/clerk-react';
 const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch<boolean> }) => {
     const { admin } = useAdminStateContext()
     const navigate = useNavigate();
+    const { getToken } = useAuth();
 
     return (
         <div id={styles['subscription-container']}>
@@ -28,7 +29,7 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                "Authorization": `Bearer ${await useAuth().getToken()}`
+                                Authorization: `Bearer ${await getToken()}`
                             },
                             body: JSON.stringify({
                                 _id: admin?._id,
@@ -73,7 +74,7 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                "Authorization": `Bearer ${await useAuth().getToken()}`
+                                "Authorization": `Bearer ${await getToken()}`
                             },
                             body: JSON.stringify({
                                 _id: admin?._id,

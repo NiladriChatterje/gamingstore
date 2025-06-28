@@ -28,18 +28,23 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
   const [editProductForm, setEditProductForm] = useState<ProductType | null>(); // To fill up form fields when a product is about to edit
   const { user, isLoaded, isSignedIn } = useUser();
 
+  const { getToken } = useAuth();
+
   async function checkAdminEnrolled(): Promise<AdminFieldsType | undefined> {
+    const token = await getToken()
+    console.log(token)
     const response: Response = await fetch(
       `http://localhost:5003/fetch-admin-data/${user?.id}`,
       {
         method: "GET",
         headers: {
-          'Authorization': `Bearer ${await useAuth().getToken()}`
+          Authorization: `Bearer ${token}`
         }
       }
     );
 
-    let userEnrolled: AdminFieldsType[] = await response.json();
+    let userEnrolled: AdminFieldsType = await response.json();
+    console.log('admin received : ', userEnrolled)
     let toastLoadingId: string | undefined;
     let placeResult: {
       properties: {
@@ -52,7 +57,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
 
     //userOps definition
     const userOps = async (latitude: number, longitude: number) => {
-      if (!user?.phoneNumbers[0]?.phoneNumber && !userEnrolled[0]?.phone) {
+      if (!user?.phoneNumbers[0]?.phoneNumber && !userEnrolled?.phone) {
         if (toastLoadingId) toast.dismiss(toastLoadingId);
 
         //address info fetch
@@ -79,7 +84,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
               headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
-                "Authorization": `Bearer ${await useAuth().getToken()}`
+                "Authorization": `Bearer ${token}`
               },
               body: JSON.stringify({
                 _type: "admin",
@@ -158,7 +163,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
     };
     //userOps definition end
 
-    if (userEnrolled.length === 0) {
+    if (userEnrolled == null) {
       navigator.geolocation.getCurrentPosition(
         async ({
           coords: { latitude, longitude },
@@ -188,7 +193,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
       );
     }
     setLoadingState(false);
-    return userEnrolled[0];
+    return userEnrolled;
   }
 
   useEffect(() => {

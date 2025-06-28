@@ -15,12 +15,13 @@ import { EanUpcIsbnType, currency } from '../../../../enums/enums'
 import { ProductType } from '../../../../declarations/ProductContextType'
 import { useParams } from 'react-router-dom'
 import { useAdminStateContext } from '../../../../component/AdminAcount/AdminStateContext'
+import { useAuth } from '@clerk/clerk-react'
 
 const keywordsSet = new Set<string>()
 
 const ProductCategories: string[] = [
   'clothing',
-  'food-n-Groceries',
+  'groceries',
   'gadgets',
   'home-goods',
   'toys',
@@ -54,24 +55,25 @@ const AddProduct = () => {
   const modelNumberRef = useRef<HTMLDivElement>(null)
   const ImageInputRef = useRef<HTMLInputElement>(null)
   const imageCarouselContainerRef = useRef<HTMLDivElement>(null)
-  const spanCategoryRef = useRef<HTMLSpanElement[]>([])
+  const spanCategoryRef = useRef<HTMLSpanElement[]>([]);
 
   const { product_id } = useParams<{ product_id?: string }>()
   const { admin } = useAdminStateContext();
+  const { getToken } = useAuth();
 
   (async () => {
     if (!product_id) {
       window.history.back()
       return
     }
-
+    const token = await getToken();
     try {
       const result = await fetch(
         `http://localhost:5002/fetch-product/${product_id}`,
         {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${admin?._id ?? ''}`
+            Authorization: `Bearer ${token}`
           }
         },
       )
@@ -111,16 +113,16 @@ const AddProduct = () => {
             eanUpcIsbnGtinAsinType: eanUpcType,
             eanUpcNumber: eanUpc,
             quantity,
+            pincode: admin?.address.pinCode ?? '700135',
             currency: currency.INR,
             price: {
               pdtPrice: price,
               discountPercentage: discount,
               currency: 'INR'
             },
-            discount: 0,
             keywords: keywordArray,
             imagesBase64: [...base64Images],
-            seller: [],
+            seller: admin?._id,
             productDescription: productDescription,
           }
           if (checked) {
@@ -131,12 +133,13 @@ const AddProduct = () => {
             formData.modelNumber = modelNumber
           }
 
-
+          const token = await getToken();
           const response = await fetch('http://localhost:5002/update-product', {
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${admin?._id}`
+              Authorization: `Bearer ${token}`,
+              "x-admin-id": admin?._id ?? ''
             },
             body: JSON.stringify(formData),
           })

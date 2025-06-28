@@ -11,6 +11,7 @@ export declare type ProductType = {
     discountPercentage: number;
     pdtPrice: number
   };
+  pincode: string;
   currency?: currency;
   imagesBase64?: { size: number; extension: string; base64: string }[];
   image?: File[];
@@ -18,5 +19,5 @@ export declare type ProductType = {
   productDescription: string;
   quantity: number;
   keywords: string[];
-  seller?: string[];
+  seller?: string;
 };

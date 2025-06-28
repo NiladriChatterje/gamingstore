@@ -13,7 +13,7 @@ const Products = () => {
   const [search, setSearch] = useState<string>(() => '');
 
   useEffect(() => {
-    fetch(`http://localhost:5002/fetch-products/${category}/${page}`)
+    fetch(`http://localhost:5002/fetch-products/700135/${category}/${page}`)
       .then((res) => {
         if (!res.ok)
           throw new Error();
@@ -41,7 +41,6 @@ const Products = () => {
           });
 
       }, 3000)
-
 
     }
 
@@ -80,7 +79,10 @@ const Products = () => {
 
         <FaSquareCaretRight
           cursor={'pointer'}
-          onClick={() => setPage(prev => prev + 1)} />
+          onClick={() => {
+            if (productData.length >= 9)
+              setPage(prev => prev + 1)
+          }} />
       </div>
     </section>
   );
