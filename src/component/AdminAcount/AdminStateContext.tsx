@@ -27,21 +27,23 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
   const [retry, setRetry] = useState<boolean>(true);
   const [editProductForm, setEditProductForm] = useState<ProductType | null>(); // To fill up form fields when a product is about to edit
   const { user, isLoaded, isSignedIn } = useUser();
-
   const { getToken } = useAuth();
 
   async function checkAdminEnrolled(): Promise<AdminFieldsType | undefined> {
     const token = await getToken()
-    console.log(token)
+    console.log(token);
     const response: Response = await fetch(
       `http://localhost:5003/fetch-admin-data/${user?.id}`,
       {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          "x-admin-id": admin?._id ?? ''
         }
       }
     );
+    if (!response.ok)
+      throw new Error(response.status + " : " + response.statusText);
 
     let userEnrolled: AdminFieldsType = await response.json();
     console.log('admin received : ', userEnrolled)
@@ -55,8 +57,8 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
       };
     };
 
-    //userOps definition
-    const userOps = async (latitude: number, longitude: number) => {
+    //#region adminCreateOperations definition
+    const adminCreateOperations = async (latitude: number, longitude: number) => {
       if (!user?.phoneNumbers[0]?.phoneNumber && !userEnrolled?.phone) {
         if (toastLoadingId) toast.dismiss(toastLoadingId);
 
@@ -115,7 +117,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
           });
           toast.loading(
             <div style={{ display: "flex", alignItems: "center" }}>
-              Retry creating account
+              <span>Retry</span>
             </div>,
             {
               icon: (
@@ -161,7 +163,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
           },
         });
     };
-    //userOps definition end
+    //#endregion adminCreateOperations definition end
 
     if (userEnrolled == null) {
       navigator.geolocation.getCurrentPosition(
@@ -170,8 +172,8 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         }: {
           coords: { latitude: number; longitude: number };
         }) => {
-          await userOps(latitude, longitude);
-          console.log("<userEnrolled after calling userOps>");
+          await adminCreateOperations(latitude, longitude);
+          console.log("<userEnrolled after calling adminCreateOperations>");
         },
         (error: GeolocationPositionError) => {
           const toastId = toast(<div>allow location</div>, {
@@ -223,18 +225,28 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         toast.dismiss();
         toast.error(err.message, {
           position: "bottom-left",
-          style: { width: 320, background: "white", fontSize: "small" },
+          style: { width: 450, background: "white", fontSize: "0.8em" },
         });
         toast.loading(
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              width: 180,
+              width: 200,
               fontSize: "small",
             }}
           >
-            Retry creating account
+            <span style={{
+              color: 'white', padding: '1px 6px',
+              fontWeight: 300,
+              margin: '0px 3px', background: '#2e3547', borderRadius: 3, textWrap: 'nowrap'
+            }}>Retry login</span>
+            <span>OR</span>
+            <span style={{
+              color: 'white', padding: '1px 6px',
+              fontWeight: 300,
+              margin: '0px 3px', background: '#2e3547', borderRadius: 3, textWrap: 'nowrap'
+            }}>creating account</span>
           </div>,
           {
             icon: (
@@ -260,8 +272,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
 
   if (loadingState) return <PreLoader />;
 
-  if (!admin) {
-    console.log("<admin> : ", admin);
+  if (admin == null)
     return (
       <div
         style={{
@@ -289,7 +300,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         <img height={"100%"} src={ServiceUnavailable} alt="" />
       </div>
     );
-  }
+
 
   return (
     <AdminContext.Provider

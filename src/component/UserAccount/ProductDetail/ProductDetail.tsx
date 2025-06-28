@@ -79,7 +79,13 @@ const ProductDetail = () => {
                     -
                   </button>
                   <span>{counter}</span>
-                  <button onClick={() => setCounter((prev) => prev + 1)}>
+                  <button onClick={() => {
+                    if (counter == singleProductDetail?.quantity) {
+                      toast(`only ${counter} product(s) available!`);
+                      return;
+                    }
+                    setCounter((prev) => prev + 1)
+                  }}>
                     +
                   </button>
                 </div>

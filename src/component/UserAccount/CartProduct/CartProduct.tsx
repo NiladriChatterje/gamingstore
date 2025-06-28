@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./CartProduct.module.css";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { useUserStateContext } from "../UserStateContext";
+import toast from "react-hot-toast";
 
 export default function CartProduct({
   _id,
@@ -57,7 +58,13 @@ export default function CartProduct({
           -
         </button>
         <h4>{counter}</h4>
-        <button onClick={() => setCounter((prev) => prev + 1)}>+</button>
+        <button onClick={() => {
+          if (counter >= quantity) {
+            toast(`Only ${quantity} items(s) available!`);
+            return;
+          }
+          setCounter((prev) => prev + 1)
+        }}>+</button>
       </div>
       <hr />
     </div>
