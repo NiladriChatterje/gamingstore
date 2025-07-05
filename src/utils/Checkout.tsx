@@ -5,6 +5,7 @@ import { CurrencyCode } from 'react-razorpay/dist/constants/currency'
 import { useStateContext } from '../StateContext'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@clerk/clerk-react'
+import { useUserStateContext } from '@/component/UserAccount/UserStateContext'
 // import { io } from 'socket.io-client';
 
 // const socket = io("http://localhost:5002",{
@@ -34,6 +35,7 @@ const Checkout = ({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const navigate = useNavigate()
   const { defaultLoginAdminOrUser } = useStateContext();
+  const { userData } = useUserStateContext();
   const { getToken } = useAuth();
 
   // const { user } = useUser()
@@ -48,7 +50,8 @@ const Checkout = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${await getToken()}`
+          Authorization: `Bearer ${await getToken()}`,
+          'x-user-id': userData?._id ?? ''
         },
         body: JSON.stringify({ price: price * 100 }),
       })

@@ -5,6 +5,7 @@ import { useStateContext } from "../../../StateContext";
 import styles from "./ProductDetail.module.css";
 import { ProductType } from "@declarations/ProductContextType";
 import toast from "react-hot-toast";
+import { AiFillLeftCircle, AiFillRightCircle } from "react-icons/ai";
 
 
 const ProductDetail = () => {
@@ -12,11 +13,12 @@ const ProductDetail = () => {
   const { id } = useParams<string>();
   const navigate = useNavigate();
 
-  const ImgRef = useRef<HTMLImageElement>(null);
+  const ImgRef = useRef<HTMLImageElement[]>([]);
   if (!id) {
     navigate(-1);
     return;
   }
+  const carouselContainerRef = useRef<HTMLDivElement>(null);
   //user Context
   const { addItemToCart, setIsOneItem, singleProductDetail, setSingleProductDetail } =
     useUserStateContext();
@@ -46,21 +48,41 @@ const ProductDetail = () => {
 
   return (
     <div id={styles.details__container}>
-      {singleProductDetail?.imagesBase64 && <img
-        style={{ objectFit: "contain", width: 300 }}
-        ref={ImgRef}
-        onMouseMove={(e) => {
-          if (ImgRef.current)
-            ImgRef.current.style.transform = `translate(${e.movementX * 5}px,${e.movementY * 5
-              }px)`;
-        }}
-        onMouseLeave={() => {
-          if (ImgRef.current)
-            ImgRef.current.style.transform = `translate(0px,0px)`;
-        }}
-        src={singleProductDetail?.imagesBase64[0].base64}
-        alt={singleProductDetail?.productName}
-      />}
+      {singleProductDetail?.imagesBase64 && <div
+        style={{ display: 'flex', alignItems: 'center', alignContent: 'center', justifyContent: 'center', height: '80%' }}>
+        <AiFillLeftCircle size={40} color={'white'} cursor={'pointer'}
+          onClick={() => {
+            if (carouselContainerRef.current) {
+              carouselContainerRef.current.scrollLeft -= ImgRef.current[0].width
+              console.log(carouselContainerRef.current.scrollLeft)
+            }
+          }} />
+        <div
+          ref={carouselContainerRef}
+          id={styles[`image-carousel`]}>
+          {singleProductDetail?.imagesBase64?.map((item, i) => (
+            <img key={i}
+              style={{ objectFit: "contain", width: 300 }}
+              ref={ele => { if (ele) ImgRef.current.push(ele) }}
+              onMouseMove={(e) => {
+                if (ImgRef.current[i])
+                  ImgRef.current[i].style.transform = `translate(${e.movementX * 5}px,${e.movementY * 5}px)`;
+              }}
+              onMouseLeave={() => {
+                if (ImgRef.current[i])
+                  ImgRef.current[i].style.transform = `translate(0px,0px)`;
+              }}
+              src={item.base64}
+              alt={singleProductDetail?.productName}
+            />))}
+        </div>
+        <AiFillRightCircle size={40} color={'white'} cursor={'pointer'}
+          onClick={() => {
+            if (carouselContainerRef.current)
+              carouselContainerRef.current.scrollLeft += ImgRef.current[0].width
+          }} />
+      </div>
+      }
       <section id={styles["product-ProductDetail"]}>
         <h1>{singleProductDetail?.productName}</h1>
         <section id={styles["product-infos"]}>
@@ -92,7 +114,7 @@ const ProductDetail = () => {
               </section>
             )}
             <section id={styles.counter_container}>
-              {singleProductDetail && singleProductDetail?.quantity > 0 && (
+              {singleProductDetail && singleProductDetail?.quantity > 0 ? (
                 <button
                   style={{ marginRight: 10 }}
                   onClick={(e) => {
@@ -103,9 +125,9 @@ const ProductDetail = () => {
                 >
                   Add to cart
                 </button>
-              )}
+              ) : ''}
 
-              {singleProductDetail && singleProductDetail?.quantity > 0 && (
+              {singleProductDetail && singleProductDetail?.quantity > 0 ? (
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -131,7 +153,10 @@ const ProductDetail = () => {
                 >
                   Buy now
                 </button>
-              )}
+              ) :
+                <button disabled={true}>
+                  Out of Stock!
+                </button>}
             </section>
           </div>
         </section>

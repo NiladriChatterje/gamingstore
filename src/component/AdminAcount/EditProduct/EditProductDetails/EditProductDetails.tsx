@@ -141,7 +141,10 @@ const AddProduct = () => {
               Authorization: `Bearer ${token}`,
               "x-admin-id": admin?._id ?? ''
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify({
+              ...formData,
+              geoPoint: { lat: admin?.geoPoint.lat, lng: admin?.geoPoint.lng }
+            }),
           })
 
           //clearing form data on successful transfer

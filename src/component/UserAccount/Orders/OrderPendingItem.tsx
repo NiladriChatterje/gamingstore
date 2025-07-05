@@ -7,7 +7,7 @@ import { ProductType } from '@/declarations/ProductContextType';
 //order page list
 const OrderPendingItem = ({ item }: { item: ProductType }) => {
   const [counter, setCounter] = useState<number>(() => 1);
-  const { cartData, setOrderData, incDecQty } = useUserStateContext();
+  const { incDecQty } = useUserStateContext();
 
   React.useEffect(() => {
     incDecQty?.(counter, item._id)
@@ -20,7 +20,10 @@ const OrderPendingItem = ({ item }: { item: ProductType }) => {
   return (
     <section
       className={styles['order-items']}>
-      <span>{item?.productName}</span>
+      <figure>
+        {item?.imagesBase64 && item.imagesBase64.length > 0 && <img width={30} src={item?.imagesBase64[0]?.base64} />}
+        <span>{item?.productName}</span>
+      </figure>
       <section
         style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
         <section id={styles.counter_container}>

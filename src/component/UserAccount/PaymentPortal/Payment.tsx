@@ -114,7 +114,8 @@ function Payment() {
                                                         method: 'PUT',
                                                         headers: {
                                                             'Content-Type': `application/json`,
-                                                            Authorization: `Bearer ${token}`
+                                                            Authorization: `Bearer ${token}`,
+                                                            'x-user-id': userData?._id ?? ''
                                                         },
                                                         body: JSON.stringify({
                                                             customer: userData?._id,
@@ -122,7 +123,8 @@ function Payment() {
                                                             transactionId: payment_id,
                                                             orderId: razorpay_order_id,
                                                             paymentSignature: razorpay_signature,
-                                                            amount: singleProductDetail?.price?.pdtPrice * singleProductDetail?.quantity
+                                                            amount: singleProductDetail?.price?.pdtPrice * singleProductDetail?.quantity,
+                                                            quantity: singleProductDetail?.quantity
                                                         })
                                                     });
                                                     console.log(await response.json())
@@ -160,7 +162,9 @@ function Payment() {
                                             </div>))}
                                     </div>
                                     <footer className={styles['single-pdt-total']}>
-                                        <Checkout price={isOneItem ? oneProduct.price * oneProduct.quantity : totalPrice || 0} />
+                                        <Checkout price={isOneItem ? oneProduct.price * oneProduct.quantity : totalPrice || 0}
+                                            callback={() => { }}
+                                        />
                                         {/* <span className={styles['first-column']}>Amount: </span> */}
                                         <span className={styles['second-column']}>Amount: </span>
                                         <span className={styles['third-column']}>₹{totalPrice}</span>

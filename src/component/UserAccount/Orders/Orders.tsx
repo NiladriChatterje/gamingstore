@@ -3,15 +3,17 @@ import styles from './Orders.module.css'
 import { useEffect, useState } from 'react';
 import OrderPendingItem from './OrderPendingItem';
 import { ProductType } from '@/declarations/ProductContextType';
+import { useUserStateContext } from '../UserStateContext';
 
 const Orders = () => {
     const [orders, setOrders] = useState<ProductType[]>(() => [1, 2, 3, 5, 6, 6, 6, 8] as unknown as ProductType[]);
-
+    const { cartData, setCartData, incDecQty } = useUserStateContext();
     const { isSignedIn } = useUser();
 
     async function fetchOrderData(userId: string): Promise<void> {
 
     }
+
     useEffect(() => {
         if (isSignedIn)
             fetchOrderData("")
@@ -41,7 +43,7 @@ const Orders = () => {
                 <legend>Pending :</legend>
                 <section
                     className={styles['order-sub-container']}>
-                    {orders?.map((item, i) => {
+                    {cartData?.map((item, i) => {
                         return <OrderPendingItem key={item?._id ?? i} item={item} />
                     })}
                 </section>
@@ -52,7 +54,10 @@ const Orders = () => {
                     backgroundColor: 'rgb(59, 59, 96)', padding: '5px 10px', marginTop: 10,
                     borderRadius: 5
                 }}
-            ><button className={styles['button-invert']}>Buy All</button></section>
+            >
+                <button className={styles['button-invert']}
+                    onClick={() => { localStorage.setItem("isOneItem", "false") }}>Buy All</button>
+            </section>
             <fieldset
                 className={styles['fieldset-style']}
             >

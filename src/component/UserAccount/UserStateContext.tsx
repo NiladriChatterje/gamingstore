@@ -25,7 +25,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
   const [totalPrice, setTotalPrice] = useState<number>(
     Number(localStorage.getItem("totalPrice")) || 0
   );
-  const [cartData, setOrderData] = useState<ProductType[]>(
+  const [cartData, setCartData] = useState<ProductType[]>(
     () =>
       (JSON.parse(localStorage.getItem("orders") as string) as ProductType[]) ||
       ([] as ProductType[])
@@ -56,7 +56,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
       if (item._id) incDecQty(x, item._id);
     }
 
-    if (addToCart === undefined) setOrderData([...cartData, { ...item, quantity: 1 }]);
+    if (addToCart === undefined) setCartData([...cartData, { ...item, quantity: 1 }]);
   }
 
   function incDecQty(counter: number, id: string) {
@@ -79,7 +79,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
         cartData,
         setSlide,
         slide,
-        setOrderData,
+        setCartData,
         isOneItem,
         setIsOneItem,
         qty,
