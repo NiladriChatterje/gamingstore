@@ -3,7 +3,7 @@
     src: url('/frontend/src/fonts/Blanka-Regular.otf');
 }
 
-nav {
+#nav {
     background-color: rgba(85, 88, 117, 0.744);
     box-shadow: 1px 2px 55px -20px black;
     padding: 5px 15px;

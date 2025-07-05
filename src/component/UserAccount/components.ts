@@ -7,3 +7,4 @@ export { default as CartListContainer } from './CartListContainer/CartListContai
 export { default as ProductDetail } from './ProductDetail/ProductDetail';
 export { default as Orders } from './Orders/Orders';
 export { default as ProfileUpdateUser } from './ProfileUpdateUser/ProfileUpdateUser';
+export { default as UserUpdateForm } from './UserUpdateForm/UserUpdateForm';

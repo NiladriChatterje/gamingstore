@@ -11,6 +11,7 @@ import { FaHome, FaShopify } from "react-icons/fa";
 import { MdProductionQuantityLimits } from "react-icons/md";
 import { FcAbout } from "react-icons/fc";
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
+import { UserUpdateForm } from '../components';
 
 
 const navItems = [{ Img: FaHome, name: 'Home', link: '' },
@@ -27,6 +28,7 @@ const Navbar = () => {
   return (
     <motion.nav
       ref={navRef}
+      id={styles['nav']}
       initial={{ scale: 0.5 }}
       animate={{ scale: 1 }}>
       <span id={styles['heading']}>
@@ -92,6 +94,7 @@ const Navbar = () => {
           </div>
         </SignedOut>
         <SignedIn>
+          <UserUpdateForm />
           <UserButton appearance={{
             elements: [styles['user-loggedIn-btn']]
           }} />
