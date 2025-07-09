@@ -5,7 +5,7 @@ import { CurrencyCode } from 'react-razorpay/dist/constants/currency'
 import { useStateContext } from '../StateContext'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@clerk/clerk-react'
-import { useUserStateContext } from '@/component/UserAccount/UserStateContext'
+import { useUserStateContext } from '../component/UserAccount/UserStateContext'
 // import { io } from 'socket.io-client';
 
 // const socket = io("http://localhost:5002",{

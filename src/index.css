@@ -7,7 +7,11 @@ body {
   background-size: cover;
   -webkit-tap-highlight-color: transparent;
   background-attachment: fixed;
-  background-color: rgb(226, 226, 226);
+  background-image:url('./assets/Background_16_10.svg');
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
 }
 
 input::-webkit-outer-spin-button,
@@ -19,7 +23,7 @@ input::-webkit-inner-spin-button {
   box-sizing: border-box;
 }
 *::selection {
-  background-color: rgba(87, 87, 129, 0.892);
+  background-color: rgba(224, 113, 34, 0.892);
   color: white;
 }
 
@@ -33,12 +37,18 @@ input::-webkit-inner-spin-button {
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: rgb(25, 25, 80);
+  background-color: rgb(189, 98, 7);
   border-radius: 30px
 }
 
 @media all and (max-width:1200px) {
   * {
     font-size: 1em
+  }
+}
+
+@media screen and (max-width:900px) {
+  body{
+    background-image:url('./assets/Background_9_16.svg');
   }
 }

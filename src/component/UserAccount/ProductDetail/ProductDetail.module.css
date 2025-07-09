@@ -7,10 +7,18 @@
     align-items: center;
     justify-content: center;
 }
-
+#sub-productDetails-container{
+    background-image: url('./product_description.svg');
+    background-position: center;
+    background-size:contain ;
+    border-radius: 8px;
+    background-repeat: no-repeat;
+    padding: 10px 25px;
+    box-shadow: 0 10px 10px -15px black;
+}
 #product-ProductDetail h1,
 #product-ProductDetail article {
-    color: rgb(57, 57, 100)
+    color: rgb(0, 0, 0)
 }
 
 #product-infos {
@@ -52,19 +60,25 @@
     border-style: none;
     border-radius: 5px;
     padding: 5px 10px;
-    color: white;
+    color: rgb(0, 0, 0);
+    border:2px dashed rgb(220, 137, 4);
     font-size: small;
-    background-color: rgb(68, 68, 104);
+    background-color: rgb(255, 255, 255);
     cursor: pointer;
+    transition: all;
+    transition-duration: 120ms;
 }
-
+#counter_container button:hover{
+    background-color: rgb(255, 140, 0);
+    color: white;
+}
 #details__container>section {
     width: 50vw;
-    color: rgb(88, 88, 88);
+    color: rgb(111, 53, 17);
     font-size: large;
     font-weight: 900;
     padding: 2px 15px;
-    border-left: 2px solid rgb(51, 50, 97);
+    border-left: 2px solid rgb(210, 116, 39);
 }
 
 #details__container>section>h1 {
@@ -76,7 +90,16 @@
         width: 50vw;
         margin-top: 20%;
     }
-
+    #sub-productDetails-container{
+        background-image: url('./product_description_mobile.svg');
+        background-position: center;
+        background-size:contain ;
+        border-radius: 8px;
+        width: 100%;
+        background-repeat: no-repeat;
+        padding: 10px 25px;
+        box-shadow: 0 10px 10px -15px black;
+    }
     #details__container>section>h1 {
         font-size: 1em;
     }

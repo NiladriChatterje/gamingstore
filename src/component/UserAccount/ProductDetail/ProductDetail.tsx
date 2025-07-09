@@ -50,7 +50,7 @@ const ProductDetail = () => {
     <div id={styles.details__container}>
       {singleProductDetail?.imagesBase64 && <div
         style={{ display: 'flex', alignItems: 'center', alignContent: 'center', justifyContent: 'center', height: '80%' }}>
-        <AiFillLeftCircle size={40} color={'white'} cursor={'pointer'}
+        <AiFillLeftCircle size={40} color={'rgb(43,43,43)'} cursor={'pointer'}
           onClick={() => {
             if (carouselContainerRef.current) {
               carouselContainerRef.current.scrollLeft -= ImgRef.current[0].width
@@ -76,7 +76,7 @@ const ProductDetail = () => {
               alt={singleProductDetail?.productName}
             />))}
         </div>
-        <AiFillRightCircle size={40} color={'white'} cursor={'pointer'}
+        <AiFillRightCircle size={40} color={'rgb(43,43,43)'} cursor={'pointer'}
           onClick={() => {
             if (carouselContainerRef.current)
               carouselContainerRef.current.scrollLeft += ImgRef.current[0].width
@@ -84,10 +84,15 @@ const ProductDetail = () => {
       </div>
       }
       <section id={styles["product-ProductDetail"]}>
+
         <h1>{singleProductDetail?.productName}</h1>
         <section id={styles["product-infos"]}>
-          <article>{singleProductDetail?.productDescription}</article>
-          <span>₹ {singleProductDetail?.price?.pdtPrice}</span>
+          <section
+            id={styles['sub-productDetails-container']}
+          >
+            <article>{singleProductDetail?.productDescription}</article>
+            <span>₹ {singleProductDetail?.price?.pdtPrice}</span>
+          </section>
           <div>
             {singleProductDetail && singleProductDetail?.quantity > 0 && (
               <section id={styles.counter_container}>

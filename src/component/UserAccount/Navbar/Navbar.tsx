@@ -94,7 +94,7 @@ const Navbar = () => {
           </div>
         </SignedOut>
         <SignedIn>
-          <UserUpdateForm />
+          {/* <UserUpdateForm /> */}
           <UserButton appearance={{
             elements: [styles['user-loggedIn-btn']]
           }} />

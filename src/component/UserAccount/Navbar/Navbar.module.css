@@ -4,8 +4,8 @@
 }
 
 #nav {
-    background-color: rgba(85, 88, 117, 0.744);
-    box-shadow: 1px 2px 55px -20px black;
+    background-color: rgb(200, 106, 6);
+    box-shadow: 0 35px 55px -20px rgb(190, 65, 7);
     padding: 5px 15px;
     position: fixed;
     z-index: 5;

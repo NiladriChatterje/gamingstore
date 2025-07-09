@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './Body.module.css'
-import Joystick from './JoyStick.webp'
+import Controller from './controller.svg'
 import { motion, MotionStyle } from 'framer-motion'
 import { IoIosCloseCircle } from 'react-icons/io'
 import upcomingData from './upcomingData.ts'
@@ -13,10 +13,10 @@ const style1: MotionStyle = {
   borderBottomLeftRadius: '10%',
   borderBottomRightRadius: '60%',
   filter: 'blur(50px)',
-  opacity: 0.6,
-  boxShadow: '-120px 5px 400px -5px rgb(120,150,185)',
+  opacity: 0.4,
+  boxShadow: '-90px -55px 400px -5px rgb(171, 85, 15)',
   position: 'absolute',
-  backgroundImage: 'linear-gradient(to right,rgb(85, 88, 117),rgb(105,148,255))'
+  backgroundImage: 'linear-gradient(to right,rgb(147, 102, 63),rgb(179,52,7))'
 }
 const style2: MotionStyle = {
   height: '240px', width: '260px',
@@ -25,10 +25,10 @@ const style2: MotionStyle = {
   borderBottomLeftRadius: '40%',
   borderBottomRightRadius: '60%',
   filter: 'blur(60px)',
-  opacity: 0.6,
-  boxShadow: '80px 85px 75px -15px rgb(120,150,185)',
+  opacity: 0.3,
+  boxShadow: '160px 85px 75px -15px rgb(188, 103, 39)',
   position: 'absolute',
-  backgroundImage: 'linear-gradient(to right,rgb(85, 88, 117),rgb(105,148,255))'
+  backgroundImage: 'linear-gradient(to right,rgb(180, 94, 13),rgb(255, 153, 105))'
 }
 
 const Body = () => {
@@ -70,13 +70,13 @@ const Body = () => {
             initial={{ opacity: 0, transform: 'scale(0,0)' }}
             whileInView={{ opacity: 1, transform: 'scale(1,1)' }}
             viewport={{ root: secondContRef }}
-            style={{ ...style1, left: 80, top: 140 }} />
+            style={{ ...style1, right: 240, top: 220 }} />
 
           <motion.div
             initial={{ opacity: 0, transform: 'scale(0,0)' }}
             whileInView={{ opacity: 1, transform: 'scale(1,1)' }}
-            style={{ ...style2, right: 220, bottom: 180 }} />
-          <img src={Joystick} alt='' ref={joyRef}
+            style={{ ...style2, right: 220, bottom: 220 }} />
+          <img src={Controller} alt='' ref={joyRef}
             style={{
               objectFit: 'contain',
               position: 'absolute', zIndex: 1, width: '75%',

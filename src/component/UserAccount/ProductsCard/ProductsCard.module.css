@@ -1,13 +1,13 @@
 #card {
     font-size: 0.75em;
-    background-image: linear-gradient(to top right, rgba(99, 174, 176, 0.596), rgba(1, 255, 170, 0.6));
+    background-image: url('../../../assets/ProductCard.svg');
     width: 200px;
     text-align: center;
     height: 260px;
     position: relative;
     border-radius: 10px;
-    box-shadow: 10px 10px 15px -13px;
-    backdrop-filter: blur(15px);
+    box-shadow: 10px 10px 10px -13px;
+    background-color: transparent;
     display: flex;
     margin: 50px 20px;
     flex-direction: column;
@@ -17,20 +17,21 @@
 }
 
 #card button:hover {
-    background-color: rgb(49, 49, 81);
-    color: white
+    background-color: rgb(45, 45, 45);
+    color: rgb(255, 255, 255)
 }
 
 #card button {
     z-index: 5;
-    background-color: rgb(75, 75, 112);
+    background-color: rgb(255, 255, 255);
     border-style: none;
     border-radius: 5px;
     padding: 5px 10px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    color: rgba(255, 255, 255, 0.827);
+    font-weight: 600;
+    color: rgb(38, 38, 38);
     gap: 10px;
 }
 

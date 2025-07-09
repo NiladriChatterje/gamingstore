@@ -11,36 +11,37 @@
 #first-container {
     width: 50%;
     padding: 0 0 0 100px;
-    height: 100vh;
+    height: 100svh;
     display: flex;
     align-items: center;
 }
 
 #first-container button {
     border-style: none;
-    border-radius: 5px;
+    border-radius: 3px;
     padding: 5px 10px;
-    font-weight: 900;
+    font-weight: 600;
     color: white;
-    background-color: rgb(80, 78, 119);
+    background-color: rgb(226, 104, 12);
     cursor: pointer;
 }
 
 #first-container button:hover {
     color: rgb(255, 255, 255);
-    background-color: rgb(15, 14, 35);
+    background-color: rgb(35, 23, 14);
 }
 
 #first-container h1 {
     font-size: 2.8em;
     font-family: 'Blanka', sans-serif;
-    color: rgb(80, 83, 119);
+    color: rgb(17, 17, 17);
     word-wrap: break-word;
+    font-weight: 400;
 }
 
 #first-container p {
     word-wrap: break-word;
-    color: rgb(62, 69, 93);
+    color: rgb(34, 34, 34);
     font-weight: 500;
 }
 
@@ -75,7 +76,7 @@
     left: 0;
     top: 0;
     z-index: 5;
-    color: rgb(34, 34, 47);
+    color: rgb(34, 34, 34);
 }
 
 @media all and (max-width:1200px) {
