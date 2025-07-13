@@ -10,7 +10,7 @@ export declare type UserType = {
   phone?: number;
   email: string | null | undefined;
   address: {
-    pinCode: string;
+    pincode: string;
     county: string;
     country: string;
     state: string;

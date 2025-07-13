@@ -119,9 +119,11 @@ function Payment() {
                                                         },
                                                         body: JSON.stringify({
                                                             customer: userData?._id,
+                                                            customerEmail: userData?.email,
                                                             product: singleProductDetail?._id,
                                                             transactionId: payment_id,
                                                             orderId: razorpay_order_id,
+                                                            pincode: userData?.address.pincode,
                                                             paymentSignature: razorpay_signature,
                                                             amount: singleProductDetail?.price?.pdtPrice * singleProductDetail?.quantity,
                                                             quantity: singleProductDetail?.quantity

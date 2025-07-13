@@ -54,6 +54,7 @@ const Navbar = () => {
           cursor={'pointer'} />
         <SignedOut>
           <button
+            style={{ fontSize: '0.80em' }}
             onClick={() => {
               setUserLoginDiv(prev => !prev);
             }}
@@ -75,7 +76,7 @@ const Navbar = () => {
                   setDefaultLoginAdminOrUser?.('admin');
                 }}
               >
-                Admin
+                Seller
               </button>
             </SignInButton>
             <SignInButton

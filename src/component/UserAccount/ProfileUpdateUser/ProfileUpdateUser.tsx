@@ -24,7 +24,7 @@ const ProfileUpdateUser = () => {
     const [toggleCountryCode, setToggleCountryCode] = useState<boolean>(false);
     const [gstin, setGstin] = useState<string>(userData?.gstin);
     const [username, setUsername] = useState<string>(userData?.firstName);
-    const [pinCode, setpinCode] = useState<string>(userData?.address?.pinCode);
+    const [pincode, setpinCode] = useState<string>(userData?.address?.pincode);
     const [country, setCountry] = useState<string>(userData?.address?.country);
     const [state, setState] = useState<string>(userData?.address?.state);
     const [county, setCounty] = useState<string>(userData?.address?.county);
@@ -81,7 +81,7 @@ const ProfileUpdateUser = () => {
 
         // const result = await sanityClient?.patch(userData._id).set({
         //     gstin, AddressObjectType: {
-        //         pinCode,
+        //         pincode,
         //         county, country, state
         //     }, email, phone: Number(phone)
         // }).commit();
@@ -184,9 +184,9 @@ const ProfileUpdateUser = () => {
                                     id={styles['phone-input']}>
                                     <MdSignpost />
                                     <input
-                                        value={pinCode}
+                                        value={pincode}
                                         onChange={e => setpinCode(e.target.value)}
-                                        name={'pinCode'} placeholder={userData.AddressObjectType?.pinCode ?? 'PIN code'}
+                                        name={'pincode'} placeholder={userData.AddressObjectType?.pincode ?? 'PIN code'}
                                         maxLength={6} minLength={6}
                                         type='text' disabled={disable} />
                                 </div>

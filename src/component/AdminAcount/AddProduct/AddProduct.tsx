@@ -90,7 +90,7 @@ const AddProduct = () => {
             eanUpcIsbnGtinAsinType: eanUpcType,
             eanUpcNumber: eanUpc,
             quantity,
-            pincode: admin?.address.pinCode ?? '700135',
+            pincode: admin?.address.pincode ?? '700135',
             currency: currency.INR,
             price: {
               pdtPrice: price,

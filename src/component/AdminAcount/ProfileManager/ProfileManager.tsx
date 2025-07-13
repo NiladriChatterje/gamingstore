@@ -23,7 +23,7 @@ const ProfileManager = () => {
   const [toggleCountryCode, setToggleCountryCode] = useState<boolean>(false);
   const [gstin, setGstin] = useState<string>(admin?.gstin ?? "");
   const [username, setUsername] = useState<string>(admin?.username ?? "");
-  const [pinCode, setpinCode] = useState<string>(admin?.address?.pinCode ?? "");
+  const [pincode, setpinCode] = useState<string>(admin?.address?.pincode ?? "");
   const [country, setCountry] = useState<string>(admin?.address?.country ?? "");
   const [state, setState] = useState<string>(admin?.address?.state ?? "");
   const [county, setCounty] = useState<string>(admin?.address?.county ?? "");
@@ -93,7 +93,7 @@ const ProfileManager = () => {
           _id: admin?._id,
           gstin,
           address: {
-            pinCode,
+            pincode,
             county,
             country,
             state,
@@ -286,10 +286,10 @@ const ProfileManager = () => {
                 >
                   <MdSignpost />
                   <input
-                    value={pinCode}
+                    value={pincode}
                     onChange={(e) => setpinCode(e.target.value)}
-                    name={"pinCode"}
-                    placeholder={admin?.address?.pinCode ?? "PIN code"}
+                    name={"pincode"}
+                    placeholder={admin?.address?.pincode ?? "PIN code"}
                     maxLength={6}
                     minLength={6}
                     type="text"

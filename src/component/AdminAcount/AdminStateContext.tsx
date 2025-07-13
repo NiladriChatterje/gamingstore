@@ -98,7 +98,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
                   lng: longitude,
                 },
                 address: {
-                  pinCode: placeResult?.properties?.postcode,
+                  pincode: placeResult?.properties?.postcode,
                   county: placeResult?.properties?.county,
                   state: placeResult?.properties?.state,
                   country: placeResult?.properties?.country,
@@ -156,7 +156,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
             lng: longitude,
           },
           address: {
-            pinCode: placeResult?.properties?.postcode,
+            pincode: placeResult?.properties?.postcode,
             county: placeResult?.properties?.county,
             state: placeResult?.properties?.state,
             country: placeResult?.properties?.country,

@@ -8,6 +8,8 @@ body {
   -webkit-tap-highlight-color: transparent;
   background-attachment: fixed;
   background-image:url('./assets/Background_16_10.svg');
+  background-color: rgba(226, 226, 226, 0.5);
+  background-blend-mode: multiply;
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-position: center;
@@ -23,7 +25,7 @@ input::-webkit-inner-spin-button {
   box-sizing: border-box;
 }
 *::selection {
-  background-color: rgba(224, 113, 34, 0.892);
+  background-color: rgb(30, 28, 41);
   color: white;
 }
 
@@ -37,7 +39,7 @@ input::-webkit-inner-spin-button {
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: rgb(189, 98, 7);
+  background-color: rgb(30, 28, 41);
   border-radius: 30px
 }
 

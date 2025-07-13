@@ -14,9 +14,9 @@ const style1: MotionStyle = {
   borderBottomRightRadius: '60%',
   filter: 'blur(50px)',
   opacity: 0.4,
-  boxShadow: '-90px -55px 400px -5px rgb(171, 85, 15)',
+  boxShadow: '-10px -55px 400px -5px rgb(56, 106, 231)',
   position: 'absolute',
-  backgroundImage: 'linear-gradient(to right,rgb(147, 102, 63),rgb(179,52,7))'
+  backgroundImage: 'linear-gradient(to right,rgb(25, 25, 37),rgb(24, 25, 40))'
 }
 const style2: MotionStyle = {
   height: '240px', width: '260px',
@@ -26,9 +26,9 @@ const style2: MotionStyle = {
   borderBottomRightRadius: '60%',
   filter: 'blur(60px)',
   opacity: 0.3,
-  boxShadow: '160px 85px 75px -15px rgb(188, 103, 39)',
+  boxShadow: '80px 65px 75px -15px rgb(61, 80, 152)',
   position: 'absolute',
-  backgroundImage: 'linear-gradient(to right,rgb(180, 94, 13),rgb(255, 153, 105))'
+  backgroundImage: 'linear-gradient(to right,rgb(56, 68, 146),rgba(19, 16, 74, 0.6))'
 }
 
 const Body = () => {
@@ -70,12 +70,13 @@ const Body = () => {
             initial={{ opacity: 0, transform: 'scale(0,0)' }}
             whileInView={{ opacity: 1, transform: 'scale(1,1)' }}
             viewport={{ root: secondContRef }}
-            style={{ ...style1, right: 240, top: 220 }} />
+            style={{ ...style1, left: 160, top: 250 }} />
 
           <motion.div
             initial={{ opacity: 0, transform: 'scale(0,0)' }}
             whileInView={{ opacity: 1, transform: 'scale(1,1)' }}
-            style={{ ...style2, right: 220, bottom: 220 }} />
+            style={{ ...style2, right: 160, bottom: 260 }} />
+
           <img src={Controller} alt='' ref={joyRef}
             style={{
               objectFit: 'contain',
