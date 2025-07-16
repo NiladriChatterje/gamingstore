@@ -49,8 +49,8 @@
     scroll-snap-align: center;
     object-fit: contain;
     transition: all;
-    width: 300px;
-    scale: 1.75;
+    width: 280px;
+    border-radius: 10px;
     transition-duration: 200ms;
     filter: drop-shadow(-5px 15px 6px black);
 }

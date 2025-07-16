@@ -42,13 +42,12 @@
 #card img {
     object-fit: contain;
     filter: drop-shadow(5px 5px 5px rgba(102, 93, 93, 0.497));
-    height: 140px;
-    width: 140px;
+    height: 120px;
+    width: 120px;
     transition: all;
     transition-duration: 120ms;
     position: relative;
     top:-60px;
-    scale: 2.5;
 }
 
 #card h2 {

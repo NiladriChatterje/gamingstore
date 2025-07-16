@@ -15,5 +15,5 @@ export declare type UserType = {
     country: string;
     state: string;
   },
-  cart: ProductType[]
+  cart: { _id: string; quantity: number }[]
 }
