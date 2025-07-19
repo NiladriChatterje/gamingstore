@@ -19,7 +19,7 @@ const UserAccount = () => {
     const { setUserData, cartData } = useUserStateContext();
     const { user, isSignedIn } = useUser()
     const { getToken } = useAuth();
-
+    console.log(user)
     useEffect(() => {
         if (isSignedIn && user != null) {
             (async () => {
@@ -58,7 +58,7 @@ const UserAccount = () => {
 
                                         const userObj = {
                                             _id: user.id,
-                                            username: user.username,
+                                            username: user.firstName,
                                             geoPoint: {
                                                 lat: latitude,
                                                 lng: longitude

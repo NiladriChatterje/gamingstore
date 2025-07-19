@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import styles from './Navbar.module.css'
 import './ClerkStyle.css'
 import { GiHamburgerMenu } from 'react-icons/gi'
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useStateContext } from '../../../StateContext';
 import { useUserStateContext } from '../UserStateContext';
@@ -11,7 +10,7 @@ import { FaHome, FaShopify } from "react-icons/fa";
 import { MdProductionQuantityLimits } from "react-icons/md";
 import { FcAbout } from "react-icons/fc";
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
-import { UserUpdateForm } from '../components';
+// import { UserUpdateForm } from '../components';
 
 
 const navItems = [{ Img: FaHome, name: 'Home', link: '' },
@@ -26,11 +25,9 @@ const Navbar = () => {
   const { navRef, setSlide } = useUserStateContext();
 
   return (
-    <motion.nav
+    <nav
       ref={navRef}
-      id={styles['nav']}
-      initial={{ scale: 0.5 }}
-      animate={{ scale: 1 }}>
+      id={styles['nav']}>
       <span id={styles['heading']}>
         <span>
           XV
@@ -110,7 +107,7 @@ const Navbar = () => {
             width: '25px',
           }} />
       </div>
-    </motion.nav>
+    </nav>
   )
 }
 
