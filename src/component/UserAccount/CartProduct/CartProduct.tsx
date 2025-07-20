@@ -58,12 +58,21 @@ export default function CartProduct({
           -
         </button>
         <h4>{counter}</h4>
-        <button onClick={() => {
-          if (counter >= quantity) {
-            toast(`Only ${quantity} items(s) available!`);
-            return;
+        <button onClick={async () => {
+          try {
+            const quantity_pdt = await fetch(`http://localhost:5002/fetch-product-quantity/${'700135'}/${_id}`)
+            const quantity_after = await quantity_pdt.json();
+
+            //check product_service: endpoint in the url structure
+            if (counter >= quantity_after.quantity) {
+              toast(`Only ${quantity} items(s) available!`);
+              return;
+            }
+            setCounter((prev) => prev + 1)
+          } catch (err) {
+            toast.error('server issue. try later to add more!')
           }
-          setCounter((prev) => prev + 1)
+
         }}>+</button>
       </div>
       <hr />

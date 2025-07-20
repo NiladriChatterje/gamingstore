@@ -19,15 +19,17 @@ const UserAccount = () => {
     const { setUserData, cartData } = useUserStateContext();
     const { user, isSignedIn } = useUser()
     const { getToken } = useAuth();
-    console.log(user)
+
     useEffect(() => {
         if (isSignedIn && user != null) {
             (async () => {
+                const token = await getToken();
+
                 try {
                     fetch(`http://localhost:5001/fetch-user-data/${user.id}`, {
                         headers: {
                             'Accept': "application/json",
-                            'Authorization': `Bearer ${await getToken()}`
+                            'Authorization': `Bearer ${token}`
                         }
                     })
                         .then(res => res.json())
@@ -97,6 +99,10 @@ const UserAccount = () => {
                                     });
 
                             }
+
+                            else
+                                setUserData?.(data);
+
 
                         })
                 } catch (err) {

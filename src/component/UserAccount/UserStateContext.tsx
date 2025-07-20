@@ -27,7 +27,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
   );
   const [cartData, setCartData] = useState<ProductType[]>(
     () =>
-      (JSON.parse(localStorage.getItem("orders") as string) as ProductType[]) ||
+      (JSON.parse(localStorage.getItem("cart") as string) as ProductType[]) ||
       ([] as ProductType[])
   );
   const [slide, setSlide] = useState<boolean>(false);
@@ -45,7 +45,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
     );
     setTotalPrice(localTotalPrice);
     localStorage.setItem("totalPrice", totalPrice.toString());
-    localStorage.setItem("orders", JSON.stringify(cartData));
+    localStorage.setItem("cart", JSON.stringify(cartData));
   }, [cartData]);
 
   function addItemToCart(item: ProductType) {

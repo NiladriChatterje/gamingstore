@@ -24,7 +24,7 @@
 .CartProduct-container img {
 
     object-fit: contain;
-    filter: drop-shadow(5px 10px 10px);
+    filter: drop-shadow(5px 2px -5px);
     height: 150px;
     width: 150px;
     position: relative;

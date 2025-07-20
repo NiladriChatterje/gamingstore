@@ -8,16 +8,16 @@ import { ProductType } from "@declarations/ProductContextType";
 
 function Completion() {
     const navigate = useNavigate();
-    const { setData, setTotalPrice, isOneItem } = useUserStateContext();
+    const { setCartData, setTotalPrice, isOneItem } = useUserStateContext();
     const params = useParams();
 
     useEffect(() => {
         try {
             console.log(params)
             if (!isOneItem) {
-                localStorage.removeItem("orders");
+                localStorage.removeItem("cart");
                 setTotalPrice?.(0);
-                setData?.([] as ProductType[]);
+                setCartData?.([] as ProductType[]);
             };
             (function () {
                 document.onkeydown = function (e: KeyboardEvent) {
