@@ -6,21 +6,18 @@ import { ProductType } from '@/declarations/ProductContextType';
 
 //order page list
 const OrderPendingItem = ({ item }: { item: ProductType }) => {
-  const [counter, setCounter] = useState<number>(() => 1);
-  const { incDecQty } = useUserStateContext();
+  const [counter, setCounter] = useState<number>(() => item.quantity);
+  const { incDecQty, setCartData, cartData } = useUserStateContext();
 
   React.useEffect(() => {
     incDecQty?.(counter, item._id)
   }, [counter]);
 
-  React.useEffect(() => {
-    setCounter(item.quantity ?? 0);
-  }, [])
 
   return (
     <section
       className={styles['order-items']}>
-      <figure>
+      <figure className={styles['order-items-figure']}>
         {item?.imagesBase64 && item.imagesBase64.length > 0 && <img width={30} src={item?.imagesBase64[0]?.base64} />}
         <span>{item?.productName}</span>
       </figure>
@@ -46,6 +43,15 @@ const OrderPendingItem = ({ item }: { item: ProductType }) => {
           }}
         >
           Buy
+        </button>
+        <button
+          className={styles['button']}
+          onClick={() => {
+            if (cartData)
+              setCartData?.(cartData?.filter(cartItem => cartItem._id !== item._id))
+          }}
+        >
+          Delete
         </button>
       </section>
     </section>

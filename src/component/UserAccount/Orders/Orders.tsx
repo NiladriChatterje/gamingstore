@@ -1,4 +1,4 @@
-import { useUser, SignIn } from '@clerk/clerk-react'
+import { useUser, SignIn, useAuth } from '@clerk/clerk-react'
 import styles from './Orders.module.css'
 import { useEffect, useState } from 'react';
 import OrderPendingItem from './OrderPendingItem';
@@ -6,17 +6,28 @@ import { ProductType } from '@/declarations/ProductContextType';
 import { useUserStateContext } from '../UserStateContext';
 
 const Orders = () => {
-    const [orders, setOrders] = useState<ProductType[]>(() => [1, 2, 3, 5, 6, 6, 6, 8] as unknown as ProductType[]);
-    const { cartData, setCartData, incDecQty } = useUserStateContext();
+    const [orders, setOrders] = useState<ProductType[]>(() => []);
+    const { cartData, userData } = useUserStateContext();
     const { isSignedIn } = useUser();
+    const { getToken } = useAuth();
 
     async function fetchOrderData(userId: string): Promise<void> {
+        const token = await getToken();
+        const response = await fetch(`http://localhost:5001/orders/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                "Authorization": `Bearer ${token}`
+            }
+        });
 
+        const orderData: any[] = await response.json();
+        setOrders(orderData);
     }
 
     useEffect(() => {
-        if (isSignedIn)
-            fetchOrderData("")
+        if (isSignedIn && userData)
+            fetchOrderData(userData._id)
     }, [])
 
 

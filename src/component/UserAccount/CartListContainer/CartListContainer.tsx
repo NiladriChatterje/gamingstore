@@ -38,10 +38,7 @@ const CartListContainer = () => {
           {cartData?.map((item, i) => (
             <CartProduct
               key={i}
-              _id={item._id}
-              images={item?.imagesBase64}
-              price={item.price.pdtPrice}
-              quantity={item.quantity}
+              item={item}
             />
           ))}
           <motion.button

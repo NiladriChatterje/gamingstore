@@ -14,6 +14,7 @@ export declare type ProductContextType = {
   setSlide: React.Dispatch<React.SetStateAction<boolean>>;
   navRef: LegacyRef<HTMLElement>;
   totalPrice: number;
+  setRefreshApp: React.Dispatch<React.SetStateAction<boolean>>;
   setTotalPrice: React.Dispatch<React.SetStateAction<number>>;
   cartData: ProductType[];
   setCartData: React.Dispatch<React.SetStateAction<ProductType[]>>;

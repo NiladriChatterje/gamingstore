@@ -1,32 +1,23 @@
-import React from "react";
 import styles from "./CartProduct.module.css";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { useUserStateContext } from "../UserStateContext";
 import toast from "react-hot-toast";
+import { ProductType } from "@/declarations/ProductContextType";
 
 export default function CartProduct({
-  _id,
-  images,
-  price,
-  quantity,
+  item
 }: {
-  _id: string;
-  images: { size: number; base64: string; extension: string }[] | undefined;
-  price: number;
-  quantity: number;
+  item: ProductType
 }) {
-  const { cartData, setCartData, incDecQty } = useUserStateContext();
-  const [counter, setCounter] = React.useState<number>(() => quantity);
-
-  React.useEffect(() => {
-    incDecQty?.(counter, _id);
-  }, [counter]);
+  const { cartData, setCartData, setRefreshApp } = useUserStateContext();
 
   return (
     <div className={styles["CartProduct-container"]}>
       <AiFillCloseCircle
         onClick={() => {
-          setCartData?.(cartData?.filter((i) => i._id !== _id) ?? []);
+          const newCartData = cartData?.filter((i) => i._id !== item._id) ?? []
+          localStorage.setItem('cart', JSON.stringify(newCartData));
+          setCartData?.(newCartData);
         }}
         style={{
           color: "black",
@@ -44,31 +35,37 @@ export default function CartProduct({
         }}
       >
 
-        {images && images.length > 0 && <img src={images[0].base64} alt={_id} />}
+        {item.imagesBase64 && item.imagesBase64.length > 0 && <img src={item.imagesBase64[0].base64} alt={item._id} />}
       </div>
 
-      <span>Rs. {price}</span>
+      <span>Rs. {item.price.pdtPrice}</span>
       <div id={styles["quantity"]}>
         <button
           onClick={() => {
-            if (counter <= 1) return 1;
-            setCounter((prev) => prev - 1);
+            if (item.quantity <= 1) return 1;
+            item.quantity -= 1;
+            setRefreshApp?.(prev => !prev)
+            if (cartData)
+              localStorage.setItem('cart', JSON.stringify(cartData))
           }}
         >
           -
         </button>
-        <h4>{counter}</h4>
+        <h4>{item.quantity}</h4>
         <button onClick={async () => {
           try {
-            const quantity_pdt = await fetch(`http://localhost:5002/fetch-product-quantity/${'700135'}/${_id}`)
+            const quantity_pdt = await fetch(`http://localhost:5002/fetch-product-quantity/${'700135'}/${item._id}`)
             const quantity_after = await quantity_pdt.json();
 
             //check product_service: endpoint in the url structure
-            if (counter >= quantity_after.quantity) {
-              toast(`Only ${quantity} items(s) available!`);
+            if (item.quantity >= quantity_after.quantity) {
+              toast(`Only ${item.quantity} items(s) available!`);
               return;
             }
-            setCounter((prev) => prev + 1)
+            item.quantity += 1;
+            setRefreshApp?.(prev => !prev)
+            if (cartData)
+              localStorage.setItem('cart', JSON.stringify(cartData))
           } catch (err) {
             toast.error('server issue. try later to add more!')
           }
