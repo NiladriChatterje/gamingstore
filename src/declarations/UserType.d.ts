@@ -7,7 +7,7 @@ export declare type UserType = {
     lat: number;
     lng: number;
   }
-  phone?: number;
+  phone?: string;
   email: string | null | undefined;
   address: {
     pincode: string;

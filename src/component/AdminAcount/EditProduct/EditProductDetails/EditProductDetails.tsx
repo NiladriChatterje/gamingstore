@@ -138,7 +138,7 @@ const AddProduct = () => {
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
+              'Authorization': `Bearer ${token}`,
               "x-admin-id": admin?._id ?? ''
             },
             body: JSON.stringify({
@@ -162,7 +162,8 @@ const AddProduct = () => {
             keywordsSet.clear()
           }
         }
-      })
+      });
+
       fileReader.readAsDataURL(image)
     }
   }

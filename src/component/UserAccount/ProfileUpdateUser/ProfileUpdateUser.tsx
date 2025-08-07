@@ -8,7 +8,7 @@ import { MdOutlineMarkEmailUnread, MdSignpost } from "react-icons/md";
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import OTPModal from "./OTPModal";
-import { FaCity, FaFileInvoiceDollar } from "react-icons/fa";
+import { FaCity } from "react-icons/fa";
 import { SiFreelancermap } from 'react-icons/si';
 import { RiLandscapeFill } from 'react-icons/ri';
 import { useUserStateContext } from '../UserStateContext';
@@ -22,14 +22,13 @@ const ProfileUpdateUser = () => {
 
     const [disable, setDisable] = useState<boolean>(true);
     const [toggleCountryCode, setToggleCountryCode] = useState<boolean>(false);
-    const [gstin, setGstin] = useState<string>(userData?.gstin);
-    const [username, setUsername] = useState<string>(userData?.firstName);
-    const [pincode, setpinCode] = useState<string>(userData?.address?.pincode);
-    const [country, setCountry] = useState<string>(userData?.address?.country);
-    const [state, setState] = useState<string>(userData?.address?.state);
-    const [county, setCounty] = useState<string>(userData?.address?.county);
-    const [email, setEmail] = useState<string>(userData?.email);
-    const [phone, setPhone] = useState<string>(userData?.phone);
+    const [username, setUsername] = useState<string>(userData?.username ?? '');
+    const [pincode, setpinCode] = useState<string | undefined>(userData?.address?.pincode);
+    const [country, setCountry] = useState<string | undefined>(userData?.address?.country);
+    const [state, setState] = useState<string | undefined>(userData?.address?.state);
+    const [county, setCounty] = useState<string | undefined>(userData?.address?.county);
+    const [email, setEmail] = useState<string | null | undefined>(userData?.email);
+    const [phone, setPhone] = useState<undefined | string>(userData?.phone);
     const [OTP, setOTP] = useState<number>(0);
     const modalRef = useRef<HTMLDialogElement>(null);
 
@@ -97,31 +96,18 @@ const ProfileUpdateUser = () => {
                 id={styles['form-container']}>
                 <div id={styles['form-input-field-container']}>
                     <div
-                        style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                        style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
                         id={styles['username-input']}>
                         <FaUser />
                         <input name={'username'} value={username} onChange={e => { setUsername(e.target.value) }} placeholder={user?.firstName ?? ''}
                             disabled={disable} />
                     </div>
                     <section>
-                        <div
-                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
-                            id={styles['phone-input']}>
-                            <FaFileInvoiceDollar />
-                            <input name={'gstin'}
-                                value={gstin}
-                                onChange={e => { setGstin(e.target.value) }}
-                                placeholder={'GSTIN'} type='text'
-                                maxLength={15} minLength={15}
-                                disabled={disable} />
-                        </div>
-                    </section>
-                    <section>
                         <OTPModal
                             OTP={OTP}
                             ref={modalRef} />
                         <div
-                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
                             id={styles['phone-input']}>
                             <div id={styles['phone-country-code']}>
                                 <FaPhone
@@ -157,10 +143,10 @@ const ProfileUpdateUser = () => {
                             OTP={OTP}
                             ref={modalRef} />
                         <div
-                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
                             id={styles['mail-input']}>
                             <MdOutlineMarkEmailUnread />
-                            <input value={email}
+                            <input value={email ?? ''}
                                 onChange={e => { setEmail(e.target.value) }}
                                 name={'email'}
                                 disabled={disable}
@@ -180,31 +166,31 @@ const ProfileUpdateUser = () => {
                             <legend>Address</legend>
                             <section>
                                 <div
-                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
                                     id={styles['phone-input']}>
                                     <MdSignpost />
                                     <input
                                         value={pincode}
                                         onChange={e => setpinCode(e.target.value)}
-                                        name={'pincode'} placeholder={userData.AddressObjectType?.pincode ?? 'PIN code'}
+                                        name={'pincode'} placeholder={userData?.address?.pincode ?? 'PIN code'}
                                         maxLength={6} minLength={6}
                                         type='text' disabled={disable} />
                                 </div>
                             </section>
                             <section>
                                 <div
-                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
                                     id={styles['phone-input']}>
                                     <FaCity />
                                     <input
                                         value={county}
                                         onChange={e => { setCounty(e.target.value) }}
-                                        name={'county'} placeholder={userData.AddressObjectType?.county ?? 'county'} type='text' disabled={disable} />
+                                        name={'county'} placeholder={userData?.address?.county ?? 'county'} type='text' disabled={disable} />
                                 </div>
                             </section>
                             <section>
                                 <div
-                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
                                     id={styles['phone-input']}>
                                     <SiFreelancermap />
                                     <input
@@ -212,20 +198,20 @@ const ProfileUpdateUser = () => {
                                         onChange={e => {
                                             setCountry(e.target.value)
                                         }}
-                                        name={'country'} placeholder={userData.AddressObjectType?.country ?? 'country'} type='text'
+                                        name={'country'} placeholder={userData?.address?.country ?? 'country'} type='text'
                                         disabled={disable} />
                                 </div>
                             </section>
                             <section>
                                 <div
-                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.563)' : 'rgba(255, 255, 255, 0.963)' }}
+                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255)' }}
                                     id={styles['phone-input']}>
                                     <RiLandscapeFill />
                                     <input value={state}
                                         onChange={e => {
                                             setState(e.target.value)
                                         }}
-                                        name={'state'} placeholder={userData.AddressObjectType?.state ?? 'state'} type='text'
+                                        name={'state'} placeholder={userData?.address?.state ?? 'state'} type='text'
                                         disabled={disable} />
                                 </div>
                             </section>
@@ -240,7 +226,7 @@ const ProfileUpdateUser = () => {
                             backgroundColor: 'rgb(52, 48, 105)',
                             borderRadius: 5, padding: '5px 10px'
                         }}
-                        size={25}
+                        size={30}
                         onClick={() => {
                             setDisable(prev => !prev)
                         }}
@@ -252,7 +238,7 @@ const ProfileUpdateUser = () => {
                             backgroundColor: 'rgb(52, 48, 105)',
                             borderRadius: 5, padding: '5px 10px'
                         }}
-                        size={25}
+                        size={30}
                         // type={'submit'}
                         onClick={() => {
                             if (!disable) {

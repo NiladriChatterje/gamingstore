@@ -12,6 +12,7 @@ import {
 import { ProductType } from "@/declarations/ProductContextType";
 import { UserType } from "@/declarations/UserType";
 import toast from "react-hot-toast";
+import { useAuth, useUser } from "@clerk/clerk-react";
 
 
 const ProductContext = createContext<Partial<ProductContextType>>({});
@@ -38,6 +39,9 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
   );
   const [singleProductDetail, setSingleProductDetail] = useState<ProductType | undefined>(JSON.parse(localStorage.getItem("oneProduct") ?? '{}' as string));
 
+
+  const { isSignedIn } = useUser();
+  const { getToken } = useAuth();
   const navRef = useRef<HTMLElement | null>(null);
   const handleStorage = () => {
     setCartData((JSON.parse(localStorage.getItem("cart") as string) as ProductType[]))
@@ -79,6 +83,30 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
     setRefreshApp(prev => !prev)
   }
 
+  const syncCartProductWithLocal = useCallback(async function syncCartProductWithLocal() {
+    if (isSignedIn) {
+      const token = await getToken();
+      const response = await fetch(`http://localhost:5002/fetch-user-cart/${userData?._id}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const cartProducts: ProductType = await response.json();
+      const tempCart = [];
+      for (const element of cartData)
+        if (element._id != cartProducts._id)
+          tempCart.push(element);
+
+      if (tempCart.length > 0)
+        setCartData([...cartData, ...tempCart]);
+
+
+    }
+  }, [])
+  React.useEffect(() => {
+    syncCartProductWithLocal();
+  }, [])
   return (
     <ProductContext.Provider
       value={{
