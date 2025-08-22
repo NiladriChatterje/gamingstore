@@ -68,25 +68,22 @@ const ProfileUpdateUser = () => {
     }
 
     async function handleUpdate() {
-        /*
-        await fetch("http://localhost:5004/user/:id",{
-        method:"PUT",
-        body:JSON.stringify({userId:userData.id, documentId:userData._id,
-        
-        })
-        })
-        */
 
+        try {
 
-        // const result = await sanityClient?.patch(userData._id).set({
-        //     gstin, AddressObjectType: {
-        //         pincode,
-        //         county, country, state
-        //     }, email, phone: Number(phone)
-        // }).commit();
-        // // e.preventDefault();
-        // console.log(result)
-        // toast.success('new records updated!');
+            const response = await fetch(`http://localhost:5004/update-user-info/${userData?._id}`, {
+                method: "PUT",
+                body: JSON.stringify({
+                    userId: userData?._id, documentId: userData?._id,
+
+                })
+            });
+            response
+        } catch (err) {
+
+        }
+
+        toast.success('new records updated!');
         setDisable(true)
     }
 
