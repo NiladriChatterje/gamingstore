@@ -1,11 +1,17 @@
 import './App.css';
-import { useEffect, useState } from 'react';
-import { UserRootContext, AdminRootContext } from './component';
+import { Suspense, useEffect, useState } from 'react';
+import { UserRootContext, AdminRootContext, ShipperRootContext } from './component';
 import PreLoader from './PreLoader.tsx';
 import { Toaster } from 'react-hot-toast';
 import { useStateContext } from './StateContext.tsx';
 import { useUser } from '@clerk/clerk-react';
 
+// Role-based component mapping for easy extensibility
+const roleComponentMap: Record<string, React.ComponentType> = {
+  admin: AdminRootContext,
+  shipper: ShipperRootContext,
+  user: UserRootContext,
+};
 
 function App() {
   const [loading, setLoading] = useState(() => true);
@@ -13,16 +19,24 @@ function App() {
   const { defaultLoginAdminOrUser } = useStateContext();
   const { user } = useUser();
 
+  // Get the appropriate component based on role, default to UserRootContext
+  const getRoleComponent = () => {
+    if (user !== null && defaultLoginAdminOrUser && defaultLoginAdminOrUser in roleComponentMap) {
+      return roleComponentMap[defaultLoginAdminOrUser];
+    }
+    // Default to UserRootContext if no user or invalid role
+    return UserRootContext;
+  };
+
+  const RoleComponent = getRoleComponent();
 
   return (
     <div className="App">
       <Toaster
         containerStyle={{ fontSize: '0.65em', fontWeight: 900 }} />
-      {loading ? <PreLoader /> : <>
-        {(defaultLoginAdminOrUser === 'admin' && user !== null) ?
-          <AdminRootContext /> : (
-            <UserRootContext />)}
-      </>}
+      <Suspense fallback={<PreLoader />}>
+        {loading ? <PreLoader /> : <RoleComponent />}
+      </Suspense>
     </div>
   );
 }

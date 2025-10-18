@@ -89,6 +89,19 @@ const Navbar = () => {
                 User
               </button>
             </SignInButton>
+            <SignInButton
+              mode='modal' >
+              <button
+                className={`${styles['login-btn']} ${defaultLoginAdminOrUser === 'shipper' ? styles['selected-admin-user'] : ''}`}
+                onClick={() => {
+                  setUserLoginDiv(true);
+                  localStorage.setItem("loginusertype", "shipper");
+                  setDefaultLoginAdminOrUser?.('shipper')
+                }}
+              >
+                Shipper
+              </button>
+            </SignInButton>
           </div>
         </SignedOut>
         <SignedIn>

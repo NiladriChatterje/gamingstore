@@ -1,0 +1,152 @@
+#nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #1a1a1a;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+#heading {
+  font-size: 1.8rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+#heading span {
+  color: #4CAF50;
+}
+
+.nav-routes {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.text:hover {
+  background-color: rgba(76, 175, 80, 0.2);
+  transform: translateY(-2px);
+}
+
+.nav-list-icons {
+  font-size: 1.2rem;
+}
+
+#ham-cart-login-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#ham-cart-login-container button {
+  padding: 0.5rem 1rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#ham-cart-login-container button:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+#user-admin-btn-group {
+  position: absolute;
+  top: 60px;
+  right: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background-color: #2a2a2a;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  z-index: 200;
+}
+
+.user-admin-btn-group-hide {
+  display: none;
+}
+
+.user-admin-btn-group-show {
+  display: flex;
+}
+
+.login-btn {
+  padding: 0.7rem 1.5rem;
+  background-color: #333;
+  color: white;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.login-btn:hover {
+  background-color: #444;
+  border-color: #4CAF50;
+}
+
+.selected-admin-user {
+  background-color: #4CAF50 !important;
+  border-color: #45a049 !important;
+}
+
+#GiHamburgerMenu {
+  display: none;
+}
+
+.user-loggedIn-btn {
+  border-radius: 50%;
+}
+
+@media screen and (max-width: 768px) {
+  .nav-routes {
+    position: fixed;
+    top: 0;
+    right: 0;
+    flex-direction: column;
+    background-color: #1a1a1a;
+    padding: 5rem 2rem 2rem 2rem;
+    width: 60%;
+    height: 100vh;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+  }
+
+  #navitems-inactive {
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  }
+
+  #navitems-active {
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+  }
+
+  #GiHamburgerMenu {
+    display: block;
+  }
+
+  #user-admin-btn-group {
+    right: 60px;
+  }
+}
