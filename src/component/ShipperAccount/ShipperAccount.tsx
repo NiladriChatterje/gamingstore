@@ -1,10 +1,13 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth, useUser } from '@clerk/clerk-react';
-import { useEffect } from 'react';
-import toast from 'react-hot-toast';
-import NotFound from '../../NotFound.tsx';
-import ShipperNavbar from './Navbar/ShipperNavbar.tsx';
-import ShipperDashboard from './Dashboard/ShipperDashboard.tsx';
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth, useUser } from "@clerk/clerk-react";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+import NotFound from "../../NotFound.tsx";
+import ShipperNavbar from "./Navbar/ShipperNavbar.tsx";
+import ShipperSidebar from "./Sidebar/ShipperSidebar.tsx";
+import ShipperDashboard from "./Dashboard/ShipperDashboard.tsx";
+import DeliveredOrders from "./DeliveredOrders/DeliveredOrders.tsx";
+import InTransitOrders from "./InTransitOrders/InTransitOrders.tsx";
 
 const ShipperAccount = () => {
     const { user, isSignedIn } = useUser();
@@ -18,15 +21,15 @@ const ShipperAccount = () => {
                 try {
                     const response = await fetch(`http://localhost:5001/fetch-shipper-data/${user.id}`, {
                         headers: {
-                            'Accept': "application/json",
-                            'Authorization': `Bearer ${token}`
+                            "Accept": "application/json",
+                            "Authorization": `Bearer ${token}`
                         }
                     });
 
                     const data = await response.json();
 
                     if (data == null) {
-                        // Create shipper account if it doesn't exist
+                        // Create shipper account if it doesn"t exist
                         const shipperObj = {
                             _id: user.id,
                             username: user.firstName,
@@ -61,11 +64,15 @@ const ShipperAccount = () => {
     return (
         <>
             <ShipperNavbar />
+            <ShipperSidebar />
             <Routes>
-                <Route path={'/'} element={<ShipperDashboard />} />
-                <Route index path={'/shipper'} element={<ShipperDashboard />} />
-                <Route path="/user/*" element={<Navigate to={'/shipper'} />} />
-                <Route path="/admin/*" element={<Navigate to={'/shipper'} />} />
+                <Route path={"/"} element={<ShipperDashboard />} />
+                <Route index path={"/shipper"} element={<ShipperDashboard />} />
+                <Route path={"/shipper/in-transit"} element={<InTransitOrders />} />
+                <Route path={"/shipper/delivered"} element={<DeliveredOrders />} />
+                <Route path={"/shipper/all-orders"} element={<ShipperDashboard />} />
+                <Route path="/user/*" element={<Navigate to={"/shipper"} />} />
+                <Route path="/admin/*" element={<Navigate to={"/shipper"} />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </>

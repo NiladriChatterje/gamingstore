@@ -115,9 +115,9 @@
     z-index: -1;
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1024px) {
     .dashboard-container {
-        padding: 80px 50px 2rem 50px;
+        padding: 80px 2rem 2rem 220px;
     }
 
     .dashboard-title {
@@ -144,7 +144,7 @@
 
 @media screen and (max-width: 768px) {
     .dashboard-container {
-        padding: 80px 20px 2rem 20px;
+        padding: 80px 1rem 2rem 1rem;
     }
 
     .dashboard-title {

@@ -1,0 +1,124 @@
+@font-face {
+    font-family: "Blanka";
+    src: url("/frontend/src/fonts/Blanka-Regular.otf");
+}
+
+.orders-container {
+    padding: 80px 2rem 2rem 270px;
+    min-height: 100vh;
+    background-color: rgb(248, 248, 248);
+}
+
+.orders-title {
+    font-size: 2.5rem;
+    font-family: "Blanka", sans-serif;
+    color: rgb(17, 17, 17);
+    font-weight: 400;
+    margin-bottom: 2rem;
+}
+
+.orders-content {
+    max-width: 1200px;
+}
+
+.orders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.order-card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.order-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(30, 28, 41, 0.15);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.order-header h3 {
+    font-size: 1.3rem;
+    color: rgb(30, 28, 41);
+    margin: 0;
+    font-weight: 600;
+}
+
+.status-badge-delivered {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background-color: #4CAF50;
+    color: white;
+}
+
+.order-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.order-details p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: rgb(34, 34, 34);
+}
+
+.order-details strong {
+    color: rgb(17, 17, 17);
+    font-weight: 600;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    background-color: white;
+    border-radius: 8px;
+    border: 2px dashed rgba(0, 0, 0, 0.1);
+}
+
+.empty-state p {
+    color: rgb(100, 100, 100);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+@media screen and (max-width: 1024px) {
+    .orders-container {
+        padding-left: 220px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .orders-container {
+        padding: 80px 1rem 2rem 1rem;
+    }
+
+    .orders-title {
+        font-size: 2rem;
+    }
+
+    .orders-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .order-card {
+        padding: 1.2rem;
+    }
+}
