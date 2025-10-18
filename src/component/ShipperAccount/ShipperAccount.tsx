@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth, useUser } from "@clerk/clerk-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import NotFound from "../../NotFound.tsx";
 import ShipperNavbar from "./Navbar/ShipperNavbar.tsx";
@@ -8,6 +8,7 @@ import ShipperSidebar from "./Sidebar/ShipperSidebar.tsx";
 import ShipperDashboard from "./Dashboard/ShipperDashboard.tsx";
 import DeliveredOrders from "./DeliveredOrders/DeliveredOrders.tsx";
 import InTransitOrders from "./InTransitOrders/InTransitOrders.tsx";
+import OrderDetailsPage from "./OrderDetailsPage/OrderDetailsPage.tsx";
 
 const ShipperAccount = () => {
     const { user, isSignedIn } = useUser();
@@ -61,6 +62,7 @@ const ShipperAccount = () => {
         }
     }, [isSignedIn]);
 
+
     return (
         <>
             <ShipperNavbar />
@@ -71,6 +73,10 @@ const ShipperAccount = () => {
                 <Route path={"/shipper/in-transit"} element={<InTransitOrders />} />
                 <Route path={"/shipper/delivered"} element={<DeliveredOrders />} />
                 <Route path={"/shipper/all-orders"} element={<ShipperDashboard />} />
+                <Route
+                    path={"/shipper/orders/:orderId"}
+                    element={<OrderDetailsPage />}
+                />
                 <Route path="/user/*" element={<Navigate to={"/shipper"} />} />
                 <Route path="/admin/*" element={<Navigate to={"/shipper"} />} />
                 <Route path="*" element={<NotFound />} />
