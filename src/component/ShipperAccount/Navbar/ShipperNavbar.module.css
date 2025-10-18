@@ -1,152 +1,192 @@
+@font-face {
+    font-family: 'Blanka';
+    src: url("/frontend/src/fonts/Blanka-Regular.otf");
+}
+
 #nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #1a1a1a;
-  color: white;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-#heading {
-  font-size: 1.8rem;
-  font-weight: bold;
-  letter-spacing: 2px;
-}
-
-#heading span {
-  color: #4CAF50;
-}
-
-.nav-routes {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-}
-
-.text {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: white;
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-}
-
-.text:hover {
-  background-color: rgba(76, 175, 80, 0.2);
-  transform: translateY(-2px);
+   background-color: rgb(30, 28, 41);
+    box-shadow: 0 35px 55px -20px rgb(30, 28, 41);
+    padding: 5px 15px;
+    position: fixed;
+    z-index: 5;
+    top: 0;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
 .nav-list-icons {
-  font-size: 1.2rem;
+    display: none;
+}
+
+.nav-routes {
+    display: flex;
+    gap: 50px;
 }
 
 #ham-cart-login-container {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+    display: flex;
+    align-items: center;
+    width: max-content;
+    gap: 20px;
 }
 
-#ham-cart-login-container button {
-  padding: 0.5rem 1rem;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+#ham-cart-login-container>button:hover {
+    background-color: rgb(255, 255, 255);
+    color: rgb(17, 19, 44) !important;
 }
 
-#ham-cart-login-container button:hover {
-  background-color: #45a049;
-  transform: scale(1.05);
-}
-
-#user-admin-btn-group {
-  position: absolute;
-  top: 60px;
-  right: 80px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  background-color: #2a2a2a;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  z-index: 200;
-}
-
-.user-admin-btn-group-hide {
-  display: none;
-}
-
-.user-admin-btn-group-show {
-  display: flex;
-}
-
-.login-btn {
-  padding: 0.7rem 1.5rem;
-  background-color: #333;
-  color: white;
-  border: 2px solid transparent;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 120px;
-}
-
-.login-btn:hover {
-  background-color: #444;
-  border-color: #4CAF50;
-}
-
-.selected-admin-user {
-  background-color: #4CAF50 !important;
-  border-color: #45a049 !important;
+#ham-cart-login-container>button {
+    padding: 6px 15px;
+    transition: background-color 120ms ease;
+    cursor: pointer;
+    border-style: none;
+    border-radius: 5px;
+    color: rgb(47, 45, 79);
+    background-color: rgba(255, 255, 255, 0.668);
+    font-weight: 600;
+    font-size: small;
 }
 
 #GiHamburgerMenu {
-  display: none;
+    color: rgb(6, 9, 38);
+    display: none;
+}
+
+#heading {
+    color: white;
+}
+
+#heading>span {
+    font-family: 'Blanka';
+}
+
+.text {
+    text-decoration: none;
+    cursor: pointer;
+    color: rgba(228, 228, 228, 0.919);
+    font-size: 0.8em;
+    font-weight: 500;
+    transition: color;
+    transition-duration: 100ms;
+}
+
+.text:hover {
+    color: rgb(255, 255, 255);
 }
 
 .user-loggedIn-btn {
-  border-radius: 50%;
+    transform: scale(0.75);
 }
 
-@media screen and (max-width: 768px) {
-  .nav-routes {
-    position: fixed;
-    top: 0;
-    right: 0;
+#user-admin-btn-group {
+    display: flex;
     flex-direction: column;
-    background-color: #1a1a1a;
-    padding: 5rem 2rem 2rem 2rem;
-    width: 60%;
-    height: 100vh;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
-  }
+    position: absolute;
+    top: 65px;
+    width: 120px;
+    box-shadow: 0 0 28px -10px rgba(72, 70, 70, 0.793);
+    border-radius: 5px;
+    transition: all;
+    transition-duration: 90ms;
+}
 
-  #navitems-inactive {
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
-  }
+.login-btn {
+    outline: none;
+    padding: 8px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    border-style: none;
+}
 
-  #navitems-active {
-    transform: translateX(0);
-    transition: transform 0.3s ease;
-  }
+.user-admin-btn-group-hide {
+    transform: translateY(-20px);
+    opacity: 0;
+    visibility: hidden;
+}
 
-  #GiHamburgerMenu {
-    display: block;
-  }
+.user-admin-btn-group-show {
+    transform: translateY(5px);
+    opacity: 1;
+    visibility: visible;
+}
 
-  #user-admin-btn-group {
-    right: 60px;
-  }
+.selected-admin-user {
+    background-color: rgb(81, 81, 106) !important;
+    color: white !important;
+}
+
+@media all and (max-width:1200px) {
+    nav {
+        justify-content: space-around;
+    }
+
+    .nav-list-icons {
+        display: inline-block;
+    }
+
+    #heading {
+        left: 10px;
+        color: rgb(246, 246, 246);
+    }
+
+    #GiHamburgerMenu {
+        display: block;
+        color: rgba(255, 255, 255, 0.792);
+        transition: color 180ms ease-in
+    }
+
+    #GiHamburgerMenu:hover {
+        color: rgb(255, 255, 255)
+    }
+
+    #heading>span {
+        color: rgb(224, 224, 224);
+    }
+
+
+
+    .slider {
+        bottom: 0;
+        height: 100%;
+        width: 40vw;
+    }
+
+    #navitems-inactive {
+        position: fixed;
+        display: none;
+    }
+
+    #navitems-active {
+        padding: 5px 10px;
+        backdrop-filter: blur(10px);
+        font-weight: 900;
+        font-size: 1.20em;
+        box-shadow: -2px -1px 15px -8px rgb(129, 129, 131);
+        background-color: rgba(255, 255, 255, 0.485);
+        visibility: visible;
+        position: fixed;
+        gap: 30px;
+        right: 35px;
+        top: 70px;
+        flex-direction: column;
+        height: 80svh;
+        width: max-content;
+        border-radius: 5px;
+    }
+
+    .text {
+        font-size: 0.8em;
+        font-weight: 800;
+        color: rgb(20, 20, 36);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .text:hover {
+        color: rgb(255, 255, 255);
+    }
 }

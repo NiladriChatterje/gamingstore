@@ -1,100 +1,178 @@
+@font-face {
+    font-family: 'Blanka';
+    src: url('/frontend/src/fonts/Blanka-Regular.otf');
+}
+
 .dashboard-container {
-  padding: 2rem;
-  min-height: calc(100vh - 80px);
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  color: white;
+    padding: 80px 100px 2rem 100px;
+    min-height: 100vh;
+    color: rgb(17, 17, 17);
+    position: relative;
 }
 
 .dashboard-title {
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  color: #4CAF50;
-  text-align: center;
+    font-size: 2.8em;
+    font-family: 'Blanka', sans-serif;
+    color: rgb(17, 17, 17);
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
 .dashboard-content {
-  max-width: 1200px;
-  margin: 0 auto;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .stats-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
 }
 
 .stat-card {
-  background-color: #2a2a2a;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(30, 28, 41, 0.15);
 }
 
 .stat-card h3 {
-  font-size: 1.2rem;
-  color: #aaa;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+    font-size: 1.1rem;
+    color: rgb(34, 34, 34);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
 }
 
 .stat-number {
-  font-size: 3rem;
-  font-weight: bold;
-  color: #4CAF50;
-  margin: 0;
+    font-size: 3rem;
+    font-weight: bold;
+    color: rgb(30, 28, 41);
+    margin: 0;
+    font-family: 'Blanka', sans-serif;
 }
 
 .welcome-message {
-  background-color: #2a2a2a;
-  padding: 3rem;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background-color: white;
+    padding: 3rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .welcome-message h2 {
-  font-size: 2rem;
-  color: #4CAF50;
-  margin-bottom: 1rem;
+    font-size: 2rem;
+    color: rgb(30, 28, 41);
+    margin-bottom: 1rem;
+    font-family: 'Blanka', sans-serif;
+    font-weight: 400;
 }
 
 .welcome-message p {
-  font-size: 1.2rem;
-  color: #aaa;
-  line-height: 1.6;
+    font-size: 1.2rem;
+    color: rgb(34, 34, 34);
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+/* Add some decorative elements similar to UserAccount */
+.dashboard-container::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 5%;
+    height: 200px;
+    width: 200px;
+    border-radius: 50% 20% 40% 60%;
+    filter: blur(40px);
+    opacity: 0.1;
+    background: linear-gradient(to right, rgb(30, 28, 41), rgb(35, 23, 14));
+    z-index: -1;
+}
+
+.dashboard-container::after {
+    content: '';
+    position: absolute;
+    bottom: 10%;
+    right: 5%;
+    height: 180px;
+    width: 220px;
+    border-radius: 40% 60% 20% 50%;
+    filter: blur(50px);
+    opacity: 0.08;
+    background: linear-gradient(to left, rgb(30, 28, 41), rgb(35, 23, 14));
+    z-index: -1;
+}
+
+@media screen and (max-width: 1200px) {
+    .dashboard-container {
+        padding: 80px 50px 2rem 50px;
+    }
+
+    .dashboard-title {
+        font-size: 2.2rem;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .welcome-message {
+        padding: 2rem;
+    }
+
+    .welcome-message h2 {
+        font-size: 1.6rem;
+    }
+
+    .welcome-message p {
+        font-size: 1rem;
+    }
 }
 
 @media screen and (max-width: 768px) {
-  .dashboard-container {
-    padding: 1rem;
-  }
+    .dashboard-container {
+        padding: 80px 20px 2rem 20px;
+    }
 
-  .dashboard-title {
-    font-size: 2rem;
-  }
+    .dashboard-title {
+        font-size: 1.8rem;
+    }
 
-  .stats-container {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
+    .stats-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
 
-  .welcome-message {
-    padding: 2rem;
-  }
+    .stat-card {
+        padding: 1.5rem;
+    }
 
-  .welcome-message h2 {
-    font-size: 1.5rem;
-  }
+    .stat-number {
+        font-size: 2.5rem;
+    }
 
-  .welcome-message p {
-    font-size: 1rem;
-  }
+    .welcome-message {
+        padding: 1.5rem;
+    }
+
+    .welcome-message h2 {
+        font-size: 1.4rem;
+    }
+
+    .welcome-message p {
+        font-size: 0.9rem;
+    }
 }

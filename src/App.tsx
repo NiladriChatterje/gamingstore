@@ -24,7 +24,7 @@ function App() {
     if (user !== null && defaultLoginAdminOrUser && defaultLoginAdminOrUser in roleComponentMap) {
       return roleComponentMap[defaultLoginAdminOrUser];
     }
-    // Default to UserRootContext if no user or invalid role
+    // Default to UserRootContext if no user, no role selected, or invalid role
     return UserRootContext;
   };
 

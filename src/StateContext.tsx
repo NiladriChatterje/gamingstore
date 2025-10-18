@@ -7,7 +7,7 @@ type LoginContext = {
 const GlobalProvider = createContext<Partial<LoginContext>>({});
 
 export const StateContext = ({ children }: { children: ReactNode }) => {
-    const [defaultLoginAdminOrUser, setDefaultLoginAdminOrUser] = useState<string>(localStorage.getItem("loginusertype") || "user");
+    const [defaultLoginAdminOrUser, setDefaultLoginAdminOrUser] = useState<string>(localStorage.getItem("loginusertype") || "");
 
     return (<GlobalProvider.Provider
         value={
