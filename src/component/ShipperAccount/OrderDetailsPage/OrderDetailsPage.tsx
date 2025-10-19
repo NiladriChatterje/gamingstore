@@ -1,39 +1,82 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { SignIn, useUser } from "@clerk/clerk-react";
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
-import { Icon, LatLngBoundsExpression } from "leaflet";
+import { divIcon, LatLngBoundsExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import styles from "./OrderDetailsPage.module.css";
 import { OrderType } from "@declarations/OrderType";
 import { UserType } from "@declarations/UserType";
+import { FaArrowsRotate } from "react-icons/fa6";
 
 
 
-// Custom marker icons for shipper and delivery location
-const shipperIcon = new Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
+// Custom marker icons using divIcon for better React compatibility
+const shipperIcon = divIcon({
+    className: 'custom-marker-icon',
+    html: `
+        <div style="
+            background-color: #3b82f6;
+            width: 32px;
+            height: 32px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        ">
+            <span style="
+                transform: rotate(45deg);
+                font-size: 18px;
+                color: white;
+            ">🚚</span>
+        </div>
+    `,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
 });
 
-const deliveryIcon = new Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
+const deliveryIcon = divIcon({
+    className: 'custom-marker-icon',
+    html: `
+        <div style="
+            background-color: #ef4444;
+            width: 32px;
+            height: 32px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        ">
+            <span style="
+                transform: rotate(45deg);
+                font-size: 18px;
+                color: white;
+            ">📍</span>
+        </div>
+    `,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
 });
 
 const OrderDetailsPage = () => {
     const { orderId } = useParams<{ orderId: string }>();
     const navigate = useNavigate();
+    const { isSignedIn } = useUser();
+
     const [orderDetails, setOrderDetails] = useState<OrderType | null>(null);
     const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(null);
+    const [routeCoordinates, setRouteCoordinates] = useState<[number, number][]>([]);
     const [loading, setLoading] = useState(true);
+    const [locationError, setLocationError] = useState<string | null>(null);
+    const locationWatchIdRef = useRef<number | null>(null);
 
     // Mock data - Replace with actual API call
     useEffect(() => {
@@ -45,8 +88,8 @@ const OrderDetailsPage = () => {
                 username: "Alice Johnson",
                 email: "alice@example.com",
                 geoPoint: {
-                    lat: 28.6139,
-                    lng: 77.2090
+                    lat: 22.6236,
+                    lng: 88.4410
                 },
                 phone: "+1234567890",
                 address: {
@@ -69,31 +112,150 @@ const OrderDetailsPage = () => {
         };
 
         setOrderDetails(mockOrderData);
-        // Simulate current delivery location (slightly offset from destination)
-        setCurrentLocation({
-            lat: mockOrderData.customer.geoPoint.lat - 0.05,
-            lng: mockOrderData.customer.geoPoint.lng - 0.05
-        });
         setLoading(false);
-
-        // Simulate real-time location updates
-        const interval = setInterval(() => {
-            setCurrentLocation(prev => {
-                if (!prev || !mockOrderData.customer.geoPoint) return prev;
-
-                // Move slightly closer to destination
-                const latDiff = mockOrderData.customer.geoPoint.lat - prev.lat;
-                const lngDiff = mockOrderData.customer.geoPoint.lng - prev.lng;
-
-                return {
-                    lat: prev.lat + latDiff * 0.05,
-                    lng: prev.lng + lngDiff * 0.05
-                };
-            });
-        }, 3000);
-
-        return () => clearInterval(interval);
     }, [orderId]);
+
+    // Function to start watching location
+    const startLocationWatch = () => {
+        if (!navigator.geolocation) {
+            setLocationError("Geolocation is not supported by your browser");
+            return;
+        }
+
+        // Clear any existing watch
+        if (locationWatchIdRef.current !== null) {
+            navigator.geolocation.clearWatch(locationWatchIdRef.current);
+            locationWatchIdRef.current = null;
+        }
+
+        setLocationError(null);
+        console.log("Requesting location access...");
+
+        // First, try to get current position to establish initial location
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                console.log("Got initial position:", position.coords);
+                const { latitude, longitude } = position.coords;
+                setCurrentLocation({
+                    lat: latitude,
+                    lng: longitude
+                });
+                setLocationError(null);
+
+                // Now start watching for continuous updates
+                const watchId = navigator.geolocation.watchPosition(
+                    (position) => {
+                        console.log("Position update:", position.coords);
+                        const { latitude, longitude } = position.coords;
+                        setCurrentLocation({
+                            lat: latitude,
+                            lng: longitude
+                        });
+                        setLocationError(null);
+                    },
+                    (error) => {
+                        console.error("Watch position error:", error);
+                        switch (error.code) {
+                            case error.PERMISSION_DENIED:
+                                setLocationError("Location permission denied. Please enable location access in your browser settings.");
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                setLocationError("Location information unavailable. Please check your device settings.");
+                                break;
+                            case error.TIMEOUT:
+                                setLocationError("Location request timed out. Please try again.");
+                                break;
+                            default:
+                                setLocationError(`Error getting location: ${error.message}`);
+                        }
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 30000,
+                        maximumAge: 5000
+                    }
+                );
+
+                locationWatchIdRef.current = watchId;
+                console.log("Started watching position with ID:", watchId);
+            },
+            (error) => {
+                console.error("Initial position error:", error);
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        setLocationError("Location permission denied. Please enable location access in your browser settings.");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        setLocationError("Location information unavailable. Please check your device settings.");
+                        break;
+                    case error.TIMEOUT:
+                        setLocationError("Location request timed out. Please try again.");
+                        break;
+                    default:
+                        setLocationError(`Error getting location: ${error.message}`);
+                }
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 30000,
+                maximumAge: 5000
+            }
+        );
+    };
+
+    // Watch shipper's real-time GPS location
+    useEffect(() => {
+        startLocationWatch();
+
+        return () => {
+            if (locationWatchIdRef.current !== null) {
+                console.log("Cleaning up watch position:", locationWatchIdRef.current);
+                navigator.geolocation.clearWatch(locationWatchIdRef.current);
+                locationWatchIdRef.current = null;
+            }
+        };
+    }, []);
+
+    // Fetch route coordinates from OSRM routing service
+    useEffect(() => {
+        const fetchRoute = async () => {
+            if (!currentLocation || !orderDetails?.customer.geoPoint) return;
+
+            try {
+                const start = `${currentLocation.lng},${currentLocation.lat}`;
+                const end = `${orderDetails.customer.geoPoint.lng},${orderDetails.customer.geoPoint.lat}`;
+
+                // Using OSRM public API for routing
+                const response = await fetch(
+                    `https://router.project-osrm.org/route/v1/driving/${start};${end}?overview=full&geometries=geojson`
+                );
+
+                if (!response.ok) {
+                    console.error('Failed to fetch route');
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (data.routes && data.routes.length > 0) {
+                    // Convert coordinates from [lng, lat] to [lat, lng] for Leaflet
+                    const coordinates = data.routes[0].geometry.coordinates.map(
+                        (coord: [number, number]) => [coord[1], coord[0]] as [number, number]
+                    );
+                    setRouteCoordinates(coordinates);
+                }
+            } catch (error) {
+                console.error('Error fetching route:', error);
+                // Fallback to straight line if routing fails
+                setRouteCoordinates([
+                    [currentLocation.lat, currentLocation.lng],
+                    [orderDetails.customer.geoPoint.lat, orderDetails.customer.geoPoint.lng]
+                ]);
+            }
+        };
+
+        fetchRoute();
+    }, [currentLocation]);
 
     if (loading) {
         return (
@@ -118,10 +280,17 @@ const OrderDetailsPage = () => {
     const { customer } = orderDetails;
     const destination = customer.geoPoint;
 
-    // Calculate route line between current location and destination
-    const routePositions: [number, number][] = currentLocation && destination
-        ? [[currentLocation.lat, currentLocation.lng], [destination.lat, destination.lng]]
-        : [];
+    if (!isSignedIn)
+        return (
+            <section
+                style={{
+                    width: '100%', height: '90dvh',
+                    display: 'flex', justifyContent: 'center', alignItems: 'center'
+                }}
+            >
+                <SignIn redirectUrl={'/shipper/in-transit'} />
+            </section>
+        );
 
     return (
         <div className={styles["details-container"]}>
@@ -138,20 +307,76 @@ const OrderDetailsPage = () => {
                 </span>
             </div>
 
+            {/* Location Status Banner */}
+            {locationError ? (
+                <div className={styles["location-error-banner"]} style={{
+                    backgroundColor: '#9574744f',
+                    border: '2px dashed #b63c3cff',
+                    borderRadius: '8px',
+                    padding: '12px 16px',
+                    margin: '16px 0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '12px'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div>
+                            <strong style={{ color: '#991b1b' }}>Location Tracking Error</strong>
+                            <p style={{ margin: '4px 0 0 0', color: '#991b1b' }}>{locationError}</p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={startLocationWatch}
+                        style={{
+                            backgroundColor: '#dc2626',
+                            color: 'white',
+                            border: 'none',
+                            padding: '8px',
+                            borderRadius: '50%',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'background-color 0.2s'
+                        }}
+                    >
+                        <FaArrowsRotate
+                            size={25}
+                        />
+                    </button>
+                </div>
+            ) : !currentLocation && (
+                <div className={styles["location-loading-banner"]} style={{
+                    backgroundColor: '#fef3c77e',
+                    border: '2px dashed #f59e0b',
+                    borderRadius: '8px',
+                    padding: '12px 16px',
+                    margin: '16px 0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px'
+                }}>
+                    <div>
+                        <strong style={{ color: '#92400e' }}>Getting GPS Location...</strong>
+                        <p style={{ margin: '4px 0 0 0', color: '#92400e' }}>Please ensure location permissions are enabled</p>
+                    </div>
+                </div>
+            )}
+
             {/* Real-time Map Section */}
             <div className={styles["map-section"]}>
-                <h2>Real-time Tracking</h2>
                 <div className={styles["map-container"]}>
                     <MapContainer
                         center={currentLocation ? [currentLocation.lat, currentLocation.lng] : [destination.lat, destination.lng]}
                         zoom={12}
                         className={styles["map"]}
-                        style={{ height: "400px", width: "100%" }}
-                        bounds={routePositions.length > 0 ? routePositions as LatLngBoundsExpression : undefined}
+                        style={{ height: "100%", width: "100%" }}
+                        bounds={routeCoordinates.length > 0 ? routeCoordinates as LatLngBoundsExpression : undefined}
                     >
                         <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}.png"
                         />
 
                         {/* Current delivery location marker */}
@@ -182,14 +407,31 @@ const OrderDetailsPage = () => {
                             </Popup>
                         </Marker>
 
-                        {/* Route line */}
-                        {routePositions.length > 0 && (
-                            <Polyline
-                                positions={routePositions}
-                                color="blue"
-                                weight={3}
-                                dashArray="10, 10"
-                            />
+                        {/* Route line following actual roads with glow effect */}
+                        {routeCoordinates.length > 0 && (
+                            <>
+                                {/* Outer glow layer */}
+                                <Polyline
+                                    positions={routeCoordinates}
+                                    color="#ff8c42"
+                                    weight={12}
+                                    opacity={0.2}
+                                />
+                                {/* Middle glow layer */}
+                                <Polyline
+                                    positions={routeCoordinates}
+                                    color="#ff8c42"
+                                    weight={8}
+                                    opacity={0.4}
+                                />
+                                {/* Main line */}
+                                <Polyline
+                                    positions={routeCoordinates}
+                                    color="#ffa726"
+                                    weight={4}
+                                    opacity={0.9}
+                                />
+                            </>
                         )}
                     </MapContainer>
                 </div>

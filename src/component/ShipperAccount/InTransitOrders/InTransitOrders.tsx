@@ -1,5 +1,6 @@
 import styles from "./InTransitOrders.module.css";
 import { useNavigate } from 'react-router-dom';
+import { SignedIn, SignIn, useUser } from '@clerk/clerk-react';
 
 const inTransitOrders = [
     {
@@ -30,48 +31,62 @@ const inTransitOrders = [
 
 const InTransitOrders = () => {
     const navigate = useNavigate();
+    const { isSignedIn } = useUser();
+
 
     const handleViewDetails = (orderId: string) => {
         navigate(`/shipper/orders/${orderId}`);
     };
-
+    if (!isSignedIn)
+        return (
+            <section
+                style={{
+                    width: '100%', height: '90dvh',
+                    display: 'flex', justifyContent: 'center', alignItems: 'center'
+                }}
+            >
+                <SignIn redirectUrl={'/shipper'} />
+            </section>
+        );
     return (
-        <div className={styles["orders-container"]}>
-            <h1 className={styles["orders-title"]}>In-Transit Orders</h1>
-            <div className={styles["orders-content"]}>
-                <div className={styles["orders-grid"]}>
-                    {
-                        inTransitOrders.map((order) => (
-                            <div className={styles["order-card"]} key={order.orderId}>
-                                <div className={styles["order-header"]}>
-                                    <h3>Order #{order.orderId}</h3>
-                                    <span className={styles["status-badge-transit"]}>In Transit</span>
+        <SignedIn>
+            <div className={styles["orders-container"]}>
+                <h1 className={styles["orders-title"]}>In-Transit Orders</h1>
+                <div className={styles["orders-content"]}>
+                    <div className={styles["orders-grid"]}>
+                        {
+                            inTransitOrders.map((order) => (
+                                <div className={styles["order-card"]} key={order.orderId}>
+                                    <div className={styles["order-header"]}>
+                                        <h3>Order #{order.orderId}</h3>
+                                        <span className={styles["status-badge-transit"]}>In Transit</span>
+                                    </div>
+                                    <div className={styles["order-details"]}>
+                                        <p><strong>Customer:</strong> {order.customer}</p>
+                                        <p><strong>Address:</strong> {order.address}</p>
+                                        <p><strong>Expected:</strong> {order.expectedDelivery}</p>
+                                        <p><strong>Items:</strong> {order.items_qty}</p>
+                                    </div>
+                                    <div className={styles["order-actions"]}>
+                                        <button className={styles["btn-primary"]}>Update Status</button>
+                                        <button
+                                            className={styles["btn-secondary"]}
+                                            onClick={() => handleViewDetails(order.orderId)}
+                                        >
+                                            View Details
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className={styles["order-details"]}>
-                                    <p><strong>Customer:</strong> {order.customer}</p>
-                                    <p><strong>Address:</strong> {order.address}</p>
-                                    <p><strong>Expected:</strong> {order.expectedDelivery}</p>
-                                    <p><strong>Items:</strong> {order.items_qty}</p>
-                                </div>
-                                <div className={styles["order-actions"]}>
-                                    <button className={styles["btn-primary"]}>Update Status</button>
-                                    <button
-                                        className={styles["btn-secondary"]}
-                                        onClick={() => handleViewDetails(order.orderId)}
-                                    >
-                                        View Details
-                                    </button>
-                                </div>
-                            </div>
-                        ))
-                    }
+                            ))
+                        }
 
-                    <div className={styles["empty-state"]}>
-                        <p>More in-transit orders will appear here</p>
+                        <div className={styles["empty-state"]}>
+                            <p>More in-transit orders will appear here</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </SignedIn>
     );
 };
 

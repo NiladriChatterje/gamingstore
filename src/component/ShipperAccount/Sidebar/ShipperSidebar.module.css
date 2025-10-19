@@ -7,7 +7,7 @@
     background-color: rgb(30, 28, 41);
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
     overflow-y: auto;
-    z-index: 1000;
+    z-index: 1001;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

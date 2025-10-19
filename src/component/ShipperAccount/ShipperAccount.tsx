@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -9,13 +9,23 @@ import ShipperDashboard from "./Dashboard/ShipperDashboard.tsx";
 import DeliveredOrders from "./DeliveredOrders/DeliveredOrders.tsx";
 import InTransitOrders from "./InTransitOrders/InTransitOrders.tsx";
 import OrderDetailsPage from "./OrderDetailsPage/OrderDetailsPage.tsx";
+import ShipperLogin from "./ShipperLogin/ShipperLogin.tsx";
+import { useStateContext } from "../../StateContext.tsx";
 
 const ShipperAccount = () => {
     const { user, isSignedIn } = useUser();
     const { getToken } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { defaultLoginAdminOrUser } = useStateContext();
+    const [isAuthChecked, setIsAuthChecked] = useState(false);
+
+    // Check if we're on the login page
+    const isLoginPage = location.pathname === "/shipper/login";
+
 
     useEffect(() => {
-        if (isSignedIn && user != null) {
+        if (isSignedIn && user != null && isAuthChecked && defaultLoginAdminOrUser === "shipper") {
             (async () => {
                 const token = await getToken();
 
@@ -60,25 +70,31 @@ const ShipperAccount = () => {
                 }
             })();
         }
-    }, [isSignedIn]);
+    }, [isSignedIn, user]);
 
+    if (!isSignedIn)
+        <Navigate to="/shipper/login" replace />;
 
     return (
         <>
-            <ShipperNavbar />
-            <ShipperSidebar />
+            {/* Only show Navbar and Sidebar when not on login page */}
+            {!isLoginPage && (
+                <>
+                    <ShipperNavbar />
+                    <ShipperSidebar />
+                </>
+            )}
             <Routes>
-                <Route path={"/"} element={<ShipperDashboard />} />
-                <Route index path={"/shipper"} element={<ShipperDashboard />} />
-                <Route path={"/shipper/in-transit"} element={<InTransitOrders />} />
-                <Route path={"/shipper/delivered"} element={<DeliveredOrders />} />
-                <Route path={"/shipper/all-orders"} element={<ShipperDashboard />} />
+                <Route path="/" element={<ShipperDashboard />} />
+                <Route index path="/shipper" element={<ShipperDashboard />} />
+                <Route path="/shipper/login" element={<ShipperLogin />} />
+                <Route path="/shipper/in-transit" element={<InTransitOrders />} />
+                <Route path="/shipper/delivered" element={<DeliveredOrders />} />
+                <Route path="/shipper/all-orders" element={<ShipperDashboard />} />
                 <Route
-                    path={"/shipper/orders/:orderId"}
+                    path="/shipper/orders/:orderId"
                     element={<OrderDetailsPage />}
                 />
-                <Route path="/user/*" element={<Navigate to={"/shipper"} />} />
-                <Route path="/admin/*" element={<Navigate to={"/shipper"} />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </>

@@ -1,6 +1,21 @@
+import { SignIn, useUser } from '@clerk/clerk-react';
 import styles from './ShipperDashboard.module.css';
 
 const ShipperDashboard = () => {
+    const { isSignedIn } = useUser();
+
+    if (!isSignedIn)
+        return (
+            <section
+                style={{
+                    width: '100%', height: '90dvh',
+                    display: 'flex', justifyContent: 'center', alignItems: 'center'
+                }}
+            >
+                <SignIn redirectUrl={'/user/Orders'} />
+            </section>
+        );
+
     return (
         <div className={styles['dashboard-container']}>
             <h1 className={styles['dashboard-title']}>Shipper Dashboard</h1>
