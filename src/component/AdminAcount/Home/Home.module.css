@@ -8,6 +8,7 @@
     transition: all 0.3s ease;
     border: 1px solid rgba(0, 0, 0, 0.06);
     cursor: pointer;
+    scroll-snap-align: center;
 }
 
 .brief-cards:hover {
@@ -44,14 +45,95 @@
     box-sizing: border-box;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     border: 1px solid rgba(0, 0, 0, 0.06);
+    margin: 0;
+}
+
+.cards-container {
+    position: relative;
+    width: 100%;
 }
 
 #top-layer {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     width: 100%;
-    justify-content: space-between;
-    align-items: stretch;
     gap: 12px;
+    height: calc(120px + 34px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+#top-layer::-webkit-scrollbar {
+    display: none;
+}
+
+.brief-cards {
+    scroll-snap-align: start;
+}
+
+.scroll-button {
+    position: absolute;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #64748b;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+    animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.8) translateY(10px);
+    }
+}
+
+.scroll-button.hiding {
+    animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.scroll-button:hover {
+    background-color: #f8fafc;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    color: #1a202c;
+    transform: scale(1.05);
+}
+
+.scroll-up {
+    top: 8px;
+}
+
+.scroll-down {
+    bottom: 8px;
 }
 
 .card-header {
@@ -105,11 +187,8 @@
 
 @media screen and (max-width: 1024px) {
     #top-layer {
-        flex-direction: column;
-    }
-
-    .brief-cards {
-        min-width: 100%;
+        grid-template-columns: repeat(2, 1fr);
+        max-height: calc(240px + 24px);
     }
 
     .page-title {
@@ -127,6 +206,11 @@
         gap: 20px;
     }
 
+    #top-layer {
+        grid-template-columns: 1fr;
+        max-height: calc(360px + 24px);
+    }
+
     .page-title {
         font-size: 22px;
     }
@@ -138,5 +222,11 @@
     #graph {
         height: 300px;
         padding: 15px;
+    }
+
+    .scroll-button {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
     }
 }

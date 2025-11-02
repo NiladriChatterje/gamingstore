@@ -17,8 +17,8 @@
 }
 
 #admin-routes {
-    width: 450px;
-
+    width: max-content;
+    max-width: 700px;
     padding: 10px;
 }
 
