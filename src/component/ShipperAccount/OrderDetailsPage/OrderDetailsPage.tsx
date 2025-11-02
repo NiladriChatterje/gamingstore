@@ -16,13 +16,11 @@ const shipperIcon = divIcon({
     className: 'custom-marker-icon',
     html: `
         <div style="
-            background-color: #3b82f6;
+            background-color: #202020ff;
             width: 32px;
             height: 32px;
             border-radius: 50% 50% 50% 0;
             transform: rotate(-45deg);
-            border: 3px solid white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -43,13 +41,11 @@ const deliveryIcon = divIcon({
     className: 'custom-marker-icon',
     html: `
         <div style="
-            background-color: #ef4444;
+            background-color: #e3a366ff;
             width: 32px;
             height: 32px;
             border-radius: 50% 50% 50% 0;
             transform: rotate(-45deg);
-            border: 3px solid white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -72,7 +68,7 @@ const OrderDetailsPage = () => {
     const { isSignedIn } = useUser();
 
     const [orderDetails, setOrderDetails] = useState<OrderType | null>(null);
-    const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(null);
+    const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>({ lat: 22.634117693411923, lng: 88.48388276892908 });
     const [routeCoordinates, setRouteCoordinates] = useState<[number, number][]>([]);
     const [loading, setLoading] = useState(true);
     const [locationError, setLocationError] = useState<string | null>(null);
@@ -219,11 +215,16 @@ const OrderDetailsPage = () => {
     // Fetch route coordinates from OSRM routing service
     useEffect(() => {
         const fetchRoute = async () => {
-            if (!currentLocation || !orderDetails?.customer.geoPoint) return;
+            if (!currentLocation || !orderDetails?.customer.geoPoint) {
+                console.log('Missing location data:', { currentLocation, orderDetails: orderDetails?.customer.geoPoint });
+                return;
+            }
 
             try {
                 const start = `${currentLocation.lng},${currentLocation.lat}`;
                 const end = `${orderDetails.customer.geoPoint.lng},${orderDetails.customer.geoPoint.lat}`;
+
+                console.log('Fetching route from:', start, 'to:', end);
 
                 // Using OSRM public API for routing
                 const response = await fetch(
@@ -231,31 +232,47 @@ const OrderDetailsPage = () => {
                 );
 
                 if (!response.ok) {
-                    console.error('Failed to fetch route');
+                    console.error('Failed to fetch route, status:', response.status);
                     return;
                 }
 
                 const data = await response.json();
+                console.log('OSRM response:', data);
 
                 if (data.routes && data.routes.length > 0) {
                     // Convert coordinates from [lng, lat] to [lat, lng] for Leaflet
                     const coordinates = data.routes[0].geometry.coordinates.map(
                         (coord: [number, number]) => [coord[1], coord[0]] as [number, number]
                     );
+                    console.log('Route coordinates count:', coordinates.length);
                     setRouteCoordinates(coordinates);
+                } else {
+                    console.error('No routes found in OSRM response');
                 }
             } catch (error) {
                 console.error('Error fetching route:', error);
                 // Fallback to straight line if routing fails
-                setRouteCoordinates([
+                const fallbackRoute = [
                     [currentLocation.lat, currentLocation.lng],
                     [orderDetails.customer.geoPoint.lat, orderDetails.customer.geoPoint.lng]
-                ]);
+                ];
+                console.log('Using fallback straight line route:', fallbackRoute);
+                setRouteCoordinates(fallbackRoute as [number, number][]);
             }
         };
 
         fetchRoute();
-    }, [currentLocation]);
+    }, [currentLocation, orderDetails]);
+
+    // Debug: Log routeCoordinates whenever it changes
+    useEffect(() => {
+        console.log('Route coordinates updated:', {
+            count: routeCoordinates.length,
+            coordinates: routeCoordinates.slice(0, 3), // Log first 3 points
+            currentLocation,
+            destination: orderDetails?.customer.geoPoint
+        });
+    }, [routeCoordinates, currentLocation, orderDetails]);
 
     if (loading) {
         return (
@@ -366,7 +383,7 @@ const OrderDetailsPage = () => {
 
             {/* Real-time Map Section */}
             <div className={styles["map-section"]}>
-                <div className={styles["map-container"]}>
+                <div className={`${styles["map-container"]} ${styles["glowing-route-container"]}`}>
                     <MapContainer
                         center={currentLocation ? [currentLocation.lat, currentLocation.lng] : [destination.lat, destination.lng]}
                         zoom={12}
@@ -408,30 +425,50 @@ const OrderDetailsPage = () => {
                         </Marker>
 
                         {/* Route line following actual roads with glow effect */}
-                        {routeCoordinates.length > 0 && (
+                        {routeCoordinates.length > 0 ? (
                             <>
                                 {/* Outer glow layer */}
                                 <Polyline
                                     positions={routeCoordinates}
-                                    color="#ff8c42"
-                                    weight={12}
-                                    opacity={0.2}
+                                    pathOptions={{
+                                        color: "#ff8c42",
+                                        weight: 2,
+                                        opacity: 0.3
+                                    }}
                                 />
                                 {/* Middle glow layer */}
                                 <Polyline
                                     positions={routeCoordinates}
-                                    color="#ff8c42"
-                                    weight={8}
-                                    opacity={0.4}
+                                    pathOptions={{
+                                        color: "#ff8c42",
+                                        weight: 4,
+                                        opacity: 0.6
+                                    }}
                                 />
                                 {/* Main line */}
                                 <Polyline
                                     positions={routeCoordinates}
-                                    color="#ffa726"
-                                    weight={4}
-                                    opacity={0.9}
+                                    pathOptions={{
+                                        color: "#ffb84dff",
+                                        weight: 0.5,
+                                        opacity: 1
+                                    }}
                                 />
                             </>
+                        ) : (
+                            <div style={{
+                                position: 'absolute',
+                                top: 10,
+                                left: 10,
+                                background: 'rgba(255, 255, 255, 0.9)',
+                                padding: '8px 12px',
+                                borderRadius: '4px',
+                                zIndex: 1000,
+                                fontSize: '12px',
+                                color: '#666'
+                            }}>
+                                Loading route...
+                            </div>
                         )}
                     </MapContainer>
                 </div>

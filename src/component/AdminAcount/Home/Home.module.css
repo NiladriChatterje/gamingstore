@@ -1,39 +1,142 @@
 .brief-cards {
-    border-radius: 8px;
+    border-radius: 10px;
     background-color: white;
-    padding: 15px;
-    width: 120px;
-    height: 80px;
+    padding: 16px;
+    min-width: 200px;
+    flex: 1;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+}
+
+.brief-cards:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
 }
 
 #container {
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    justify-content: space-between;
+    gap: 12px;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 100%;
+}
+
+.page-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0 0 12px 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 #graph {
     width: 100%;
-    border-radius: 8px;
-    height: 200px;
+    border-radius: 10px;
+    flex: 1;
+    min-height: 300px;
     background-color: white;
+    padding: 18px;
+    box-sizing: border-box;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 #top-layer {
     display: flex;
     width: 100%;
-    justify-content: center;
-    align-items: center;
-    gap: 25px;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 12px;
 }
 
-@media screen and (max-width:950px) {
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.icon-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon {
+    font-size: 18px;
+}
+
+.card-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 8px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.card-trend {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #10b981;
+    font-weight: 500;
+}
+
+.trend-icon {
+    font-size: 10px;
+}
+
+@media screen and (max-width: 1024px) {
     #top-layer {
         flex-direction: column;
     }
 
     .brief-cards {
-        width: 100%;
+        min-width: 100%;
+    }
+
+    .page-title {
+        font-size: 24px;
+    }
+
+    #graph {
+        height: 350px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #container {
+        padding: 15px;
+        gap: 20px;
+    }
+
+    .page-title {
+        font-size: 22px;
+    }
+
+    .card-value {
+        font-size: 28px;
+    }
+
+    #graph {
+        height: 300px;
+        padding: 15px;
     }
 }

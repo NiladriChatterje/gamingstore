@@ -1,6 +1,6 @@
-import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useAuth, useUser } from "@clerk/clerk-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import NotFound from "../../NotFound.tsx";
 import ShipperNavbar from "./Navbar/ShipperNavbar.tsx";
@@ -15,17 +15,15 @@ import { useStateContext } from "../../StateContext.tsx";
 const ShipperAccount = () => {
     const { user, isSignedIn } = useUser();
     const { getToken } = useAuth();
-    const navigate = useNavigate();
     const location = useLocation();
     const { defaultLoginAdminOrUser } = useStateContext();
-    const [isAuthChecked, setIsAuthChecked] = useState(false);
 
     // Check if we're on the login page
     const isLoginPage = location.pathname === "/shipper/login";
 
 
     useEffect(() => {
-        if (isSignedIn && user != null && isAuthChecked && defaultLoginAdminOrUser === "shipper") {
+        if (isSignedIn && user != null && defaultLoginAdminOrUser === "shipper") {
             (async () => {
                 const token = await getToken();
 

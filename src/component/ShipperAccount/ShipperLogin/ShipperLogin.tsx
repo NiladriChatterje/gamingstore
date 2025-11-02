@@ -10,11 +10,15 @@ const ShipperLogin = () => {
     const { setDefaultLoginAdminOrUser } = useStateContext();
     const { isSignedIn } = useUser();
 
-    // Set user type to shipper when component mounts (before sign-in)
     useEffect(() => {
-        localStorage.setItem("loginusertype", "shipper");
-        setDefaultLoginAdminOrUser?.("shipper");
-    }, [setDefaultLoginAdminOrUser]);
+
+        return () => {
+            if (!isSignedIn) {
+                localStorage.setItem("loginusertype", "user");
+                setDefaultLoginAdminOrUser?.("user");
+            }
+        };
+    }, [setDefaultLoginAdminOrUser, isSignedIn]);
 
     // Redirect if already signed in
     useEffect(() => {

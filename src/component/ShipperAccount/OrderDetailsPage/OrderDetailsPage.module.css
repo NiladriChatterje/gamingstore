@@ -450,3 +450,42 @@
         width: 100%;
     }
 }
+/* Glowing Route Polyline Styles */
+.map-container :global(.leaflet-interactive) {
+    filter: drop-shadow(0 0 8px rgba(255, 140, 66, 0.6));
+}
+
+.glowing-route-container :global(.leaflet-interactive) {
+    animation: routePulse 2s ease-in-out infinite;
+}
+
+@keyframes routePulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 8px rgba(255, 140, 66, 0.6));
+    }
+    50% {
+        filter: drop-shadow(0 0 16px rgba(255, 140, 66, 0.9));
+    }
+}
+
+/* Enhanced glow effect for route polylines */
+.route-glow-outer {
+    stroke: #ff8c42;
+    stroke-width: 12;
+    opacity: 0.2;
+    fill: none;
+}
+
+.route-glow-middle {
+    stroke: #ff8c42;
+    stroke-width: 8;
+    opacity: 0.4;
+    fill: none;
+}
+
+.route-glow-inner {
+    stroke: #ffa726;
+    stroke-width: 4;
+    opacity: 0.9;
+    fill: none;
+}
