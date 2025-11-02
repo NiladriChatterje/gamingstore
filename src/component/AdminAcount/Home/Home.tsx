@@ -15,6 +15,7 @@ import {
     Legend,
     ChartOptions
 } from 'chart.js';
+import { useAdminStateContext } from '../AdminStateContext';
 
 // Register Chart.js components
 ChartJS.register(
@@ -38,7 +39,7 @@ interface DashboardMetrics {
 }
 
 const Home = () => {
-    const { isSignedIn, user } = useUser();
+    const { isSignedIn } = useUser();
     const { getToken } = useAuth();
     const topLayerRef = useRef<HTMLElement>(null);
     const [canScrollUp, setCanScrollUp] = useState(false);
@@ -46,6 +47,7 @@ const Home = () => {
     const [dashboardMetrics, setDashboardMetrics] = useState<DashboardMetrics | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { admin } = useAdminStateContext();
 
     if (!isSignedIn)
         <Navigate to={'/user'} />
@@ -56,12 +58,12 @@ const Home = () => {
             setLoading(true);
             setError(null);
 
-            if (!user?.id) {
+            if (!admin?._id) {
                 throw new Error('User ID not available');
             }
 
             const token = await getToken();
-            const response = await fetch(`http://localhost:5003/${user.id}/dashboard-metrics`, {
+            const response = await fetch(`http://localhost:5003/${admin._id}/dashboard-metrics`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -85,10 +87,10 @@ const Home = () => {
 
     // Effect to fetch data on component mount
     useEffect(() => {
-        if (isSignedIn && user?.id) {
+        if (isSignedIn && admin?._id) {
             fetchDashboardMetrics();
         }
-    }, [isSignedIn, user?.id]);
+    }, [isSignedIn, admin?._id]);
 
     // Performance cards data - now dynamic based on API response or fallback to defaults
     const performanceCards = [

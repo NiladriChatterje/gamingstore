@@ -110,6 +110,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
           const result = await res.text();
           if (!res.ok) throw new Error(result);
         } catch (err: Error | any) {
+          console.log("error in creating admin doc : ", err);
           toast.dismiss();
           toast.error(err.message, {
             position: "bottom-left",
@@ -149,7 +150,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         setAdmin({
           _type: "admin",
           username: user?.firstName,
-          _id: user?.id,
+          _id: "admin-" + user?.id,
           email: user?.emailAddresses[0].emailAddress,
           geoPoint: {
             lat: latitude,
