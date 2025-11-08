@@ -22,7 +22,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
   const [admin, setAdmin] = useState<AdminFieldsType | undefined>(
     () => undefined
   );
-  const [isPlanActiveState, setIsPlanActive] = useState<boolean>(true);
+  const [isPlanActiveState, setIsPlanActive] = useState<boolean>(false);
   const [loadingState, setLoadingState] = useState<boolean>(true);
   const [retry, setRetry] = useState<boolean>(true);
   const [editProductForm, setEditProductForm] = useState<ProductType | null>(); // To fill up form fields when a product is about to edit
@@ -33,12 +33,12 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
     const token = await getToken()
     console.log(token);
     const response: Response = await fetch(
-      `http://localhost:5003/fetch-admin-data/${user?.id}`,
+      `http://localhost:5003/fetch-admin-data/${"admin-" + user?.id}`,
       {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
-          "x-admin-id": admin?._id ?? ''
+          "x-admin-id": user?.id ? `admin-${user.id}` : ''
         }
       }
     );
@@ -201,25 +201,19 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     async function mainCheck() {
-      // check from sanity if user has an existing
+      // check from server if user has an existing
       // subscription plan or not
       try {
         const result: AdminFieldsType | undefined = await checkAdminEnrolled();
 
         if (result == null) return;
-        if (
-          result != null &&
-          result?.SubscriptionPlan &&
-          result?.SubscriptionPlan?.length !== 0
-        ) {
-          let lastPlan = result.SubscriptionPlan?.at(-1);
-          const today = new Date().getTime();
-          const expirationDay = new Date(
-            lastPlan?.planSchemeList?.expireDate || new Date()
-          ).getTime();
 
-          if (expirationDay - today > 0) setIsPlanActive(true);
+        // Use the isPlanActive value from server response
+        console.log('subscription plan from server : ', result.isPlanActive);
+        if (result.isPlanActive) {
+          setIsPlanActive(true);
         }
+
         setAdmin(result);
       } catch (err: Error | any) {
         setLoadingState(false);
@@ -240,13 +234,13 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
             <span style={{
               color: 'white', padding: '1px 6px',
               fontWeight: 300,
-              margin: '0px 3px', background: '#2e3547', borderRadius: 3, textWrap: 'nowrap'
+              margin: '0px 3px', borderRadius: 3, textWrap: 'nowrap'
             }}>Retry login</span>
             <span>OR</span>
             <span style={{
               color: 'white', padding: '1px 6px',
               fontWeight: 300,
-              margin: '0px 3px', background: '#2e3547', borderRadius: 3, textWrap: 'nowrap'
+              margin: '0px 3px', borderRadius: 3, textWrap: 'nowrap'
             }}>creating account</span>
           </div>,
           {

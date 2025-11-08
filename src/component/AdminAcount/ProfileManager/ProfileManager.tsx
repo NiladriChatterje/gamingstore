@@ -3,7 +3,7 @@ import styles from "./ProfileManager.module.css";
 import { MdEdit } from "react-icons/md";
 import { FaPhone, FaUser } from "react-icons/fa6";
 import { IoIosPersonAdd } from "react-icons/io";
-import { useUser } from "@clerk/clerk-react";
+import { useUser, useAuth } from "@clerk/clerk-react";
 import { MdOutlineMarkEmailUnread, MdSignpost } from "react-icons/md";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -16,6 +16,7 @@ import { useAdminStateContext } from "../AdminStateContext";
 const ProfileManager = () => {
   const { admin } = useAdminStateContext();
   const { user } = useUser();
+  const { getToken } = useAuth();
 
   console.log("admin ", admin);
 
@@ -76,18 +77,20 @@ const ProfileManager = () => {
       toast.error('invalid phone-number');
       return Promise.reject();
     }
-    if (gstin.length !== 14) {
+    if (gstin.length !== 15) {
       toast.error('invalid GSTIN!');
       return Promise.reject();
     }
-    if (phone.length !== 10 || gstin.length !== 14) {
+    if (phone.length !== 10 || gstin.length !== 15) {
       toast.error("Form not submitted!")
       return Promise.reject();
     }
     try {
+      const token = await getToken();
       const response = await fetch("http://localhost:5003/update-admin-info", {
         headers: {
           "content-type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           _id: admin?._id,
@@ -102,11 +105,12 @@ const ProfileManager = () => {
           phone: Number(phone),
         }),
       });
-
+      console.log("update response ", response);
       if (response.ok) setDisable(true);
       return Promise.resolve();
     } catch (err) {
-      throw Promise.reject();
+      console.log(err);
+      return Promise.reject();
     }
   }
 
@@ -391,7 +395,7 @@ const ProfileManager = () => {
               padding: "2px 10px",
             }}
             size={30}
-            onClick={() => {
+            onClick={async () => {
               if (!disable)
                 toast.promise(handleUpdate(), {
                   loading: "updating...",

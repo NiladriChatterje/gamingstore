@@ -81,6 +81,14 @@ const AdminAccount = () => {
                     }
                   />
                 </Routes>
+                <section className={styles.dateSection}>
+                  <div id={styles.fromDate}>
+
+                  </div>
+                  <div id={styles.toDate}>
+
+                  </div>
+                </section>
               </section>
             ) : (
               <SubscriptionPlan

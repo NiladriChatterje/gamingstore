@@ -9,7 +9,8 @@ export declare interface AdminFieldsType {
   };
   phone?: number;
   email: string | null | undefined;
-  SubscriptionPlan?: subscription[] | undefined | null;
+  subscriptionPlan?: subscription[] | undefined | null;
+  isPlanActive?: boolean;
   address: {
     pincode: string;
     county: string;
@@ -23,10 +24,11 @@ type subscription = {
   orderId: string;
   paymentSignature: string;
   amount: number;
-  planSchemeList: plan;
+  planSchemaList: plan; // Fixed: Changed from planSchemeList to planSchemaList to match Sanity schema
 };
 
 interface plan {
   activeDate: Date;
   expireDate: Date;
 }
+

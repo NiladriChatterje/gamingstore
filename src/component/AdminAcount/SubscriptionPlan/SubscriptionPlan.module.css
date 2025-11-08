@@ -1,18 +1,31 @@
 #subscription-container {
     display: flex;
-    width: 60%;
-    justify-content: space-evenly;
+    width: 80%;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 1px 5px;
+    overflow-y: auto;
     flex-wrap: wrap;
+    height: 450px;
 }
 
 .subscription-plans {
     background-color: white;
     border-radius: 5px;
     padding: 15px 25px;
-    min-height: 300px;
+    height: 400px;
     width: 250px;
     box-shadow: 0 0 10px -5px grey;
     transition: transform 60ms ease-in;
+    display: flex;
+    flex-direction: column;
+}
+
+.subscription-plans span {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
 }
 
 .purchase-btn {
@@ -37,5 +50,17 @@
 
 .subscription-content {
     padding: 5px 0;
-    height: 250px;
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.subscription-content ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.subscription-content li {
+    margin-bottom: 8px;
+    line-height: 1.4;
 }

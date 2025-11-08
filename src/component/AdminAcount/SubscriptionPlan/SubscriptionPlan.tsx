@@ -25,7 +25,7 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                 <Checkout
                     price={Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_1)}
                     callback={async (_payment_id: string, _payment_signature: string, _order_id: string) => {
-                        const response = await fetch('http://localhost:5000/admin-subscription', {
+                        const response = await fetch('http://localhost:5000/seller-subscription', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -33,8 +33,9 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                             },
                             body: JSON.stringify({
                                 _id: admin?._id,
-                                subscription: {
+                                subscriptionPlan: {
                                     amount: Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_1),
+                                    _type: "subscription",
                                     transactionId: _payment_id,
                                     orderId: _order_id,
                                     paymentSignature: _payment_signature,
@@ -45,9 +46,10 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                                 },
                             }),
                         });
-                        const data = await response.json()
+                        //check payment_service
+                        // const data = await response.text()
 
-                        if (data?.status == 200) {
+                        if (response?.status == 200) {
                             setIsPlanActive(true);
                             navigate('/admin');
                         }
@@ -63,14 +65,13 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                         <li>Out-of-stock notification (phone+email)</li>
                         <li>SSL/TLS</li>
                         <li>SSO</li>
-                        <li>Multi-User support</li>
                         <li>Manual Cache Control</li>
                     </ul>
                 </article>
                 <Checkout
                     price={Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_2)}
                     callback={async (_payment_id: string, _payment_signature: string, _order_id: string) => {
-                        const response = await fetch('http://localhost:5000/save-subscription', {
+                        const response = await fetch('http://localhost:5000/seller-subscription', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -78,21 +79,81 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                             },
                             body: JSON.stringify({
                                 _id: admin?._id,
-                                subscription: {
+                                subscriptionPlan: {
                                     amount: Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_2),
-                                    _payment_id, _order_id, _payment_signature,
+                                    _type: "subscription",
+                                    transactionId: _payment_id,
+                                    orderId: _order_id,
+                                    paymentSignature: _payment_signature,
+                                    planSchemaList: {
+                                        activeDate: new Date(),
+                                        expireDate: new Date(new Date().getTime() + 365 * 24 * 60 * 60 * 1000)
+                                    }
                                 },
                             }),
                         });
-                        const data = await response.json();
 
-                        if (data?.status === 200) {
+                        //check payment_service
+                        // const data = await response.text();
+
+                        if (response?.status === 200) {
                             setIsPlanActive(true)
                             navigate('/admin')
                         }
                         return;
                     }}
                 />
+            </section>
+            <section className={styles['subscription-plans']}>
+                <span>₹ 1299</span>
+                <article className={styles['subscription-content']}>
+                    <ul>
+                        <li>25GB Storage</li>
+                        <li>12-months Validity</li>
+                        <li>Out-of-stock notification (phone+email+SMS)</li>
+                        <li>SSL/TLS</li>
+                        <li>SSO</li>
+                        <li>Manual Cache Control</li>
+                        <li>Analytics Dashboard</li>
+                        <li>Priority Customer Support</li>
+                        <li>Custom Domain Support</li>
+                        <li>Advanced Inventory Management</li>
+                    </ul>
+                </article>
+                <Checkout
+                    price={1299}
+                    callback={async (_payment_id: string, _payment_signature: string, _order_id: string) => {
+                        const response = await fetch('http://localhost:5000/seller-subscription', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${await getToken()}`
+                            },
+                            body: JSON.stringify({
+                                _id: admin?._id,
+                                subscriptionPlan: {
+                                    amount: 1299,
+                                    _type: "subscription",
+                                    transactionId: _payment_id,
+                                    orderId: _order_id,
+                                    paymentSignature: _payment_signature,
+                                    planSchemaList: {
+                                        activeDate: new Date(),
+                                        expireDate: new Date(new Date().getTime() + 365 * 24 * 60 * 60 * 1000)
+                                    }
+                                },
+                            }),
+                        });
+
+                        //check payment_service
+                        // const data = await response.text()
+
+                        if (response?.status == 200) {
+                            setIsPlanActive(true);
+                            navigate('/admin');
+                        }
+                        return;
+                    }} />
             </section>
         </div>
     )
