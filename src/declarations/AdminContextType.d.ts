@@ -13,4 +13,11 @@ export type AdminContextType = {
   setIsPlanActive: React.Dispatch<React.SetStateAction<boolean>>;
   setAdmin: React.Dispatch<React.SetStateAction<any>>;
   sanityClient: SanityClient;
+  // Date filtering states for statistics
+  fromDate: Date | null;
+  setFromDate: React.Dispatch<React.SetStateAction<Date | null>>;
+  toDate: Date | null;
+  setToDate: React.Dispatch<React.SetStateAction<Date | null>>;
+  // Function to fetch filtered statistics
+  fetchFilteredStatistics: (fromDate: Date | null, toDate: Date | null) => Promise<void>;
 }

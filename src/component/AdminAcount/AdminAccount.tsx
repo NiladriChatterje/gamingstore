@@ -17,8 +17,39 @@ import NotFound from '../../NotFound'
 
 const AdminAccount = () => {
   const { defaultLoginAdminOrUser } = useStateContext()
-  const { isPlanActiveState, setIsPlanActive } = useAdminStateContext()
+  const {
+    isPlanActiveState,
+    setIsPlanActive,
+    fromDate,
+    setFromDate,
+    toDate,
+    setToDate,
+    fetchFilteredStatistics
+  } = useAdminStateContext()
   const { user } = useUser();
+
+  // Handle date change and fetch filtered data
+  const handleDateChange = async (type: 'from' | 'to', date: Date | null) => {
+    if (type === 'from') {
+      setFromDate?.(date);
+    } else {
+      setToDate?.(date);
+    }
+
+    // Fetch filtered statistics when both dates are available
+    const updatedFromDate = type === 'from' ? date : fromDate;
+    const updatedToDate = type === 'to' ? date : toDate;
+
+    if (updatedFromDate && updatedToDate && fetchFilteredStatistics) {
+      await fetchFilteredStatistics(updatedFromDate, updatedToDate);
+    }
+  };
+
+  // Format date for input field
+  const formatDateForInput = (date: Date | null): string => {
+    if (!date) return '';
+    return date.toISOString().split('T')[0];
+  };
 
 
   return (
@@ -83,10 +114,31 @@ const AdminAccount = () => {
                 </Routes>
                 <section className={styles.dateSection}>
                   <div id={styles.fromDate}>
-
+                    <label htmlFor="fromDate">From Date:</label>
+                    <input
+                      type="date"
+                      id="fromDate"
+                      value={formatDateForInput(fromDate || null)}
+                      onChange={(e) => {
+                        const date = e.target.value ? new Date(e.target.value) : null;
+                        handleDateChange('from', date);
+                      }}
+                      max={formatDateForInput(toDate || new Date())}
+                    />
                   </div>
                   <div id={styles.toDate}>
-
+                    <label htmlFor="toDate">To Date:</label>
+                    <input
+                      type="date"
+                      id="toDate"
+                      value={formatDateForInput(toDate || null)}
+                      onChange={(e) => {
+                        const date = e.target.value ? new Date(e.target.value) : null;
+                        handleDateChange('to', date);
+                      }}
+                      min={formatDateForInput(fromDate || null)}
+                      max={formatDateForInput(new Date())}
+                    />
                   </div>
                 </section>
               </section>

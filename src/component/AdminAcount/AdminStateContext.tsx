@@ -26,6 +26,16 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
   const [loadingState, setLoadingState] = useState<boolean>(true);
   const [retry, setRetry] = useState<boolean>(true);
   const [editProductForm, setEditProductForm] = useState<ProductType | null>(); // To fill up form fields when a product is about to edit
+
+  // Date filtering states
+  const [fromDate, setFromDate] = useState<Date | null>(() => {
+    // Default to 30 days ago
+    const date = new Date();
+    date.setDate(date.getDate() - 30);
+    return date;
+  });
+  const [toDate, setToDate] = useState<Date | null>(() => new Date()); // Default to today
+
   const { user, isLoaded, isSignedIn } = useUser();
   const { getToken } = useAuth();
 
@@ -199,6 +209,51 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
     return userEnrolled;
   }
 
+  // Function to fetch filtered statistics based on date range
+  const fetchFilteredStatistics = async (fromDate: Date | null, toDate: Date | null) => {
+    if (!user?.id || !fromDate || !toDate) {
+      console.warn('Missing required parameters for fetching filtered statistics');
+      return;
+    }
+
+    try {
+      const token = await getToken();
+      const adminId = `admin-${user.id}`;
+
+      // Format dates to ISO string for API
+      const fromDateISO = fromDate.toISOString();
+      const toDateISO = toDate.toISOString();
+
+      const response = await fetch(
+        `http://localhost:5003/${adminId}/dashboard-metrics?fromDate=${fromDateISO}&toDate=${toDateISO}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "x-admin-id": adminId
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`${response.status}: ${response.statusText}`);
+      }
+
+      const filteredMetrics = await response.json();
+      console.log('Filtered metrics received:', filteredMetrics);
+
+      // You can dispatch this data to a metrics state or handle it as needed
+      // For now, we'll just log it. You might want to add a metrics state later.
+
+    } catch (error: any) {
+      console.error('Error fetching filtered statistics:', error);
+      toast.error(`Failed to fetch statistics: ${error.message}`, {
+        position: "bottom-left",
+        style: { width: 320, background: "white" },
+      });
+    }
+  };
+
   useEffect(() => {
     async function mainCheck() {
       // check from server if user has an existing
@@ -306,6 +361,11 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         setIsPlanActive,
         admin,
         setAdmin,
+        fromDate,
+        setFromDate,
+        toDate,
+        setToDate,
+        fetchFilteredStatistics,
       }}
     >
       {children}
