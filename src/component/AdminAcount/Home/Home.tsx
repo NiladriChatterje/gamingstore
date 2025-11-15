@@ -47,13 +47,46 @@ const Home = () => {
     const [dashboardMetrics, setDashboardMetrics] = useState<DashboardMetrics | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const { admin } = useAdminStateContext();
+    const {
+        admin,
+        fromDate,
+        setFromDate,
+        toDate,
+        setToDate,
+        fetchFilteredStatistics
+    } = useAdminStateContext();
 
     if (!isSignedIn)
         <Navigate to={'/user'} />
 
+    // Handle date change and fetch filtered data
+    const handleDateChange = async (type: 'from' | 'to', date: Date | null) => {
+        if (type === 'from') {
+            setFromDate?.(date);
+        } else {
+            setToDate?.(date);
+        }
+
+        // Fetch filtered statistics when both dates are available
+        const updatedFromDate = type === 'from' ? date : fromDate;
+        const updatedToDate = type === 'to' ? date : toDate;
+
+        if (updatedFromDate && updatedToDate) {
+            // Use a small delay to ensure state is updated
+            setTimeout(() => {
+                fetchDashboardMetrics(true);
+            }, 100);
+        }
+    };
+
+    // Format date for input field
+    const formatDateForInput = (date: Date | null): string => {
+        if (!date) return '';
+        return date.toISOString().split('T')[0];
+    };
+
     // Fetch dashboard metrics from backend
-    const fetchDashboardMetrics = async () => {
+    const fetchDashboardMetrics = async (useCurrentDateFilter = false) => {
         try {
             setLoading(true);
             setError(null);
@@ -63,7 +96,16 @@ const Home = () => {
             }
 
             const token = await getToken();
-            const response = await fetch(`http://localhost:5003/${admin._id}/dashboard-metrics`, {
+
+            // Build URL with date parameters if filtering is requested and dates are available
+            let url = `http://localhost:5003/${admin._id}/dashboard-metrics`;
+            if (useCurrentDateFilter && fromDate && toDate) {
+                const fromDateISO = fromDate.toISOString();
+                const toDateISO = toDate.toISOString();
+                url += `?fromDate=${fromDateISO}&toDate=${toDateISO}`;
+            }
+
+            const response = await fetch(url, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -91,6 +133,12 @@ const Home = () => {
             fetchDashboardMetrics();
         }
     }, [isSignedIn, admin?._id]);
+
+    // Effect to trigger chart re-render when date range or metrics change
+    useEffect(() => {
+        // This effect ensures the chart updates when fromDate, toDate, or dashboardMetrics change
+        // The chart data generation function will be called automatically due to React's re-rendering
+    }, [fromDate, toDate, dashboardMetrics]);
 
     // Performance cards data - now dynamic based on API response or fallback to defaults
     const performanceCards = [
@@ -214,59 +262,150 @@ const Home = () => {
         return () => clearTimeout(timer);
     }, [performanceCards.length]);
 
-    // Chart data configuration - now uses real data with simulated monthly progression
-    const getMonthlyData = (finalValue: number) => {
-        // Generate realistic monthly progression leading to the final value
-        const months = 12;
-        const data = [];
-        for (let i = 0; i < months; i++) {
-            // Simulate growth over the year, with some variation
-            const progress = (i + 1) / months;
-            const baseValue = finalValue * progress;
-            const variation = finalValue * 0.1 * (Math.sin(i) * 0.5 + 0.5); // Add some realistic variation
-            data.push(Math.round(baseValue + variation));
+    // Generate date labels and data based on selected date range
+    const generateDateRangeData = () => {
+        const startDate = fromDate || new Date(new Date().getFullYear(), 0, 1); // Default to start of current year
+        const endDate = toDate || new Date(); // Default to current date
+
+        const labels: string[] = [];
+        const salesData: number[] = [];
+        const profitData: number[] = [];
+        const ordersData: number[] = [];
+
+        // Calculate the time difference and determine appropriate interval
+        const timeDiff = endDate.getTime() - startDate.getTime();
+        const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+        let interval: 'day' | 'week' | 'month' = 'day';
+        let intervalDays = 1;
+
+        // Determine appropriate interval based on date range
+        if (daysDiff > 365) {
+            interval = 'month';
+            intervalDays = 30;
+        } else if (daysDiff > 60) {
+            interval = 'week';
+            intervalDays = 7;
+        } else {
+            interval = 'day';
+            intervalDays = 1;
         }
-        return data;
+
+        // Generate data points for the selected time range
+        const currentDate = new Date(startDate);
+        const finalSalesValue = dashboardMetrics?.totalSales?.numericValue || 9800;
+        const finalProfitValue = dashboardMetrics?.totalProfit?.numericValue || 3900;
+        const finalOrdersValue = dashboardMetrics?.ordersServed?.numericValue || 147;
+
+        let dataPointIndex = 0;
+
+        while (currentDate <= endDate) {
+            // Format label based on interval
+            let label = '';
+            if (interval === 'day') {
+                label = currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            } else if (interval === 'week') {
+                const weekEnd = new Date(currentDate);
+                weekEnd.setDate(weekEnd.getDate() + 6);
+                label = `${currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+            } else {
+                label = currentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            }
+
+            labels.push(label);
+
+            // Calculate progress through the time range
+            const totalDuration = endDate.getTime() - startDate.getTime();
+            const currentProgress = (currentDate.getTime() - startDate.getTime()) / totalDuration;
+
+            // Generate realistic data progression with some variation
+            const baseVariation = 0.15; // 15% variation
+            const randomFactor = (Math.sin(dataPointIndex * 0.5) * 0.5 + 0.5) * baseVariation + (1 - baseVariation);
+
+            // Calculate values with progressive growth and variation
+            const salesValue = Math.round(finalSalesValue * currentProgress * randomFactor);
+            const profitValue = Math.round(finalProfitValue * currentProgress * randomFactor);
+            const ordersValue = Math.round(finalOrdersValue * currentProgress * randomFactor);
+
+            salesData.push(Math.max(0, salesValue));
+            profitData.push(Math.max(0, profitValue));
+            ordersData.push(Math.max(0, ordersValue));
+
+            // Move to next interval
+            if (interval === 'month') {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+            } else {
+                currentDate.setDate(currentDate.getDate() + intervalDays);
+            }
+
+            dataPointIndex++;
+        }
+
+        return { labels, salesData, profitData, ordersData };
     };
 
-    const salesData = dashboardMetrics?.totalSales?.numericValue || 9800;
-    const profitData = dashboardMetrics?.totalProfit?.numericValue || 3900;
-    const ordersData = dashboardMetrics?.ordersServed?.numericValue || 147;
+    const { labels: chartLabels, salesData: chartSalesData, profitData: chartProfitData, ordersData: chartOrdersData } = generateDateRangeData();
 
     const chartData = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        labels: chartLabels,
         datasets: [
             {
-                label: 'Sales',
-                data: getMonthlyData(salesData),
-                borderColor: 'rgb(0, 0, 0)',
-                backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                label: 'Sales ($)',
+                data: chartSalesData,
+                borderColor: 'rgb(25, 118, 210)',
+                backgroundColor: 'rgba(25, 118, 210, 0.1)',
                 tension: 0.4,
                 borderWidth: 2,
+                fill: false,
             },
             {
-                label: 'Profit',
-                data: getMonthlyData(profitData),
-                borderColor: 'rgb(64, 64, 64)',
-                backgroundColor: 'rgba(64, 64, 64, 0.1)',
+                label: 'Profit ($)',
+                data: chartProfitData,
+                borderColor: 'rgb(56, 142, 60)',
+                backgroundColor: 'rgba(56, 142, 60, 0.1)',
                 tension: 0.4,
                 borderWidth: 2,
+                fill: false,
             },
             {
                 label: 'Orders',
-                data: getMonthlyData(ordersData),
-                borderColor: 'rgb(128, 128, 128)',
-                backgroundColor: 'rgba(128, 128, 128, 0.1)',
+                data: chartOrdersData,
+                borderColor: 'rgb(194, 24, 91)',
+                backgroundColor: 'rgba(194, 24, 91, 0.1)',
                 tension: 0.4,
                 borderWidth: 2,
+                fill: false,
+                yAxisID: 'y1',
             },
         ],
     };
 
-    // Chart options configuration
+    // Generate chart title based on date range
+    const getChartTitle = () => {
+        if (fromDate && toDate) {
+            const startDateStr = fromDate.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+            const endDateStr = toDate.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+            return `Performance Tracking: ${startDateStr} - ${endDateStr}`;
+        }
+        return 'Performance Tracking Over Time';
+    };
+
+    // Chart options configuration with dual y-axis
     const chartOptions: ChartOptions<'line'> = {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: {
+            mode: 'index' as const,
+            intersect: false,
+        },
         plugins: {
             legend: {
                 position: 'top' as const,
@@ -276,11 +415,12 @@ const Home = () => {
                         size: 12,
                         family: "'Inter', sans-serif",
                     },
+                    usePointStyle: true,
                 },
             },
             title: {
                 display: true,
-                text: 'Monthly Performance Tracking',
+                text: getChartTitle(),
                 font: {
                     size: 18,
                     weight: 'bold',
@@ -291,9 +431,43 @@ const Home = () => {
                     bottom: 20,
                 },
             },
+            tooltip: {
+                callbacks: {
+                    label: function (context) {
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null) {
+                            if (context.dataset.label === 'Orders') {
+                                label += context.parsed.y.toLocaleString();
+                            } else {
+                                label += '$' + context.parsed.y.toLocaleString();
+                            }
+                        }
+                        return label;
+                    }
+                }
+            }
         },
         scales: {
+            x: {
+                display: true,
+                grid: {
+                    display: false,
+                },
+                ticks: {
+                    font: {
+                        size: 10,
+                    },
+                    maxRotation: 45,
+                    minRotation: 0,
+                },
+            },
             y: {
+                type: 'linear' as const,
+                display: true,
+                position: 'left' as const,
                 beginAtZero: true,
                 grid: {
                     color: 'rgba(0, 0, 0, 0.05)',
@@ -302,23 +476,79 @@ const Home = () => {
                     font: {
                         size: 11,
                     },
+                    callback: function (value) {
+                        return '$' + Number(value).toLocaleString();
+                    }
                 },
+                title: {
+                    display: true,
+                    text: 'Sales & Profit ($)',
+                    font: {
+                        size: 12,
+                        weight: 'bold',
+                    }
+                }
             },
-            x: {
+            y1: {
+                type: 'linear' as const,
+                display: true,
+                position: 'right' as const,
+                beginAtZero: true,
                 grid: {
-                    display: false,
+                    drawOnChartArea: false,
                 },
                 ticks: {
                     font: {
                         size: 11,
                     },
+                    callback: function (value) {
+                        return Number(value).toLocaleString();
+                    }
                 },
+                title: {
+                    display: true,
+                    text: 'Orders',
+                    font: {
+                        size: 12,
+                        weight: 'bold',
+                    }
+                }
             },
         },
     };
 
     return (
         <main id={styles['container']}>
+            <section className={styles.dateSection}>
+                <div id={styles.fromDate}>
+                    <label htmlFor="fromDate">From Date:</label>
+                    <input
+                        type="date"
+                        id="fromDate"
+                        value={formatDateForInput(fromDate || null)}
+                        onChange={(e) => {
+                            const date = e.target.value ? new Date(e.target.value) : null;
+                            handleDateChange('from', date);
+                        }}
+                        max={formatDateForInput(toDate || new Date())}
+                    />
+                </div>
+                <div id={styles.toDate}>
+                    <label htmlFor="toDate">To Date:</label>
+                    <input
+                        type="date"
+                        id="toDate"
+                        value={formatDateForInput(toDate || null)}
+                        onChange={(e) => {
+                            const date = e.target.value ? new Date(e.target.value) : null;
+                            handleDateChange('to', date);
+                        }}
+                        min={formatDateForInput(fromDate || null)}
+                        max={formatDateForInput(new Date())}
+                    />
+                </div>
+            </section>
+
             {error && (
                 <div style={{
                     padding: '1rem',

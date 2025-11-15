@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import styles from "./ProfileManager.module.css";
-import { MdEdit } from "react-icons/md";
+import { MdEdit, MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
 import { FaPhone, FaUser } from "react-icons/fa6";
 import { IoIosPersonAdd } from "react-icons/io";
 import { useUser, useAuth } from "@clerk/clerk-react";
@@ -32,6 +32,7 @@ const ProfileManager = () => {
   const [phone, setPhone] = useState<string>(admin?.phone as unknown as string ?? "");
   const [OTP, setOTP] = useState<number>(0);
   const modalRef = useRef<HTMLDialogElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   async function onClickMailVerify() {
     try {
@@ -114,16 +115,32 @@ const ProfileManager = () => {
     }
   }
 
+  const scrollUp = () => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const scrollAmount = container.clientHeight * 0.8;
+      container.scrollBy({ top: -scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  const scrollDown = () => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const scrollAmount = container.clientHeight * 0.8;
+      container.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleUpdate();
-        }}
-        id={styles["form-container"]}
-      >
-        <div id={styles["form-input-field-container"]}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleUpdate();
+      }}
+      id={styles["form-container"]}
+    >
+      <div className={styles["scroll-container"]}>
+        <div id={styles["form-input-field-container"]} ref={scrollContainerRef}>
           <div
             style={{
               backgroundColor: disable
@@ -370,43 +387,47 @@ const ProfileManager = () => {
             </fieldset>
           </section>
         </div>
-        <section
-          style={{ display: "flex", justifyContent: "flex-end", gap: 15 }}
+      </div>
+      <button
+        type="button"
+        className={`${styles["scroll-button"]} ${styles["scroll-up"]}`}
+        onClick={scrollUp}
+      >
+        <MdKeyboardArrowUp size={16} />
+      </button>
+      <button
+        type="button"
+        className={`${styles["scroll-button"]} ${styles["scroll-down"]}`}
+        onClick={scrollDown}
+      >
+        <MdKeyboardArrowDown size={16} />
+      </button>
+      <section className={styles["action-buttons"]}>
+        <button
+          type="button"
+          className={styles["action-button"]}
+          onClick={() => {
+            setDisable((prev) => !prev);
+          }}
         >
-          <MdEdit
-            color="white"
-            cursor={"pointer"}
-            style={{
-              backgroundColor: "rgb(52, 48, 105)",
-              borderRadius: 5,
-              padding: "2px 10px",
-            }}
-            size={30}
-            onClick={() => {
-              setDisable((prev) => !prev);
-            }}
-          />
-          <IoIosPersonAdd
-            color="white"
-            cursor={"pointer"}
-            style={{
-              backgroundColor: "rgb(52, 48, 105)",
-              borderRadius: 5,
-              padding: "2px 10px",
-            }}
-            size={30}
-            onClick={async () => {
-              if (!disable)
-                toast.promise(handleUpdate(), {
-                  loading: "updating...",
-                  success: "Profile Updated!",
-                  error: "Updation failed!",
-                });
-            }}
-          />
-        </section>
-      </form>
-    </div>
+          <MdEdit size={18} />
+        </button>
+        <button
+          type="button"
+          className={styles["action-button"]}
+          onClick={async () => {
+            if (!disable)
+              toast.promise(handleUpdate(), {
+                loading: "updating...",
+                success: "Profile Updated!",
+                error: "Updation failed!",
+              });
+          }}
+        >
+          <IoIosPersonAdd size={18} />
+        </button>
+      </section>
+    </form>
   );
 };
 

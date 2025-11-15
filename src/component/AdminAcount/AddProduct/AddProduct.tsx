@@ -485,17 +485,22 @@ const AddProduct = () => {
                     ImageInputRef.current?.click();
                   }}
                   data-section={"product-images"}
+                  className={`${styles["input-containers"]} ${styles["image-upload-area"]}`}
                   style={{
                     backgroundColor: "rgba(255, 255, 255, 0.963)",
                     display: "flex",
+                    flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
-                    height: 90,
+                    height: 120,
                     cursor: "pointer",
+                    gap: 8,
                   }}
-                  className={styles["input-containers"]}
                 >
-                  <ImUpload size={35} id={"img-upload"} />
+                  <ImUpload size={32} id={"img-upload"} />
+                  <span style={{ fontSize: '0.875rem', color: '#718096', fontWeight: 500 }}>
+                    Click to upload images
+                  </span>
                   <input
                     id={styles["images-input"]}
                     ref={ImageInputRef}
@@ -618,7 +623,7 @@ const AddProduct = () => {
               </div>
             </section>
             <section>
-              <label>Discount :</label>
+              <label>Product Description :</label>
               <div>
                 <div
                   data-section={"product-description"}
@@ -649,26 +654,13 @@ const AddProduct = () => {
           </fieldset>
         </section>
       </div>
-      <section style={{ display: "flex", justifyContent: "flex-end", gap: 15 }}>
+      <section className={styles["submit-button-container"]}>
         <button
-          style={{
-            padding: 0,
-            borderStyle: "none",
-            margin: 0,
-            outline: "none",
-          }}
+          className={styles["submit-button"]}
           type="submit"
         >
-          <IoIosPersonAdd
-            color="white"
-            cursor={"pointer"}
-            style={{
-              backgroundColor: "rgb(52, 48, 105)",
-              borderRadius: 5,
-              padding: "5px 10px",
-            }}
-            size={25}
-          />
+          <IoIosPersonAdd size={20} />
+          Add Product
         </button>
       </section>
     </form>

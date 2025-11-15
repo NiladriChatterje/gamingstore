@@ -1,35 +1,49 @@
 #form-container {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 12px;
 }
 
 .category-containers {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px;
+    margin-top: 8px;
 }
 
 .span-category {
     background-color: white;
-    color: black;
-    font-size: x-small;
-    padding: 1px 8px;
-    border-radius: 10px;
-    border: 2px solid white;
+    color: #4a5568;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 2px solid #e2e8f0;
     cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.span-category:hover {
+    border-color: #cbd5e0;
+    transform: translateY(-1px);
 }
 
 .span-category-selected {
-    background-color: rgba(83, 83, 83, 0.936) !important;
+    background-color: #4a5568 !important;
     color: white !important;
-    font-weight: 700;
+    font-weight: 600;
+    border-color: #4a5568 !important;
+    box-shadow: 0 2px 8px rgba(74, 85, 104, 0.3);
 }
 
 #form-container input {
-    padding: 10px;
-    font-size: 0.70em;
-    font-weight: 700;
+    padding: 12px 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #2d3748;
 }
 
 #form-container input,
@@ -39,7 +53,7 @@
     border-style: none;
     height: 100%;
     outline: none;
-    padding: 5px;
+    transition: all 0.2s ease;
 }
 
 .preview-images {
@@ -90,39 +104,67 @@
 }
 
 #keyword-list {
-    width: 370px;
-    padding: 5px 10px;
+    width: 100%;
+    max-width: 400px;
+    padding: 8px 12px;
     overflow: auto clip;
     display: flex;
-    gap: 15px;
+    gap: 8px;
     border-style: none;
     outline: none;
+    margin-top: 8px;
 }
 
 .keyword {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
-    background-color: grey;
-    border-radius: 15px;
-    padding: 3px 10px;
-    font-size: smaller;
-    font-weight: 600;
+    gap: 8px;
+    background-color: #4a5568;
+    border-radius: 16px;
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
     color: white;
     align-items: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.keyword:hover {
+    background-color: #2d3748;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 #form-input-field-container {
     display: flex;
     flex-direction: column;
-    height: 320px;
-    padding: 3px 10px;
-    gap: 35px;
+    height: 430px;
+    padding: 8px 16px;
+    gap: 24px;
     overflow: clip auto;
 }
 
 #form-input-field-container label {
-    font-size: x-small;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 6px;
+    display: block;
+}
+
+#form-input-field-container fieldset {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 0;
+}
+
+#form-input-field-container legend {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #2d3748;
+    padding: 0 12px;
 }
 
 #images-input {
@@ -131,11 +173,19 @@
 
 .input-containers {
     position: relative;
-    gap: 15px;
-    padding: 5px 10px;
+    gap: 12px;
+    padding: 12px 16px;
     display: flex;
     align-items: center;
-    border-radius: 5px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.input-containers:hover {
+    border-color: #cbd5e0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .input-containers[data-section='price']::after,
@@ -161,8 +211,8 @@
 .input-containers[data-section='product-name']:focus-within,
 .input-containers[data-section="quantity"]:focus-within,
 .input-containers[data-section="keywords"]:focus-within {
-    border: 1px solid rgb(231, 0, 0);
-    box-shadow: 0 0 8px -5px red;
+    border: 2px solid #e53e3e;
+    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
 }
 
 .input-containers[data-section="eanUpcIsbnGtinAsinType"] dl {
@@ -208,7 +258,9 @@
 }
 
 .input-containers:focus-within {
-    background-color: white;
+    background-color: #fafafa;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
 }
 
 .input-containers[data-section='modelNumber'] {
@@ -216,6 +268,88 @@
 }
 
 #form-container input::placeholder {
-    color: rgb(175, 175, 175);
+    color: #a0aec0;
     font-weight: 400;
+}
+
+#form-container textarea::placeholder {
+    color: #a0aec0;
+    font-weight: 400;
+}
+
+/* Submit button styling */
+.submit-button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding: 20px 0;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 20px;
+}
+
+.submit-button {
+    background-color: #184061;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(66, 153, 225, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.submit-button:hover {
+    background-color: #081521;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+}
+
+/* Image upload area styling */
+.image-upload-area {
+    border: 2px dashed #cbd5e0;
+    border-radius: 8px;
+    padding: 40px 20px;
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.image-upload-area:hover {
+    border-color: #4299e1;
+    background-color: #f7fafc;
+}
+
+/* Enhanced dropdown styling */
+.input-containers[data-section="eanUpcIsbnGtinAsinType"]>section {
+    position: absolute;
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+    top: 50px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: clip auto;
+    left: 22px;
+    height: max-content;
+    max-height: 160px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+}
+
+.input-containers[data-section="eanUpcIsbnGtinAsinType"] dl:hover {
+    background-color: #4299e1;
+    color: white;
+    cursor: pointer;
 }

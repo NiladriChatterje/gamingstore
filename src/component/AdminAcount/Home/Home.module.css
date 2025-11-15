@@ -230,3 +230,73 @@
         font-size: 12px;
     }
 }
+
+/* Date Section Styles */
+.dateSection {
+    position: absolute;
+    top: 20px;
+    right: 120px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 10;
+}
+
+#fromDate, #toDate {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#fromDate label, #toDate label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+#fromDate input, #toDate input {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    background: white;
+    transition: border-color 0.2s ease;
+    min-width: 130px;
+}
+
+#fromDate input:focus, #toDate input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+#fromDate input:hover, #toDate input:hover {
+    border-color: #bbb;
+}
+
+@media screen and (max-width: 768px) {
+    .dateSection {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin: 10px 0;
+        justify-content: center;
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    #fromDate, #toDate {
+        flex: 1;
+    }
+    
+    #fromDate input, #toDate input {
+        min-width: auto;
+        width: 100%;
+    }
+}
