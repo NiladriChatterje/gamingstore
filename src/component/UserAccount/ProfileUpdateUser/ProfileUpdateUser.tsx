@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { MdEdit } from "react-icons/md";
 import { FaPhone, FaUser } from "react-icons/fa6";
 import { IoIosPersonAdd } from "react-icons/io";
-import { useUser } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, SignIn, useUser } from '@clerk/clerk-react';
 import { MdOutlineMarkEmailUnread, MdSignpost } from "react-icons/md";
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -88,165 +88,176 @@ const ProfileUpdateUser = () => {
     }
 
     return (
-        <div >
-            <form onSubmit={handleUpdate}
-                id={styles['form-container']}>
-                <div id={styles['form-input-field-container']}>
-                    <div
-                        style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
-                        id={styles['username-input']}>
-                        <FaUser />
-                        <input name={'username'} value={username} onChange={e => { setUsername(e.target.value) }} placeholder={user?.firstName ?? ''}
-                            disabled={disable} />
-                    </div>
-                    <section>
-                        <OTPModal
-                            OTP={OTP}
-                            ref={modalRef} />
-                        <div
-                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
-                            id={styles['phone-input']}>
-                            <div id={styles['phone-country-code']}>
-                                <FaPhone
-                                    cursor={'pointer'}
-                                    onClick={() => {
-                                        if (!disable)
-                                            setToggleCountryCode(prev => !prev)
-                                    }}
-                                />
-                                {!disable && <section className={`${toggleCountryCode ? '' : styles['country-code-list']}`}>
-                                    <dl onClick={() => { setToggleCountryCode(false) }}>(+91)IN</dl>
-                                    <dl onClick={() => { setToggleCountryCode(false) }}>(+144)US</dl>
-                                    <dl onClick={() => { setToggleCountryCode(false) }}>(+92)PAK</dl>
-                                </section>}
+        <>
+            <SignedIn>
+                <div >
+                    <form onSubmit={handleUpdate}
+                        id={styles['form-container']}>
+                        <div id={styles['form-input-field-container']}>
+                            <div
+                                style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
+                                id={styles['username-input']}>
+                                <FaUser />
+                                <input name={'username'} value={username} onChange={e => { setUsername(e.target.value) }} placeholder={user?.firstName ?? ''}
+                                    disabled={disable} />
                             </div>
-                            <input value={phone}
-                                onChange={e => { setPhone(e.target.value) }}
-                                name={'phone'} placeholder={userData?.phone || 'xxx-xxx-xxxx'} type='tel'
-                                maxLength={10} minLength={10}
-                                disabled={disable} />
-                        </div>
-                        <div
-                            id={styles['verify-span-btn']}
-                        ><span onClick={() => {
-                            if (!disable) {
-                                onClickPhoneVerify();
-                                modalRef?.current?.showModal()
-                            }
-                        }}>Verify</span></div>
-                    </section>
-                    <section>
-                        <OTPModal
-                            OTP={OTP}
-                            ref={modalRef} />
-                        <div
-                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
-                            id={styles['mail-input']}>
-                            <MdOutlineMarkEmailUnread />
-                            <input value={email ?? ''}
-                                onChange={e => { setEmail(e.target.value) }}
-                                name={'email'}
-                                disabled={disable}
-                                placeholder={userData?.email ?? 'example@domain.com'} />
-                        </div>
-                        <div
-                            id={styles['verify-span-btn']}
-                        ><span onClick={() => {
-                            if (!disable) {
-                                onClickMailVerify()
-                                modalRef?.current?.showModal()
-                            }
-                        }}>Verify</span></div>
-                    </section>
-                    <section data-label="address">
-                        <fieldset style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                            <legend>Address</legend>
                             <section>
+                                <OTPModal
+                                    OTP={OTP}
+                                    ref={modalRef} />
                                 <div
                                     style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
                                     id={styles['phone-input']}>
-                                    <MdSignpost />
-                                    <input
-                                        value={pincode}
-                                        onChange={e => setpinCode(e.target.value)}
-                                        name={'pincode'} placeholder={userData?.address?.pincode ?? 'PIN code'}
-                                        maxLength={6} minLength={6}
-                                        type='text' disabled={disable} />
-                                </div>
-                            </section>
-                            <section>
-                                <div
-                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
-                                    id={styles['phone-input']}>
-                                    <FaCity />
-                                    <input
-                                        value={county}
-                                        onChange={e => { setCounty(e.target.value) }}
-                                        name={'county'} placeholder={userData?.address?.county ?? 'county'} type='text' disabled={disable} />
-                                </div>
-                            </section>
-                            <section>
-                                <div
-                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
-                                    id={styles['phone-input']}>
-                                    <SiFreelancermap />
-                                    <input
-                                        value={country}
-                                        onChange={e => {
-                                            setCountry(e.target.value)
-                                        }}
-                                        name={'country'} placeholder={userData?.address?.country ?? 'country'} type='text'
+                                    <div id={styles['phone-country-code']}>
+                                        <FaPhone
+                                            cursor={'pointer'}
+                                            onClick={() => {
+                                                if (!disable)
+                                                    setToggleCountryCode(prev => !prev)
+                                            }}
+                                        />
+                                        {!disable && <section className={`${toggleCountryCode ? '' : styles['country-code-list']}`}>
+                                            <dl onClick={() => { setToggleCountryCode(false) }}>(+91)IN</dl>
+                                            <dl onClick={() => { setToggleCountryCode(false) }}>(+144)US</dl>
+                                            <dl onClick={() => { setToggleCountryCode(false) }}>(+92)PAK</dl>
+                                        </section>}
+                                    </div>
+                                    <input value={phone}
+                                        onChange={e => { setPhone(e.target.value) }}
+                                        name={'phone'} placeholder={userData?.phone || 'xxx-xxx-xxxx'} type='tel'
+                                        maxLength={10} minLength={10}
                                         disabled={disable} />
                                 </div>
+                                <div
+                                    id={styles['verify-span-btn']}
+                                ><span onClick={() => {
+                                    if (!disable) {
+                                        onClickPhoneVerify();
+                                        modalRef?.current?.showModal()
+                                    }
+                                }}>Verify</span></div>
                             </section>
                             <section>
+                                <OTPModal
+                                    OTP={OTP}
+                                    ref={modalRef} />
                                 <div
-                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255)' }}
-                                    id={styles['phone-input']}>
-                                    <RiLandscapeFill />
-                                    <input value={state}
-                                        onChange={e => {
-                                            setState(e.target.value)
-                                        }}
-                                        name={'state'} placeholder={userData?.address?.state ?? 'state'} type='text'
-                                        disabled={disable} />
+                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
+                                    id={styles['mail-input']}>
+                                    <MdOutlineMarkEmailUnread />
+                                    <input value={email ?? ''}
+                                        onChange={e => { setEmail(e.target.value) }}
+                                        name={'email'}
+                                        disabled={disable}
+                                        placeholder={userData?.email ?? 'example@domain.com'} />
                                 </div>
+                                <div
+                                    id={styles['verify-span-btn']}
+                                ><span onClick={() => {
+                                    if (!disable) {
+                                        onClickMailVerify()
+                                        modalRef?.current?.showModal()
+                                    }
+                                }}>Verify</span></div>
                             </section>
-                        </fieldset>
-                    </section>
+                            <section data-label="address">
+                                <fieldset style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                                    <legend>Address</legend>
+                                    <section>
+                                        <div
+                                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
+                                            id={styles['phone-input']}>
+                                            <MdSignpost />
+                                            <input
+                                                value={pincode}
+                                                onChange={e => setpinCode(e.target.value)}
+                                                name={'pincode'} placeholder={userData?.address?.pincode ?? 'PIN code'}
+                                                maxLength={6} minLength={6}
+                                                type='text' disabled={disable} />
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <div
+                                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
+                                            id={styles['phone-input']}>
+                                            <FaCity />
+                                            <input
+                                                value={county}
+                                                onChange={e => { setCounty(e.target.value) }}
+                                                name={'county'} placeholder={userData?.address?.county ?? 'county'} type='text' disabled={disable} />
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <div
+                                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
+                                            id={styles['phone-input']}>
+                                            <SiFreelancermap />
+                                            <input
+                                                value={country}
+                                                onChange={e => {
+                                                    setCountry(e.target.value)
+                                                }}
+                                                name={'country'} placeholder={userData?.address?.country ?? 'country'} type='text'
+                                                disabled={disable} />
+                                        </div>
+                                    </section>
+                                    <section>
+                                        <div
+                                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255)' }}
+                                            id={styles['phone-input']}>
+                                            <RiLandscapeFill />
+                                            <input value={state}
+                                                onChange={e => {
+                                                    setState(e.target.value)
+                                                }}
+                                                name={'state'} placeholder={userData?.address?.state ?? 'state'} type='text'
+                                                disabled={disable} />
+                                        </div>
+                                    </section>
+                                </fieldset>
+                            </section>
+                        </div>
+                        <section style={{ display: 'flex', justifyContent: 'flex-end', gap: 15 }}>
+                            <MdEdit
+                                color='white'
+                                cursor={'pointer'}
+                                style={{
+                                    backgroundColor: 'rgb(52, 48, 105)',
+                                    borderRadius: 5, padding: '5px 10px'
+                                }}
+                                size={30}
+                                onClick={() => {
+                                    setDisable(prev => !prev)
+                                }}
+                            />
+                            <IoIosPersonAdd
+                                color='white'
+                                cursor={'pointer'}
+                                style={{
+                                    backgroundColor: 'rgb(52, 48, 105)',
+                                    borderRadius: 5, padding: '5px 10px'
+                                }}
+                                size={30}
+                                // type={'submit'}
+                                onClick={() => {
+                                    if (!disable) {
+                                        toast('updating...')
+                                        handleUpdate()
+                                    }
+                                }}
+                            />
+                        </section>
+                    </form>
                 </div>
-                <section style={{ display: 'flex', justifyContent: 'flex-end', gap: 15 }}>
-                    <MdEdit
-                        color='white'
-                        cursor={'pointer'}
-                        style={{
-                            backgroundColor: 'rgb(52, 48, 105)',
-                            borderRadius: 5, padding: '5px 10px'
-                        }}
-                        size={30}
-                        onClick={() => {
-                            setDisable(prev => !prev)
-                        }}
+            </SignedIn>
+            <SignedOut>
+                <div id={styles['signed-out-message']}>
+                    <SignIn forceRedirectUrl={'/user/profile-update'}
+                        redirectUrl={'/user/profile-update'}
                     />
-                    <IoIosPersonAdd
-                        color='white'
-                        cursor={'pointer'}
-                        style={{
-                            backgroundColor: 'rgb(52, 48, 105)',
-                            borderRadius: 5, padding: '5px 10px'
-                        }}
-                        size={30}
-                        // type={'submit'}
-                        onClick={() => {
-                            if (!disable) {
-                                toast('updating...')
-                                handleUpdate()
-                            }
-                        }}
-                    />
-                </section>
-            </form>
-        </div>
+                </div>
+            </SignedOut>
+        </>
     )
 }
 

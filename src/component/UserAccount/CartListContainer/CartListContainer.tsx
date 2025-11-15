@@ -29,7 +29,7 @@ const CartListContainer = () => {
               fontWeight: "900",
               left: 8,
               top: 10,
-              color: "black",
+              color: "white",
               fontSize: 25,
               cursor: "pointer",
               zIndex: 20,

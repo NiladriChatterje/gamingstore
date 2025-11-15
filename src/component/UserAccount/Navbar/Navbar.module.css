@@ -93,29 +93,41 @@
     flex-direction: column;
     position: absolute;
     top: 65px;
-    width: 120px;
-    box-shadow: 0 0 28px -10px rgba(72, 70, 70, 0.793);
-    border-radius: 5px;
+    width: 140px;
+    background-color: rgb(30, 28, 41);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    padding: 8px;
+    gap: 6px;
     transition: all;
-    transition-duration: 90ms;
+    transition-duration: 150ms;
 }
 
 .login-btn {
     outline: none;
-    padding: 8px 10px;
-    border-radius: 5px;
+    padding: 10px 14px;
+    border-radius: 6px;
     cursor: pointer;
     border-style: none;
+    background-color: white;
+    color: rgb(30, 28, 41);
+    font-weight: 600;
+    font-size: 0.85em;
+    transition: all 150ms ease;
+}
+
+.login-btn:hover {
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
 .user-admin-btn-group-hide {
-    transform: translateY(-20px);
+    transform: translateY(-10px);
     opacity: 0;
     visibility: hidden;
 }
 
 .user-admin-btn-group-show {
-    transform: translateY(5px);
+    transform: translateY(0px);
     opacity: 1;
     visibility: visible;
 }
@@ -125,7 +137,7 @@
 }
 
 .selected-admin-user {
-    background-color: rgb(81, 81, 106) !important;
+    background-color: rgb(30, 28, 41) !important;
     color: white !important;
 }
 
