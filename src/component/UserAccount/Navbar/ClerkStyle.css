@@ -9,16 +9,19 @@
     align-items: center;
 }
 .cl-card{
-    background-color: rgb(255, 199, 121);
+    background-color: rgb(252, 252, 252);
     color: white;
 }
 .cl-button__google{
     background-color: white;
-    color: black;
+    color: rgb(30, 28, 41);
 }
 .cl-button__google:hover{
-    background-color: rgb(24, 24, 24);
+    background-color: rgb(249, 249, 249);
     color: white;
+}
+.cl-internal-1dauvpw{
+    display: none;
 }
 .cl-modalContent {
     display: flex;
@@ -35,12 +38,12 @@
 }
 
 .cl-formButtonPrimary {
-    background-color: rgba(236, 124, 5, 0.834);
+    background-color: rgb(30, 28, 41);
 }
 
 .cl-formButtonPrimary:hover {
-    background-color: rgba(255, 255, 255, 0.915);
-    color: black;
+    background-color: rgb(45, 42, 60);
+    color: white;
     font-weight: 600;
 }
 .cl-userButtonPopoverCard {
@@ -49,9 +52,9 @@
     transform: scale(0.55) translate(290px, -140px) !important;
 }
 
-/* .cl-cardBox {
-    transform: scale(0.50);
-} */
+.cl-cardBox {
+    color:white
+}
 
 @media all and (max-width:940px) {
     .cl-userButtonPopoverCard {
