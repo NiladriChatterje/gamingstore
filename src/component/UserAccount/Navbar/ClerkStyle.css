@@ -14,11 +14,11 @@
 }
 .cl-button__google{
     background-color: white;
-    color: rgb(30, 28, 41);
+    color: rgb(21, 21, 21);
 }
 .cl-button__google:hover{
     background-color: rgb(249, 249, 249);
-    color: white;
+    color: rgb(5, 13, 33);
 }
 .cl-internal-1dauvpw{
     display: none;
@@ -53,7 +53,7 @@
 }
 
 .cl-cardBox {
-    color:white
+    color:rgb(25, 25, 25)
 }
 
 @media all and (max-width:940px) {

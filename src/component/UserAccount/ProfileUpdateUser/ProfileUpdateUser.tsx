@@ -12,12 +12,13 @@ import { FaCity } from "react-icons/fa";
 import { SiFreelancermap } from 'react-icons/si';
 import { RiLandscapeFill } from 'react-icons/ri';
 import { useUserStateContext } from '../UserStateContext';
+import { useNavigate } from 'react-router-dom';
 
 const ProfileUpdateUser = () => {
 
     const { userData } = useUserStateContext();
     const { user } = useUser();
-
+    const navigate = useNavigate();
     console.log('user =>', userData)
 
     const [disable, setDisable] = useState<boolean>(true);
@@ -85,6 +86,11 @@ const ProfileUpdateUser = () => {
 
         toast.success('new records updated!');
         setDisable(true)
+    }
+
+    if (user !== null && localStorage.getItem('loginusertype') !== 'user') {
+        toast("You are not logged in as User!");
+        navigate(-1)
     }
 
     return (
