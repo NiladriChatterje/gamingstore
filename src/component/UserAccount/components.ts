@@ -6,5 +6,6 @@ export { default as CartProduct } from './CartProduct/CartProduct';
 export { default as CartListContainer } from './CartListContainer/CartListContainer';
 export { default as ProductDetail } from './ProductDetail/ProductDetail';
 export { default as Orders } from './Orders/Orders';
+export { default as Delivery } from './Delivery/Delivery';
 export { default as ProfileUpdateUser } from './ProfileUpdateUser/ProfileUpdateUser';
 export { default as UserUpdateForm } from './UserUpdateForm/UserUpdateForm';

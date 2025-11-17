@@ -7,6 +7,7 @@ import {
     CartListContainer,
     Navbar,
     Orders,
+    Delivery,
     ProfileUpdateUser
 } from './components.ts';
 import { useUserStateContext } from './UserStateContext.tsx';
@@ -125,6 +126,7 @@ const UserAccount = () => {
                 <Route index path={'/user'} element={<Body />} />
                 <Route path={'/user/Payment'} element={<Payment />} />
                 <Route path={'/user/Orders'} element={<Orders />} />
+                <Route path={'/user/Delivery'} element={<Delivery />} />
                 <Route path={'/user/About'} element={<About />} />
                 <Route path={'/user/profile-update'} element={<ProfileUpdateUser />} />
                 <Route path={'/user/Product'} element={<Products />} />

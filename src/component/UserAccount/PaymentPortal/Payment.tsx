@@ -29,8 +29,8 @@ function Payment() {
         return;
     }
 
-    const { isLoaded } = useSignIn();
-    if (isLoaded) {
+    const { isLoaded, signIn } = useSignIn();
+    if (isLoaded && signIn) {
         localStorage.setItem('loginusertype', 'user')
         setDefaultLoginAdminOrUser?.('user')
         toast(

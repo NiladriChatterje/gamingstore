@@ -15,7 +15,9 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-reac
 
 const navItems = [{ Img: FaHome, name: 'Home', link: '' },
 { Img: MdProductionQuantityLimits, name: 'Product', link: 'Product' },
-{ Img: FaShopify, name: 'Orders', link: 'Orders' }, { Img: FaShopify, name: 'Profile', link: 'profile-update' },
+{ Img: FaShopify, name: 'Orders', link: 'Orders' },
+{ Img: FaShopify, name: 'Delivery', link: 'Delivery' },
+{ Img: FaShopify, name: 'Profile', link: 'profile-update' },
 { Img: FcAbout, name: 'About', link: 'About' }];
 
 const Navbar = () => {
