@@ -61,6 +61,12 @@
     width: 55%;
 }
 
+.fieldset-style legend {
+    padding: 0 10px;
+    font-weight: 600;
+    color: rgb(59, 59, 96);
+}
+
 #counter_container {
     display: flex;
     align-items: flex-start;
