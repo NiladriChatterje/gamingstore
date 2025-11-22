@@ -4,9 +4,6 @@ import { useEffect, useState } from 'react';
 import DeliveryItem from './DeliveryItem';
 import { OrderType } from '@/declarations/OrderType';
 import { useUserStateContext } from '../UserStateContext';
-import { EanUpcIsbnType, currency } from '@enums/enums';
-
-type AccordionState = 'inTransit' | 'delivered' | null;
 
 const Delivery = () => {
     const [deliveryOrders, setDeliveryOrders] = useState<OrderType[]>([]);
