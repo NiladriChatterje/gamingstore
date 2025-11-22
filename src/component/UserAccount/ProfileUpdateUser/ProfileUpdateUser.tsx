@@ -38,7 +38,7 @@ const ProfileUpdateUser = () => {
 
     async function onClickMailVerify() {
         try {
-            const { data }: { data: { OTP: number } } = await axios.post('http://localhost:5000/fetch-mail-otp', {
+            const { data }: { data: { OTP: number } } = await axios.post('http://localhost:5001/fetch-mail-otp', {
                 recipient: email
             }
             );
@@ -54,7 +54,7 @@ const ProfileUpdateUser = () => {
 
     async function onClickPhoneVerify() {
         try {
-            const { data }: { data: { OTP: number } } = await axios.post('http://localhost:5000/fetch-phone-otp', {
+            const { data }: { data: { OTP: number } } = await axios.post('http://localhost:5001/fetch-phone-otp', {
                 recipient: phone
             }
             );
