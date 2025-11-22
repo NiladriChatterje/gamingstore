@@ -37,7 +37,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
   const [isOneItem, setIsOneItem] = useState<boolean>(
     localStorage.getItem("isOneItem") === "false" ? false : true
   );
-  const [singleProductDetail, setSingleProductDetail] = useState<ProductType | undefined>(JSON.parse(localStorage.getItem("oneProduct") ?? '{}' as string));
+  const [singleProductDetail, setSingleProductDetail] = useState<ProductType | undefined>();
 
 
   const { isSignedIn } = useUser();

@@ -32,8 +32,10 @@ const ProductDetail = () => {
           'Accept': 'application/json'
         }
       });
+      const data = await result.json() as ProductType
+      console.log("SingleProductDetails from api :", data);
       if (result.status == 200)
-        setSingleProductDetail?.(await result.json() as ProductType);
+        setSingleProductDetail?.(data);
     }
     if (!singleProductDetail)
       getProductDetailsFromApi(id);
