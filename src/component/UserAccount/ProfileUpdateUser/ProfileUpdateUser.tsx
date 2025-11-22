@@ -39,7 +39,7 @@ const ProfileUpdateUser = () => {
     async function onClickMailVerify() {
         try {
             const { data }: { data: { OTP: number } } = await axios.post('http://localhost:5000/fetch-mail-otp', {
-                recipient: phone
+                recipient: email
             }
             );
             if (data.OTP === -1)
@@ -101,7 +101,7 @@ const ProfileUpdateUser = () => {
                         id={styles['form-container']}>
                         <div id={styles['form-input-field-container']}>
                             <div
-                                style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
+                                style={{ backgroundColor: '#f5f5f5' }}
                                 id={styles['username-input']}>
                                 <FaUser />
                                 <input name={'username'} value={username} onChange={e => { setUsername(e.target.value) }} placeholder={user?.firstName ?? ''}
@@ -112,7 +112,7 @@ const ProfileUpdateUser = () => {
                                     OTP={OTP}
                                     ref={modalRef} />
                                 <div
-                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
+                                    style={{ backgroundColor: '#f5f5f5' }}
                                     id={styles['phone-input']}>
                                     <div id={styles['phone-country-code']}>
                                         <FaPhone
@@ -148,7 +148,7 @@ const ProfileUpdateUser = () => {
                                     OTP={OTP}
                                     ref={modalRef} />
                                 <div
-                                    style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
+                                    style={{ backgroundColor: '#f5f5f5' }}
                                     id={styles['mail-input']}>
                                     <MdOutlineMarkEmailUnread />
                                     <input value={email ?? ''}
@@ -171,7 +171,7 @@ const ProfileUpdateUser = () => {
                                     <legend>Address</legend>
                                     <section>
                                         <div
-                                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
+                                            style={{ backgroundColor: '#f5f5f5' }}
                                             id={styles['phone-input']}>
                                             <MdSignpost />
                                             <input
@@ -184,7 +184,7 @@ const ProfileUpdateUser = () => {
                                     </section>
                                     <section>
                                         <div
-                                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
+                                            style={{ backgroundColor: '#f5f5f5' }}
                                             id={styles['phone-input']}>
                                             <FaCity />
                                             <input
@@ -195,7 +195,7 @@ const ProfileUpdateUser = () => {
                                     </section>
                                     <section>
                                         <div
-                                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255, 1)' }}
+                                            style={{ backgroundColor: '#f5f5f5' }}
                                             id={styles['phone-input']}>
                                             <SiFreelancermap />
                                             <input
@@ -209,7 +209,7 @@ const ProfileUpdateUser = () => {
                                     </section>
                                     <section>
                                         <div
-                                            style={{ backgroundColor: disable ? 'rgba(255, 255, 255, 0.863)' : 'rgba(255, 255, 255)' }}
+                                            style={{ backgroundColor: '#f5f5f5' }}
                                             id={styles['phone-input']}>
                                             <RiLandscapeFill />
                                             <input value={state}
