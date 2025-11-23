@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from './Payment.module.css';
 import Loader from "./Loader.tsx";
 import { useUserStateContext } from "../UserStateContext.tsx";
@@ -18,74 +18,78 @@ function Payment() {
     const navigate = useNavigate();
     const { setDefaultLoginAdminOrUser } = useStateContext()
     const { getToken } = useAuth();
-
-
-    if ((cartData?.length == 0) && (singleProductDetail == undefined)) {
-        if (cartData?.length == 0)
-            toast('cart is empty! Redirecting to homepage.');
-        else
-            toast('No product selected! Redirecting to homepage.');
-        navigate('/');
-        return;
-    }
-
     const { isLoaded, signIn } = useSignIn();
-    if (isLoaded && signIn) {
-        localStorage.setItem('loginusertype', 'user')
-        setDefaultLoginAdminOrUser?.('user')
-        toast(
-            <div>
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}><AiFillCloseCircle
 
-                    onClick={() => toast.dismiss()}
-                /></div>
-                <table id={styles['razorpay-testdata-info']}>
-                    <thead>
-                        <tr>
-                            <th>Card Net.</th>
-                            <th>Card No.</th>
-                            <th>CVV</th>
-                            <th>Expiration</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>MasterCard <RiMastercardFill /></td>
-                            <td style={{
-                                color: 'white', background: '#3b3b3b', padding: '2px 5px',
-                                borderRadius: 5
-                            }}>5267 3181 8797 5449 <BsClipboard
-                                    cursor={'pointer'}
-                                    onClick={() => {
-                                        navigator.clipboard.writeText("5267318187975449");
-                                        toast.success('Copied!')
-                                    }} /></td>
-                            <td>&lt; Any &gt;</td>
-                            <td>&lt; Future date &gt;</td>
-                        </tr>
+    // Show test card info in a useEffect to avoid rendering state updates
+    useEffect(() => {
+        if (isLoaded && signIn) {
+            localStorage.setItem('loginusertype', 'user')
+            setDefaultLoginAdminOrUser?.('user')
+            toast(
+                <div>
+                    <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}><AiFillCloseCircle
 
-                        <tr>
-                            <td>Visa <RiVisaFill /></td>
-                            <td style={{
-                                color: 'white', background: '#3b3b3b', padding: '2px 5px',
-                                borderRadius: 5
-                            }}> 4386 2894 0766 0153 <BsClipboard
-                                    cursor={'pointer'}
-                                    onClick={() => {
-                                        navigator.clipboard.writeText("4386289407660153");
-                                        toast.success('Copied!')
-                                    }} /></td>
-                            <td>&lt; Any &gt;</td>
-                            <td>&lt; Future date &gt;</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>,
-            {
-                duration: 50000,
-                position: 'bottom-right'
-            })
-    }
+                        onClick={() => toast.dismiss()}
+                    /></div>
+                    <table id={styles['razorpay-testdata-info']}>
+                        <thead>
+                            <tr>
+                                <th>Card Net.</th>
+                                <th>Card No.</th>
+                                <th>CVV</th>
+                                <th>Expiration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>MasterCard <RiMastercardFill /></td>
+                                <td style={{
+                                    color: 'white', background: '#3b3b3b', padding: '2px 5px',
+                                    borderRadius: 5
+                                }}>5267 3181 8797 5449 <BsClipboard
+                                        cursor={'pointer'}
+                                        onClick={() => {
+                                            navigator.clipboard.writeText("5267318187975449");
+                                            toast.success('Copied!')
+                                        }} /></td>
+                                <td>&lt; Any &gt;</td>
+                                <td>&lt; Future date &gt;</td>
+                            </tr>
+
+                            <tr>
+                                <td>Visa <RiVisaFill /></td>
+                                <td style={{
+                                    color: 'white', background: '#3b3b3b', padding: '2px 5px',
+                                    borderRadius: 5
+                                }}> 4386 2894 0766 0153 <BsClipboard
+                                        cursor={'pointer'}
+                                        onClick={() => {
+                                            navigator.clipboard.writeText("4386289407660153");
+                                            toast.success('Copied!')
+                                        }} /></td>
+                                <td>&lt; Any &gt;</td>
+                                <td>&lt; Future date &gt;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>,
+                {
+                    duration: 50000,
+                    position: 'bottom-right'
+                })
+        }
+    }, [isLoaded, signIn])
+
+    // Check for empty cart
+    useEffect(() => {
+        if ((cartData?.length == 0) && (singleProductDetail == undefined)) {
+            if (cartData?.length == 0)
+                toast('cart is empty! Redirecting to homepage.');
+            else
+                toast('No product selected! Redirecting to homepage.');
+            navigate('/');
+        }
+    }, [cartData, singleProductDetail, navigate])
     return (
 
         <div id={styles['payment-container']}>
@@ -101,7 +105,7 @@ function Payment() {
                                 </section>
                                 <div className={`${styles['pdt-ProductDetail']} ${styles['single-pdt-total']}`}>
                                     <Checkout price={singleProductDetail != undefined ?
-                                        (singleProductDetail?.price?.pdtPrice * singleProductDetail?.quantity) : 0}
+                                        (singleProductDetail?.price?.pdtPrice * (singleProductDetail?.quantity ?? 0)) : 0}
                                         callback={async (
                                             payment_id: string,
                                             razorpay_signature: string,
@@ -125,7 +129,7 @@ function Payment() {
                                                             orderId: razorpay_order_id,
                                                             pincode: userData?.address.pincode,
                                                             paymentSignature: razorpay_signature,
-                                                            amount: singleProductDetail?.price?.pdtPrice * singleProductDetail?.quantity,
+                                                            amount: singleProductDetail?.price?.pdtPrice * (singleProductDetail?.quantity ?? 0),
                                                             quantity: singleProductDetail?.quantity
                                                         })
                                                     });
@@ -147,7 +151,7 @@ function Payment() {
                                         }} />
                                     <span>Total: </span><span>₹ {
                                         singleProductDetail ?
-                                            (singleProductDetail?.price?.pdtPrice * singleProductDetail?.quantity) : 0}</span></div>
+                                            (singleProductDetail?.price?.pdtPrice * (singleProductDetail?.quantity ?? 0)) : 0}</span></div>
                             </div> :
                                 <section id={styles['table']}>
                                     <header>
@@ -160,7 +164,7 @@ function Payment() {
                                             <div key={item._id} >
                                                 <span className={styles['first-column']} >{item?.productName}</span>
                                                 <span className={styles['second-column']}>{item?.quantity}</span>
-                                                <span className={styles['third-column']}>₹{item?.price.pdtPrice * item?.quantity}</span>
+                                                <span className={styles['third-column']}>₹{item?.price.pdtPrice * (item?.quantity ?? 0)}</span>
                                             </div>))}
                                     </div>
                                     <footer className={styles['single-pdt-total']}>
@@ -176,7 +180,7 @@ function Payment() {
                     </div>)}
             </SignedIn>
             <SignedOut>
-                <SignIn redirectUrl={'/user/payment'} afterSignInUrl={'/user/payment'} />
+                <SignIn forceRedirectUrl={'/user/payment'} afterSignInUrl={'/user/payment'} />
             </SignedOut>
         </div>
     );

@@ -15,27 +15,36 @@
     justify-content: space-around;
     width: 100%;
     height: max-content;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
 }
 
 footer {
     display: flex;
-    gap: 5em;
+    gap: 1.5em;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 #about-sec2 {
     border-radius: 80px;
-    width: 80%;
-    height: 120px;
+    width: 90%;
+    min-height: auto;
+    height: auto;
     background-color: aliceblue;
+    padding: 40px 20px;
+    margin: 20px auto;
 }
 
 #about-sec3 {
     position: relative;
     width: 100%;
-    padding-right: 10px;
-    text-align: right;
+    padding: 40px 20px;
     display: flex;
     justify-content: space-around;
+    align-items: center;
+    gap: 40px;
 }
 
 #about-sec1 img {
@@ -60,6 +69,7 @@ footer {
 
     #about-sec1 {
         flex-direction: column-reverse;
+        padding: 15px;
     }
 
     #about-sec1>div {
@@ -73,5 +83,34 @@ footer {
 
     #about-sec3 {
         flex-direction: column;
+        padding: 20px;
+    }
+
+    #about-sec1 img,
+    #about-sec3 img {
+        width: 250px;
+        height: 250px;
+    }
+}
+
+@media all and (max-width:768px) {
+    #about-container {
+        margin-top: 50px;
+    }
+
+    #about-sec1 img,
+    #about-sec3 img {
+        width: 200px;
+        height: 200px;
+    }
+
+    footer {
+        gap: 1em;
+        padding: 20px;
+    }
+
+    #about-sec2 {
+        width: 95%;
+        padding: 25px 15px;
     }
 }

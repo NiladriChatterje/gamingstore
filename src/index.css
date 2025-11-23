@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Blanka';
+  src: url('./fonts/Blanka-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
 body {
   margin: 0;
   padding: 0;
