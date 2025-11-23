@@ -138,7 +138,8 @@ const Body = () => {
         style={{
           height: val,
           opacity: toggle ? 1 : 0,
-          display: toggle ? 'flex' : 'none',
+          transform: toggle ? 'translateY(0)' : 'translateY(100%)',
+          display: 'flex',
           flexDirection: 'column',
           width: '100vw',
           zIndex: 5,

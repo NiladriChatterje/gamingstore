@@ -259,7 +259,9 @@
     width: 100vw;
     background-color: white;
     border-top: 1px solid #e0e0e0;
-    transition: all 0.3s ease;
+    transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(100%);
 }
 
 #modal-header {
@@ -269,6 +271,7 @@
     padding: 20px 40px;
     border-bottom: 1px solid #e0e0e0;
     background-color: transparent;
+    transition: opacity 0.12s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #modal-header span {
@@ -285,6 +288,7 @@
     padding: 30px 40px;
     overflow-y: auto;
     max-height: calc(70dvh - 60px);
+    transition: opacity 0.12s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Responsive Design */
