@@ -1,128 +1,174 @@
 import React from 'react'
 import styles from './Body.module.css'
 import Controller from './controller.svg'
-import { motion, MotionStyle } from 'framer-motion'
 import { IoIosCloseCircle } from 'react-icons/io'
+import { AiOutlineShoppingCart, AiOutlineTruck, AiOutlineSwap, AiOutlineTeam } from 'react-icons/ai'
 import upcomingData from './upcomingData.ts'
 import UpcomingDataMap from './UpcomingDataMap.tsx'
 
-const style1: MotionStyle = {
-  height: '250px', width: '250px',
-  borderTopLeftRadius: '50%',
-  borderTopRightRadius: '17%',
-  borderBottomLeftRadius: '10%',
-  borderBottomRightRadius: '60%',
-  filter: 'blur(50px)',
-  opacity: 0.4,
-  boxShadow: '-10px -55px 400px -5px rgb(56, 106, 231)',
-  position: 'absolute',
-  backgroundImage: 'linear-gradient(to right,rgb(25, 25, 37),rgb(24, 25, 40))'
-}
-const style2: MotionStyle = {
-  height: '240px', width: '260px',
-  borderTopLeftRadius: '50%',
-  borderTopRightRadius: '27%',
-  borderBottomLeftRadius: '40%',
-  borderBottomRightRadius: '60%',
-  filter: 'blur(60px)',
-  opacity: 0.3,
-  boxShadow: '80px 65px 75px -15px rgb(61, 80, 152)',
-  position: 'absolute',
-  backgroundImage: 'linear-gradient(to right,rgb(56, 68, 146),rgba(19, 16, 74, 0.6))'
-}
-
 const Body = () => {
-  const secondContRef = React.useRef<HTMLDivElement>(null);
   const joyRef = React.useRef<HTMLImageElement>(null);
   const [val, setVal] = React.useState<string>('none');
   const [toggle, setToggle] = React.useState<boolean>(false);
 
-
   return (
     <>
-      <motion.div id={styles['container']}
-        initial={{ x: 150 }}
-        animate={{ x: 0 }}>
-        <div id={styles['first-container']}>
-          <div>
-            <h1>
-              XBOX Controller
-            </h1>
-            <p>
-              This is a hyper Ergonomic XBOX <br />
-              Controller concept Makes Gaming More <br />
-              Comfortable
-            </p>
+      {/* Hero Section */}
+      <div id={styles['container']}>
+        <div id={styles['hero-section']}>
+          <div id={styles['hero-content']}>
+            <h1>Welcome to Your Marketplace</h1>
+            <p>Discover premium quality products across all categories. From electronics to gaming gear, find everything you need in one place.</p>
             <button
               onClick={() => {
                 setVal('70dvh');
                 setToggle(true);
                 if (joyRef.current)
                   joyRef.current.style.transform = 'scale(0.7)'
-              }}>
-              EXPLORE
+              }}
+              id={styles['cta-button']}>
+              Browse Products
             </button>
+          </div>
+          <div id={styles['hero-image']}>
+            <img src={Controller} alt='Featured Product' ref={joyRef} />
           </div>
         </div>
 
-        <motion.div id={styles['second-container']} ref={secondContRef}>
-          <motion.div
-            initial={{ opacity: 0, transform: 'scale(0,0)' }}
-            whileInView={{ opacity: 1, transform: 'scale(1,1)' }}
-            viewport={{ root: secondContRef }}
-            style={{ ...style1, left: 160, top: 250 }} />
+        {/* Features Section */}
+        <div id={styles['features-section']}>
+          <h2>Why Choose Us</h2>
+          <div id={styles['features-grid']}>
+            <div className={styles['feature-card']}>
+              <div className={styles['feature-icon']}>
+                <AiOutlineShoppingCart size={32} />
+              </div>
+              <h3>Wide Selection</h3>
+              <p>Thousands of products across multiple categories to meet all your needs.</p>
+            </div>
+            <div className={styles['feature-card']}>
+              <div className={styles['feature-icon']}>
+                <AiOutlineTruck size={32} />
+              </div>
+              <h3>Fast Shipping</h3>
+              <p>Quick and reliable delivery to your doorstep within 3-5 business days.</p>
+            </div>
+            <div className={styles['feature-card']}>
+              <div className={styles['feature-icon']}>
+                <AiOutlineSwap size={32} />
+              </div>
+              <h3>Easy Returns</h3>
+              <p>30-day return policy with hassle-free exchanges and refunds.</p>
+            </div>
+            <div className={styles['feature-card']}>
+              <div className={styles['feature-icon']}>
+                <AiOutlineTeam size={32} />
+              </div>
+              <h3>24/7 Support</h3>
+              <p>Dedicated customer service team ready to help you anytime.</p>
+            </div>
+          </div>
+        </div>
 
-          <motion.div
-            initial={{ opacity: 0, transform: 'scale(0,0)' }}
-            whileInView={{ opacity: 1, transform: 'scale(1,1)' }}
-            style={{ ...style2, right: 160, bottom: 260 }} />
+        {/* Categories Section */}
+        <div id={styles['categories-section']}>
+          <h2>Shop by Category</h2>
+          <div id={styles['categories-grid']}>
+            <div className={styles['category-card']}>
+              <div className={styles['category-header']}>Electronics</div>
+              <p>Latest gadgets and devices</p>
+            </div>
+            <div className={styles['category-card']}>
+              <div className={styles['category-header']}>Gaming</div>
+              <p>Console games and accessories</p>
+            </div>
+            <div className={styles['category-card']}>
+              <div className={styles['category-header']}>Home & Garden</div>
+              <p>Everything for your home</p>
+            </div>
+            <div className={styles['category-card']}>
+              <div className={styles['category-header']}>Fashion</div>
+              <p>Clothing and accessories</p>
+            </div>
+            <div className={styles['category-card']}>
+              <div className={styles['category-header']}>Sports</div>
+              <p>Athletic gear and equipment</p>
+            </div>
+            <div className={styles['category-card']}>
+              <div className={styles['category-header']}>Books & Media</div>
+              <p>Books, movies, and music</p>
+            </div>
+          </div>
+        </div>
 
-          <img src={Controller} alt='' ref={joyRef}
-            style={{
-              objectFit: 'contain',
-              position: 'absolute', zIndex: 1, width: '75%',
-              filter: 'drop-shadow(#3c3c3c 5px 8px 8px)',
-            }} />
-        </motion.div>
-      </motion.div>
-      <motion.div
+        {/* Featured Products Section */}
+        <div id={styles['featured-section']}>
+          <h2>Featured Products</h2>
+          <p className={styles['section-description']}>Handpicked items for you</p>
+          <button
+            onClick={() => {
+              setVal('70dvh');
+              setToggle(true);
+            }}
+            id={styles['featured-btn']}>
+            View All Products
+          </button>
+        </div>
+
+        {/* Info Section */}
+        <div id={styles['info-section']}>
+          <div className={styles['info-card']}>
+            <h3>Quality Guarantee</h3>
+            <p>All products are sourced from trusted suppliers and tested for quality before delivery.</p>
+          </div>
+          <div className={styles['info-card']}>
+            <h3>Secure Shopping</h3>
+            <p>Your transactions are protected with industry-standard encryption and security measures.</p>
+          </div>
+          <div className={styles['info-card']}>
+            <h3>Best Prices</h3>
+            <p>We offer competitive pricing with regular promotions and exclusive deals for members.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal for Products */}
+      <div
         id={styles['modal']}
         style={{
-          width: '100vw', zIndex: 5,
-          display: 'flex', flexDirection: 'column',
-          backgroundColor: 'white',
-        }}
-        initial={{ height: '0svh' }}
-        animate={{ height: val, opacity: toggle ? 1 : 0 }}
-      >
-        <span>
-          Upcoming Products:
-        </span>
-        <section
-          style={{
-            display: 'flex',
-            margin: 25,
-            overflowX: 'clip',
-            overflowY: 'auto',
-            flexWrap: 'wrap', justifyContent: 'center',
-
-          }}
-        >
-          {upcomingData?.map(item => <UpcomingDataMap key={item._id} _id={item._id} image={(item.imagesBase64 && item.imagesBase64[0]?.base64) ?? ''} price={item.price.pdtPrice} name={item.productName} desc={item.productDescription} />)}
+          height: val,
+          opacity: toggle ? 1 : 0,
+          display: toggle ? 'flex' : 'none',
+          flexDirection: 'column',
+          width: '100vw',
+          zIndex: 5,
+        }}>
+        <div id={styles['modal-header']}>
+          <span>Upcoming Products</span>
           <IoIosCloseCircle
+            size={28}
             onClick={() => {
               setToggle(false);
               setVal('0svh');
               if (joyRef.current)
                 joyRef.current.style.transform = 'scale(1)'
             }}
-            color={'rgb(40,48,102)'}
-            style={{
-              position: 'absolute', top: 20, right: 45,
-              transform: 'scale(2)', cursor: 'pointer'
-            }} />
+            style={{ cursor: 'pointer' }}
+          />
+        </div>
+        <section id={styles['modal-content']}>
+          {upcomingData?.map(item => (
+            <UpcomingDataMap
+              key={item._id}
+              _id={item._id}
+              image={(item.imagesBase64 && item.imagesBase64[0]?.base64) ?? ''}
+              price={item.price.pdtPrice}
+              name={item.productName}
+              desc={item.productDescription}
+            />
+          ))}
         </section>
-      </motion.div>
+      </div>
     </>
   )
 }
