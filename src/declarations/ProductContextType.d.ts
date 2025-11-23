@@ -17,7 +17,7 @@ export declare type ProductType = {
   image?: File[];
   modelNumber?: string;
   productDescription: string;
-  quantity: number;
+  quantity: number | null;
   keywords: string[];
   seller?: string;
 };

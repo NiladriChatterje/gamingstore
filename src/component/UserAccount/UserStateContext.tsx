@@ -52,7 +52,7 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
   }, []);
   React.useEffect(() => {
     const localTotalPrice = cartData?.reduce(
-      (acc: number, cur: ProductType) => acc + cur.price.pdtPrice * cur.quantity,
+      (acc: number, cur: ProductType) => acc + cur.price.pdtPrice * (cur.quantity ?? 0),
       0
     );
     setTotalPrice(localTotalPrice);
