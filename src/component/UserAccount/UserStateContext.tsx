@@ -52,11 +52,11 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
   }, []);
   React.useEffect(() => {
     const localTotalPrice = cartData?.reduce(
-      (acc: number, cur: ProductType) => acc + cur.price.pdtPrice * (cur.quantity ?? 0),
+      (acc: number, cur: ProductType) => acc + (cur.price?.pdtPrice ?? 0) * (cur.quantity ?? 0),
       0
-    );
+    ) ?? 0;
     setTotalPrice(localTotalPrice);
-    localStorage.setItem("totalPrice", totalPrice.toString());
+    localStorage.setItem("totalPrice", localTotalPrice.toString());
     localStorage.setItem("cart", JSON.stringify(cartData));
   }, [cartData]);
 
@@ -77,10 +77,13 @@ export const UserStateContext = ({ children }: { children: ReactNode }) => {
 
   function incDecQty(counter: number, id: string) {
     let foundItem: ProductType | undefined = cartData?.find((i) => i._id === id);
-    if (foundItem)
+    if (foundItem) {
       foundItem.quantity = counter;
-    localStorage.setItem('cart', JSON.stringify(cartData));
-    setRefreshApp(prev => !prev)
+      // Create a new array reference to trigger state updates and totalPrice recalculation
+      const updatedCartData = [...cartData];
+      localStorage.setItem('cart', JSON.stringify(updatedCartData));
+      setCartData(updatedCartData);
+    }
   }
 
   const syncCartProductWithLocal = useCallback(async function syncCartProductWithLocal() {
