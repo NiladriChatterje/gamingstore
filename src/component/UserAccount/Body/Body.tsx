@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './Body.module.css'
-import Controller from './controller.svg'
+import Controller3D from './Controller3D'
 import { IoIosCloseCircle } from 'react-icons/io'
 import { AiOutlineShoppingCart, AiOutlineTruck, AiOutlineSwap, AiOutlineTeam } from 'react-icons/ai'
 import upcomingData from './upcomingData.ts'
@@ -31,7 +31,7 @@ const Body = () => {
             </button>
           </div>
           <div id={styles['hero-image']}>
-            <img src={Controller} alt='Featured Product' ref={joyRef} />
+            <Controller3D />
           </div>
         </div>
 
