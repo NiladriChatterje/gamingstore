@@ -6,7 +6,7 @@ import { ProductType } from '@/declarations/ProductContextType';
 
 //order page list
 const OrderPendingItem = ({ item }: { item: ProductType }) => {
-  const [counter, setCounter] = useState<number>(() => item.quantity);
+  const [counter, setCounter] = useState<number>(() => (item.quantity ?? 1));
   const { incDecQty, setCartData, cartData } = useUserStateContext();
 
   React.useEffect(() => {
