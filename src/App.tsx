@@ -19,11 +19,21 @@ function App() {
   const { defaultLoginAdminOrUser } = useStateContext();
   const { user } = useUser();
 
+  // Debug logging
+  useEffect(() => {
+    console.log('App.tsx - Rendering with:');
+    console.log('  - defaultLoginAdminOrUser:', defaultLoginAdminOrUser);
+    console.log('  - user:', user);
+    console.log('  - localStorage loginusertype:', localStorage.getItem('loginusertype'));
+  }, [defaultLoginAdminOrUser, user]);
+
   // Get the appropriate component based on role, default to UserRootContext
   const getRoleComponent = () => {
     if (user !== null && defaultLoginAdminOrUser && defaultLoginAdminOrUser in roleComponentMap) {
+      console.log('App.tsx - Selecting component for role:', defaultLoginAdminOrUser);
       return roleComponentMap[defaultLoginAdminOrUser];
     }
+    console.log('App.tsx - No user or invalid role, defaulting to UserRootContext');
     // Default to UserRootContext if no user, no role selected, or invalid role
     return UserRootContext;
   };
