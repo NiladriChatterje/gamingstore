@@ -6,6 +6,7 @@ import {
   AddProduct,
   EditProduct,
   EditProductDetails,
+  Orders,
 } from './component'
 import styles from './AdminAccount.module.css'
 import { IoLogOutOutline } from 'react-icons/io5'
@@ -53,6 +54,7 @@ const AdminAccount = () => {
                 <Routes>
                   <Route index path='/' element={<Home />} />
                   <Route index path='/admin' element={<Home />} />
+                  <Route path='/admin/orders' element={<Orders />} />
                   <Route path='/admin/sales' element={<h1>Sales</h1>} />
                   <Route
                     path='/admin/edit-profile'

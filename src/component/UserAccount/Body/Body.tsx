@@ -101,35 +101,6 @@ const Body = () => {
           </div>
         </div>
 
-        {/* Featured Products Section */}
-        <div id={styles['featured-section']}>
-          <h2>Featured Products</h2>
-          <p className={styles['section-description']}>Handpicked items for you</p>
-          <button
-            onClick={() => {
-              setVal('70dvh');
-              setToggle(true);
-            }}
-            id={styles['featured-btn']}>
-            View All Products
-          </button>
-        </div>
-
-        {/* Info Section */}
-        <div id={styles['info-section']}>
-          <div className={styles['info-card']}>
-            <h3>Quality Guarantee</h3>
-            <p>All products are sourced from trusted suppliers and tested for quality before delivery.</p>
-          </div>
-          <div className={styles['info-card']}>
-            <h3>Secure Shopping</h3>
-            <p>Your transactions are protected with industry-standard encryption and security measures.</p>
-          </div>
-          <div className={styles['info-card']}>
-            <h3>Best Prices</h3>
-            <p>We offer competitive pricing with regular promotions and exclusive deals for members.</p>
-          </div>
-        </div>
       </div>
 
       {/* Modal for Products */}
