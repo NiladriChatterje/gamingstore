@@ -19,13 +19,6 @@ function App() {
   const { defaultLoginAdminOrUser } = useStateContext();
   const { user } = useUser();
 
-  // Debug logging
-  useEffect(() => {
-    console.log('App.tsx - Rendering with:');
-    console.log('  - defaultLoginAdminOrUser:', defaultLoginAdminOrUser);
-    console.log('  - user:', user);
-    console.log('  - localStorage loginusertype:', localStorage.getItem('loginusertype'));
-  }, [defaultLoginAdminOrUser, user]);
 
   // Get the appropriate component based on role, default to UserRootContext
   const getRoleComponent = () => {

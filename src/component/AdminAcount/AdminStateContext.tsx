@@ -322,6 +322,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
 
   if (loadingState) return <PreLoader />;
 
+  //if error in fetching admin data
   if (admin == null)
     return (
       <div
