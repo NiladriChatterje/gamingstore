@@ -1,5 +1,5 @@
 /// <reference types="vite-plugin-svgr/client" />
-import PreLoader from "../../PreLoader";
+import PreLoader from "@/PreLoader";
 import {
   createContext,
   ReactNode,
@@ -25,19 +25,34 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
   const [isPlanActiveState, setIsPlanActive] = useState<boolean>(false);
   const [loadingState, setLoadingState] = useState<boolean>(true);
   const [retry, setRetry] = useState<boolean>(true);
-  const [editProductForm, setEditProductForm] = useState<ProductType | null>(); // To fill up form fields when a product is about to edit
+  const [editProductForm, setEditProductForm] = useState<ProductType | null>();
 
-  // Date filtering states
   const [fromDate, setFromDate] = useState<Date | null>(() => {
-    // Default to 30 days ago
     const date = new Date();
     date.setDate(date.getDate() - 30);
     return date;
   });
-  const [toDate, setToDate] = useState<Date | null>(() => new Date()); // Default to today
+  const [toDate, setToDate] = useState<Date | null>(() => new Date());
 
   const { user, isLoaded, isSignedIn } = useUser();
   const { getToken } = useAuth();
+
+  // ✅ Promisified Geolocation API
+  const getGeolocation = (): Promise<{ latitude: number; longitude: number }> => {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  };
 
   async function checkAdminEnrolled(): Promise<AdminFieldsType | undefined> {
     const token = await getToken()
@@ -69,13 +84,14 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
 
     //#region adminCreateOperations definition
     const adminCreateOperations = async (latitude: number, longitude: number) => {
+      console.log("<adminCreateOperations called>");
+      let token = await getToken();
+      console.log("geolocation fetched: ", latitude, longitude);
       if (!user?.phoneNumbers[0]?.phoneNumber && !userEnrolled?.phone) {
         if (toastLoadingId) toast.dismiss(toastLoadingId);
 
-        //address info fetch
         const responseGeo = await fetch(
-          `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${import.meta.env.VITE_GEOAPIFY_API
-          }`,
+          `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${import.meta.env.VITE_GEOAPIFY_API}`,
           {
             method: "GET",
             headers: {
@@ -88,7 +104,6 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         console.log("reverse geocoding : ", placeResult);
 
         try {
-          //creating admin document if not found in sanity
           const res: Response = await fetch(
             `http://localhost:5003/create-admin`,
             {
@@ -145,7 +160,6 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
               position: "bottom-right",
             }
           );
-          setLoadingState(false);
           return;
         }
 
@@ -155,7 +169,6 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         });
       }
 
-      //if the document created successfully
       if (user?.id)
         setAdmin({
           _type: "admin",
@@ -176,40 +189,38 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
     };
     //#endregion adminCreateOperations definition end
 
+    // ✅ FIXED: Properly awaiting geolocation
     if (userEnrolled == null) {
-      navigator.geolocation.getCurrentPosition(
-        async ({
-          coords: { latitude, longitude },
-        }: {
-          coords: { latitude: number; longitude: number };
-        }) => {
-          await adminCreateOperations(latitude, longitude);
-          console.log("<userEnrolled after calling adminCreateOperations>");
-        },
-        (error: GeolocationPositionError) => {
-          const toastId = toast(<div>allow location</div>, {
-            position: "bottom-left",
-            style: { width: 320, background: "white", fontSize: "small" },
-            icon: <IoLocation size={25} />,
-          });
-          const toastIdForMsg = toast.error(error.message, {
-            position: "bottom-left",
-            style: { width: 320, background: "white", fontSize: "small" },
-          });
+      try {
+        const { latitude, longitude } = (await getGeolocation()) ?? {
+          latitude: 22.6230272,
+          longitude: 88.4867072
+        };
+        await adminCreateOperations(latitude, longitude);
+        console.log("<userEnrolled after calling adminCreateOperations>");
+      } catch (error: GeolocationPositionError | any) {
+        const toastId = toast(<div>allow location</div>, {
+          position: "bottom-left",
+          style: { width: 320, background: "white", fontSize: "small" },
+          icon: <IoLocation size={25} />,
+        });
+        const toastIdForMsg = toast.error(error.message, {
+          position: "bottom-left",
+          style: { width: 320, background: "white", fontSize: "small" },
+        });
 
-          setTimeout(() => {
-            toast.dismiss(toastId);
-            toast.dismiss(toastIdForMsg);
-            setRetry((prev) => !prev);
-          }, 4000);
-        }
-      );
+        setTimeout(() => {
+          toast.dismiss(toastId);
+          toast.dismiss(toastIdForMsg);
+          setRetry((prev) => !prev);
+        }, 4000);
+      }
     }
+
     setLoadingState(false);
     return userEnrolled;
   }
 
-  // Function to fetch filtered statistics based on date range
   const fetchFilteredStatistics = async (fromDate: Date | null, toDate: Date | null) => {
     if (!user?.id || !fromDate || !toDate) {
       console.warn('Missing required parameters for fetching filtered statistics');
@@ -220,7 +231,6 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
       const token = await getToken();
       const adminId = `admin-${user.id}`;
 
-      // Format dates to ISO string for API
       const fromDateISO = fromDate.toISOString();
       const toDateISO = toDate.toISOString();
 
@@ -242,9 +252,6 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
       const filteredMetrics = await response.json();
       console.log('Filtered metrics received:', filteredMetrics);
 
-      // You can dispatch this data to a metrics state or handle it as needed
-      // For now, we'll just log it. You might want to add a metrics state later.
-
     } catch (error: any) {
       console.error('Error fetching filtered statistics:', error);
       toast.error(`Failed to fetch statistics: ${error.message}`, {
@@ -256,14 +263,11 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     async function mainCheck() {
-      // check from server if user has an existing
-      // subscription plan or not
       try {
         const result: AdminFieldsType | undefined = await checkAdminEnrolled();
 
         if (result == null) return;
 
-        // Use the isPlanActive value from server response
         console.log('subscription plan from server : ', result.isPlanActive);
         if (result.isPlanActive) {
           setIsPlanActive(true);
@@ -322,7 +326,6 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
 
   if (loadingState) return <PreLoader />;
 
-  //if error in fetching admin data
   if (admin == null)
     return (
       <div
@@ -351,7 +354,6 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         <img height={"100%"} src={ServiceUnavailable} alt="" />
       </div>
     );
-
 
   return (
     <AdminContext.Provider

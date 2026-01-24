@@ -13,7 +13,7 @@ import { BsClipboard } from "react-icons/bs";
 
 
 function Payment() {
-    const [oneProduct, _] = useState<{ _id: String; productName: string; quantity: number; price: number }>(JSON.parse(localStorage.getItem('oneProduct') ?? ''));
+    const [oneProduct, _] = useState<{ _id: String; productName: string; quantity: number; price: number }>(JSON.parse(localStorage.getItem('oneProduct') ?? '{}'));
     const { isOneItem, cartData, totalPrice, userData, singleProductDetail, setSingleProductDetail } = useUserStateContext();
     const navigate = useNavigate();
     const { setDefaultLoginAdminOrUser } = useStateContext()
@@ -26,57 +26,72 @@ function Payment() {
             localStorage.setItem('loginusertype', 'user')
             setDefaultLoginAdminOrUser?.('user')
             toast(
-                <div>
-                    <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}><AiFillCloseCircle
-
-                        onClick={() => toast.dismiss()}
-                    /></div>
-                    <table id={styles['razorpay-testdata-info']}>
-                        <thead>
-                            <tr>
-                                <th>Card Net.</th>
-                                <th>Card No.</th>
-                                <th>CVV</th>
-                                <th>Expiration</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>MasterCard <RiMastercardFill /></td>
-                                <td style={{
-                                    color: 'white', background: '#3b3b3b', padding: '2px 5px',
-                                    borderRadius: 5
-                                }}>5267 3181 8797 5449 <BsClipboard
-                                        cursor={'pointer'}
-                                        onClick={() => {
-                                            navigator.clipboard.writeText("5267318187975449");
-                                            toast.success('Copied!')
-                                        }} /></td>
-                                <td>&lt; Any &gt;</td>
-                                <td>&lt; Future date &gt;</td>
-                            </tr>
-
-                            <tr>
-                                <td>Visa <RiVisaFill /></td>
-                                <td style={{
-                                    color: 'white', background: '#3b3b3b', padding: '2px 5px',
-                                    borderRadius: 5
-                                }}> 4386 2894 0766 0153 <BsClipboard
-                                        cursor={'pointer'}
-                                        onClick={() => {
-                                            navigator.clipboard.writeText("4386289407660153");
-                                            toast.success('Copied!')
-                                        }} /></td>
-                                <td>&lt; Any &gt;</td>
-                                <td>&lt; Future date &gt;</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div style={{ minWidth: '320px' }}>
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '12px',
+                        paddingBottom: '8px',
+                        borderBottom: '1px solid rgba(0,0,0,0.1)'
+                    }}>
+                        <h4 style={{
+                            margin: 0,
+                            fontSize: '14px',
+                            fontWeight: 600,
+                            color: 'rgb(30, 28, 41)'
+                        }}>Test Card Details</h4>
+                        <AiFillCloseCircle
+                            cursor='pointer'
+                            size={18}
+                            color="rgb(30, 28, 41)"
+                            onClick={() => toast.dismiss()}
+                            style={{ opacity: 0.6, transition: 'opacity 150ms' }}
+                            onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                            onMouseLeave={(e) => e.currentTarget.style.opacity = '0.6'}
+                        />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {[
+                            { name: 'MasterCard', icon: <RiMastercardFill />, no: '5267 3181 8797 5449', clean: '5267318187975449' },
+                            { name: 'Visa', icon: <RiVisaFill />, no: '4386 2894 0766 0153', clean: '4386289407660153' }
+                        ].map(card => (
+                            <div key={card.name} style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                background: 'rgba(0,0,0,0.02)',
+                                padding: '10px',
+                                borderRadius: '8px',
+                                border: '1px solid rgba(0,0,0,0.05)',
+                                transition: 'all 150ms'
+                            }}>
+                                <div style={{ fontSize: '24px', color: 'rgb(30, 28, 41)' }}>{card.icon}</div>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: '11px', color: '#888', marginBottom: '2px' }}>{card.name}</div>
+                                    <div style={{ fontSize: '13px', fontWeight: 600, color: 'rgb(30, 28, 41)' }}>{card.no}</div>
+                                </div>
+                                <BsClipboard
+                                    cursor='pointer'
+                                    size={16}
+                                    color="rgb(30, 28, 41)"
+                                    style={{ opacity: 0.5, transition: 'opacity 150ms' }}
+                                    onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                                    onMouseLeave={(e) => e.currentTarget.style.opacity = '0.5'}
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(card.clean);
+                                        toast.success('Copied!', { duration: 1500 });
+                                    }}
+                                />
+                            </div>
+                        ))}
+                    </div>
                 </div>,
                 {
-                    duration: 50000,
+                    duration: 15000,
                     position: 'bottom-right'
-                })
+                }
+            )
         }
     }, [isLoaded, signIn])
 
@@ -91,96 +106,109 @@ function Payment() {
         }
     }, [cartData, singleProductDetail, navigate])
     return (
-
         <div id={styles['payment-container']}>
             <SignedIn>
                 {false ? <Loader /> : (
                     <div id={styles['whole_wrapper']}>
                         <div id={styles['product-list']}>
-                            {isOneItem ? <div id={styles['nam_price_container']}>
-                                <section id={styles['nam_price']}>
-                                    <span>{singleProductDetail?.productName}</span>
-                                    <div className={styles['pdt-ProductDetail']}><span>Quantity: </span><span>{singleProductDetail?.quantity}</span></div>
-                                    <div className={styles['pdt-ProductDetail']}><span>Unit Price: </span><span>₹ {singleProductDetail?.price?.pdtPrice}</span></div>
-                                </section>
-                                <div className={`${styles['pdt-ProductDetail']} ${styles['single-pdt-total']}`}>
-                                    <Checkout price={singleProductDetail != undefined ?
-                                        (singleProductDetail?.price?.pdtPrice * (singleProductDetail?.quantity ?? 0)) : 0}
-                                        callback={async (
-                                            payment_id: string,
-                                            razorpay_signature: string,
-                                            razorpay_order_id: string,
-                                        ) => {
-                                            try {
-                                                const token = await getToken()
-                                                if (singleProductDetail) {
-                                                    const response = await fetch(`http://localhost:5000/user-order`, {
-                                                        method: 'PUT',
-                                                        headers: {
-                                                            'Content-Type': `application/json`,
-                                                            Authorization: `Bearer ${token}`,
-                                                            'x-user-id': userData?._id ?? ''
-                                                        },
-                                                        body: JSON.stringify({
-                                                            customer: userData?._id,
-                                                            customerEmail: userData?.email,
-                                                            product: singleProductDetail?._id,
-                                                            transactionId: payment_id,
-                                                            orderId: razorpay_order_id,
-                                                            pincode: userData?.address.pincode,
-                                                            paymentSignature: razorpay_signature,
-                                                            amount: singleProductDetail?.price?.pdtPrice * (singleProductDetail?.quantity ?? 0),
-                                                            quantity: singleProductDetail?.quantity
-                                                        })
-                                                    });
-                                                    console.log(await response.json())
-                                                    if (response.ok) {
-                                                        localStorage.removeItem('oneProduct')
-                                                        setSingleProductDetail?.(undefined)
+                            {isOneItem ? (
+                                <div id={styles['nam_price_container']}>
+                                    <section id={styles['nam_price']}>
+                                        <span>{singleProductDetail?.productName}</span>
+                                        <div className={styles['pdt-ProductDetail']}>
+                                            <span>Quantity</span>
+                                            <span>{singleProductDetail?.quantity}</span>
+                                        </div>
+                                        <div className={styles['pdt-ProductDetail']}>
+                                            <span>Unit Price</span>
+                                            <span>₹ {singleProductDetail?.price?.pdtPrice}</span>
+                                        </div>
+                                    </section>
+                                    <div className={styles['single-pdt-total']}>
+                                        <span>Total</span>
+                                        <span>₹ {singleProductDetail ? (singleProductDetail?.price?.pdtPrice * (singleProductDetail?.quantity ?? 0)) : 0}</span>
+                                        <Checkout
+                                            price={singleProductDetail ? (singleProductDetail?.price?.pdtPrice * (singleProductDetail?.quantity ?? 0)) : 0}
+                                            callback={async (payment_id: string, razorpay_signature: string, razorpay_order_id: string) => {
+                                                try {
+                                                    const token = await getToken();
+                                                    if (singleProductDetail) {
+                                                        const response = await fetch(`http://localhost:5000/user-order`, {
+                                                            method: 'PUT',
+                                                            headers: {
+                                                                'Content-Type': `application/json`,
+                                                                Authorization: `Bearer ${token}`,
+                                                                'x-user-id': userData?._id ?? ''
+                                                            },
+                                                            body: JSON.stringify({
+                                                                customer: userData?._id,
+                                                                customerEmail: userData?.email,
+                                                                product: singleProductDetail?._id,
+                                                                transactionId: payment_id,
+                                                                orderId: razorpay_order_id,
+                                                                pincode: userData?.address.pincode,
+                                                                paymentSignature: razorpay_signature,
+                                                                amount: singleProductDetail?.price?.pdtPrice * (singleProductDetail?.quantity ?? 0),
+                                                                quantity: singleProductDetail?.quantity
+                                                            })
+                                                        });
+                                                        if (response.ok) {
+                                                            localStorage.removeItem('oneProduct');
+                                                            setSingleProductDetail?.(undefined);
+                                                        }
+                                                    } else {
+                                                        toast('This Route is only accessible through proper workflow');
                                                     }
-
+                                                } catch (e) {
+                                                    console.error(e);
                                                 }
-                                                else {
-                                                    toast('This Route is only accessible through proper workflow');
-                                                    return;
-                                                }
-                                            } catch (e) {
-
-                                            }
-
-                                        }} />
-                                    <span>Total: </span><span>₹ {
-                                        singleProductDetail ?
-                                            (singleProductDetail?.price?.pdtPrice * (singleProductDetail?.quantity ?? 0)) : 0}</span></div>
-                            </div> :
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            ) : (
                                 <section id={styles['table']}>
                                     <header>
-                                        <th className={styles['first-column']}>Product</th>
-                                        <th className={styles['second-column']}>QTY</th>
-                                        <th className={styles['third-column']}>Price</th>
+                                        <span className={styles['first-column']}>Product</span>
+                                        <span className={styles['second-column']}>QTY</span>
+                                        <span className={styles['third-column']}>Price</span>
                                     </header>
                                     <div>
                                         {cartData?.map(item => (
-                                            <div key={item._id} >
-                                                <span className={styles['first-column']} >{item?.productName}</span>
+                                            <div key={item._id}>
+                                                <span className={styles['first-column']}>
+                                                    {item.imagesBase64?.[0]?.base64 && (
+                                                        <img
+                                                            src={item.imagesBase64[0].base64}
+                                                            alt={item.productName}
+                                                            className={styles['product-thumb']}
+                                                        />
+                                                    )}
+                                                    {item?.productName}
+                                                </span>
                                                 <span className={styles['second-column']}>{item?.quantity}</span>
-                                                <span className={styles['third-column']}>₹{item?.price.pdtPrice * (item?.quantity ?? 0)}</span>
-                                            </div>))}
+                                                <span className={styles['third-column']}>₹{(item?.price?.pdtPrice ?? 0) * (item?.quantity ?? 0)}</span>
+                                            </div>
+                                        ))}
                                     </div>
-                                    <footer className={styles['single-pdt-total']}>
-                                        <Checkout price={isOneItem ? oneProduct.price * oneProduct.quantity : totalPrice || 0}
+                                    <footer>
+                                        <span>Grand Total</span>
+                                        <span>₹ {totalPrice}</span>
+                                        <Checkout
+                                            price={isOneItem ? oneProduct.price * oneProduct.quantity : totalPrice || 0}
                                             callback={() => { }}
                                         />
-                                        {/* <span className={styles['first-column']}>Amount: </span> */}
-                                        <span className={styles['second-column']}>Amount: </span>
-                                        <span className={styles['third-column']}>₹{totalPrice}</span>
                                     </footer>
-                                </section>}
+                                </section>
+                            )}
                         </div>
-                    </div>)}
+                    </div>
+                )}
             </SignedIn>
             <SignedOut>
-                <SignIn forceRedirectUrl={'/user/payment'} afterSignInUrl={'/user/payment'} />
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100dvh', width: '100vw' }}>
+                    <SignIn forceRedirectUrl={'/user/payment'} />
+                </div>
             </SignedOut>
         </div>
     );

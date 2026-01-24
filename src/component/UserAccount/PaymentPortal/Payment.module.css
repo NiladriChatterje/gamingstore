@@ -1,191 +1,255 @@
 #payment-container {
     display: flex;
     width: 100%;
-    height: 100dvh;
+    min-height: 100dvh;
     justify-content: center;
     align-items: center;
-}
-
-#product-list {
-    width: 50%;
-    height: 100%;
-}
-#razorpay-testdata-info{
-    table-layout: fixed;
-    text-align: left;
-}
-#razorpay-testdata-info td,#razorpay-testdata-info th{
-    border:1px solid black
-} 
-#loader-payment-card-container {
-    width: 50%;
-    height: 100%;
-    padding: 5px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#loader-payment-card-container>form {
-    position: relative;
-    width: 80%;
+    padding: 80px 20px 20px;
 }
 
 #whole_wrapper {
     display: flex;
-    padding: 10px;
-    color: black;
-    justify-content: center;
-    align-items: center;
-    height: 380px;
-    width: 70vw
+    background-color: rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 900px;
+    overflow: hidden;
+    transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-#nam_price_container {
-    height: 90%;
-    padding: 5px 12px;
+#product-list {
+    flex: 1;
+    padding: 32px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+}
+
+/* Single Product View */
+#nam_price_container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    height: 100%;
 }
 
 #nam_price {
-    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    justify-content: space-between
+    gap: 16px;
 }
 
 #nam_price>span:first-child {
-    color: rgb(237, 237, 237);
-    background-color: rgb(105, 111, 149);
-    border-radius: 5px;
-    padding: 3px 8px;
+    font-size: 1.5em;
+    font-weight: 700;
+    color: rgb(30, 28, 41);
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(30, 28, 41, 0.1);
 }
 
 .pdt-ProductDetail {
     display: flex;
-    font-size: 0.95em;
-    font-weight: 100;
-    width: 100%;
-    justify-content: space-between
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1em;
+    padding: 10px 0;
+    color: rgb(60, 60, 60);
+}
+
+.pdt-ProductDetail span:first-child {
+    font-weight: 500;
+}
+
+.pdt-ProductDetail span:last-child {
+    font-weight: 600;
+    color: rgb(30, 28, 41);
 }
 
 .single-pdt-total {
-    background-color: rgb(57, 60, 92);
+    margin-top: auto;
+    background-color: rgb(30, 28, 41);
     color: white;
-    padding: 4px 8px;
-    border-radius: 5px;
-
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1em;
+    font-weight: 600;
 }
 
-
-.first-column {
-    width: 250px;
-}
-
-.second-column {
-    width: 80px;
-}
-
-.third-column {
-    width: 100px;
-}
-
-.first-column,
-.second-column,
-.third-column {
-    margin-bottom: 8px;
-    display: inline-block;
-    text-align: left;
-}
-
+/* Table View */
 #table {
     display: flex;
     flex-direction: column;
-    padding: 2px 15px;
     width: 100%;
     height: 100%;
-    border-right: 1px solid black;
+    gap: 16px;
 }
 
 #table>header {
-    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background-color: rgb(30, 28, 41);
     color: white;
-    background-color: rgb(93, 97, 131);
-    margin-bottom: 10px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 #table>div {
-    border-radius: 5px;
-    background-color: rgb(240, 240, 240);
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    padding: 1px;
 }
 
 #table>div>div {
-    border-bottom: 0.5px solid rgb(70, 73, 106);
-}
-
-#table>header,
-#table>div>div,
-#table>footer {
-    padding: 5px 10px;
-    gap: 10px;
     display: flex;
     justify-content: space-between;
+    padding: 14px 20px;
+    background-color: white;
+    transition: all 120ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-#table>div {
-    height: 90%;
-    overflow: clip auto;
+#table>div>div:first-child {
+    border-radius: 8px 8px 0 0;
 }
 
-@media all and (max-width:868px) {
-    #nam_price_container {
-        border-right: 0px;
-        border-bottom: 1px solid black;
-        width: 100%;
-    }
+#table>div>div:last-child {
+    border-radius: 0 0 8px 8px;
+}
 
-    #product-list {
-        width: 90%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+#table>div>div:hover {
+    background-color: rgba(30, 28, 41, 0.02);
+}
 
-    #loader-payment-card-container {
-        width: 100%;
+#table>footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: rgb(30, 28, 41);
+    color: white;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.first-column {
+    flex: 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    color: rgb(30, 28, 41);
+}
+
+.second-column {
+    flex: 1;
+    text-align: center;
+    font-weight: 500;
+    color: rgb(60, 60, 60);
+}
+
+.third-column {
+    flex: 1;
+    text-align: right;
+    font-weight: 600;
+    color: rgb(30, 28, 41);
+}
+
+/* Ensure header text is white */
+#table>header .first-column,
+#table>header .second-column,
+#table>header .third-column {
+    color: white;
+}
+
+/* Ensure footer text is white */
+#table>footer span {
+    color: white;
+}
+
+/* Product Thumbnail */
+.product-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    object-fit: contain;
+    background-color: rgba(0, 0, 0, 0.02);
+    padding: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Test Card Info */
+#razorpay-testdata-info {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 0.85em;
+}
+
+#razorpay-testdata-info th,
+#razorpay-testdata-info td {
+    padding: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+#razorpay-testdata-info th {
+    background-color: rgba(30, 28, 41, 0.05);
+    font-weight: 600;
+    color: rgb(30, 28, 41);
+}
+
+#razorpay-testdata-info td {
+    background-color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 868px) {
+    #payment-container {
+        padding: 70px 12px 12px;
     }
 
     #whole_wrapper {
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 85vw;
-        max-width: 400px;
     }
 
-    #table th:first-child,
-    td:first-child {
-        padding-left: 0;
-        text-align: left
+    #product-list {
+        padding: 20px;
     }
 
-    #table {
-        border-right: 0px;
-        border-bottom: 1px solid black;
+    #table>header,
+    #table>div>div,
+    #table>footer {
+        padding: 12px 16px;
     }
 
-    #table th:last-child,
-    td:last-child {
-        text-align: right
+    .first-column {
+        flex: 1.5;
+        font-size: 0.9em;
     }
 
-    #table th:nth-child(2),
-    td:nth-child(2) {
-        text-align: center
+    .second-column {
+        flex: 0.8;
     }
 
+    .third-column {
+        flex: 1;
+    }
+
+    .product-thumb {
+        width: 40px;
+        height: 40px;
+    }
 }
