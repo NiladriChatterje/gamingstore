@@ -13,7 +13,7 @@ const Orders = () => {
 
     async function fetchOrderData(userId: string): Promise<void> {
         const token = await getToken();
-        const response = await fetch(`http://localhost:5001/orders/${userId}`, {
+        const response = await fetch(`http://localhost:5001/delivery-orders/${userId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
