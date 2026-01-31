@@ -58,20 +58,25 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
     const token = await getToken()
     console.log(token);
     const response: Response = await fetch(
-      `http://localhost:5003/fetch-admin-data/${"admin-" + user?.id}`,
+      `http://localhost:5003/fetch-admin-data/${"seller-" + user?.id}`,
       {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
-          "x-admin-id": user?.id ? `admin-${user.id}` : ''
+          "x-admin-id": user?.id ? `seller-${user.id}` : ''
         }
       }
     );
-    if (!response.ok)
+    let userEnrolled: AdminFieldsType | undefined = undefined;
+    if (response.status === 404) {
+      console.log('Admin not enrolled, proceeding to enrollment flow');
+      userEnrolled = undefined;
+    } else if (!response.ok) {
       throw new Error(response.status + " : " + response.statusText);
-
-    let userEnrolled: AdminFieldsType = await response.json();
-    console.log('admin received : ', userEnrolled)
+    } else {
+      userEnrolled = await response.json();
+      console.log('admin received : ', userEnrolled)
+    }
     let toastLoadingId: string | undefined;
     let placeResult: {
       properties: {
@@ -114,7 +119,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
                 "Authorization": `Bearer ${token}`
               },
               body: JSON.stringify({
-                _type: "admin",
+                _type: "seller",
                 username: user?.firstName,
                 _id: user?.id,
                 email: user?.emailAddresses[0].emailAddress,
@@ -173,7 +178,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
         setAdmin({
           _type: "admin",
           username: user?.firstName,
-          _id: "admin-" + user?.id,
+          _id: "seller-" + user?.id,
           email: user?.emailAddresses[0].emailAddress,
           geoPoint: {
             lat: latitude,
@@ -229,7 +234,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
 
     try {
       const token = await getToken();
-      const adminId = `admin-${user.id}`;
+      const adminId = `seller-${user.id}`;
 
       const fromDateISO = fromDate.toISOString();
       const toDateISO = toDate.toISOString();
