@@ -56,170 +56,181 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
 
   async function checkAdminEnrolled(): Promise<AdminFieldsType | undefined> {
     const token = await getToken()
-    console.log(token);
-    const response: Response = await fetch(
-      `http://localhost:5003/fetch-admin-data/${"seller-" + user?.id}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "x-admin-id": user?.id ? `seller-${user.id}` : ''
-        }
-      }
-    );
+    console.log("Auth token fetched for checkAdminEnrolled.");
     let userEnrolled: AdminFieldsType | undefined = undefined;
-    if (response.status === 404) {
-      console.log('Admin not enrolled, proceeding to enrollment flow');
-      userEnrolled = undefined;
-    } else if (!response.ok) {
-      throw new Error(response.status + " : " + response.statusText);
-    } else {
-      userEnrolled = await response.json();
-      console.log('admin received : ', userEnrolled)
-    }
-    let toastLoadingId: string | undefined;
-    let placeResult: {
-      properties: {
-        postcode: string;
-        county: string;
-        state: string;
-        country: string;
-      };
-    };
-
-    //#region adminCreateOperations definition
-    const adminCreateOperations = async (latitude: number, longitude: number) => {
-      console.log("<adminCreateOperations called>");
-      let token = await getToken();
-      console.log("geolocation fetched: ", latitude, longitude);
-      if (!user?.phoneNumbers[0]?.phoneNumber && !userEnrolled?.phone) {
-        if (toastLoadingId) toast.dismiss(toastLoadingId);
-
-        const responseGeo = await fetch(
-          `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${import.meta.env.VITE_GEOAPIFY_API}`,
-          {
-            method: "GET",
-            headers: {
-              "Accept": "application/json"
-            }
+    try {
+      const response: Response = await fetch(
+        `http://localhost:5003/fetch-admin-data/${"seller-" + user?.id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "x-admin-id": user?.id ? `seller-${user.id}` : ''
           }
-        );
-        const { features } = await responseGeo.json();
-        placeResult = features[0];
-        console.log("reverse geocoding : ", placeResult);
+        }
+      );
+      if (response.status === 404) {
+        console.log('Server returned 404: Admin not enrolled');
+        userEnrolled = undefined;
+        throw new Error("admin not found!!. in catch block, creation will be encountered");
+      } else if (response.ok) {
+        userEnrolled = await response.json();
+        console.log('Server returned 200: Admin enrolled:', userEnrolled)
+      } else {
+        console.log('Server returned error status:', response.status);
+      }
+    } catch (err) {
+      console.log('Fetch error during enrollment check:', err);
+      userEnrolled = undefined;
 
-        try {
-          const res: Response = await fetch(
-            `http://localhost:5003/create-admin`,
+      console.log("Final userEnrolled state before potential creation:", userEnrolled);
+      let toastLoadingId: string | undefined;
+      let placeResult: {
+        properties: {
+          postcode: string;
+          county: string;
+          state: string;
+          country: string;
+        };
+      };
+
+      //#region adminCreateOperations definition
+      const adminCreateOperations = async (latitude: number, longitude: number) => {
+        console.log("<adminCreateOperations called>");
+        let token = await getToken();
+        console.log("geolocation fetched: ", latitude, longitude);
+        if (!user?.phoneNumbers[0]?.phoneNumber && !userEnrolled?.phone) {
+          if (toastLoadingId) toast.dismiss(toastLoadingId);
+
+          const responseGeo = await fetch(
+            `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${import.meta.env.VITE_GEOAPIFY_API}`,
             {
-              method: "POST",
+              method: "GET",
               headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Authorization": `Bearer ${token}`
-              },
-              body: JSON.stringify({
-                _type: "seller",
-                username: user?.firstName,
-                _id: user?.id,
-                email: user?.emailAddresses[0].emailAddress,
-                geoPoint: {
-                  lat: latitude,
-                  lng: longitude,
-                },
-                address: {
-                  pincode: placeResult?.properties?.postcode,
-                  county: placeResult?.properties?.county,
-                  state: placeResult?.properties?.state,
-                  country: placeResult?.properties?.country,
-                },
-              }),
+                "Accept": "application/json"
+              }
             }
           );
+          const { features } = await responseGeo.json();
+          placeResult = features[0];
+          console.log("reverse geocoding : ", placeResult);
 
-          const result = await res.text();
-          if (!res.ok) throw new Error(result);
-        } catch (err: Error | any) {
-          console.log("error in creating admin doc : ", err);
-          toast.dismiss();
-          toast.error(err.message, {
+          try {
+            const res: Response = await fetch(
+              `http://localhost:5003/create-admin`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Accept": "application/json",
+                  "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                  _type: "seller",
+                  username: user?.firstName,
+                  _id: user?.id,
+                  email: user?.emailAddresses[0].emailAddress,
+                  geoPoint: {
+                    lat: latitude,
+                    lng: longitude,
+                  },
+                  address: {
+                    pincode: placeResult?.properties?.postcode,
+                    county: placeResult?.properties?.county,
+                    state: placeResult?.properties?.state,
+                    country: placeResult?.properties?.country,
+                  },
+                }),
+              }
+            );
+
+            const result = await res.text();
+            if (!res.ok) throw new Error(result);
+          } catch (err: Error | any) {
+            console.log("error in creating admin doc : ", err);
+            toast.dismiss();
+            toast.error(err.message, {
+              position: "bottom-left",
+              style: { width: 320, background: "white" },
+            });
+            toast.loading(
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <span>Retry</span>
+              </div>,
+              {
+                icon: (
+                  <MdReplayCircleFilled
+                    cursor={"pointer"}
+                    size={25}
+                    onClick={() => {
+                      setRetry((prev) => !prev);
+                      toast.dismiss();
+                    }}
+                  />
+                ),
+                duration: Infinity,
+                position: "bottom-right",
+              }
+            );
+            return;
+          }
+
+          toastLoadingId = toast("Update phone number!", {
             position: "bottom-left",
             style: { width: 320, background: "white" },
           });
-          toast.loading(
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <span>Retry</span>
-            </div>,
-            {
-              icon: (
-                <MdReplayCircleFilled
-                  cursor={"pointer"}
-                  size={25}
-                  onClick={() => {
-                    setRetry((prev) => !prev);
-                    toast.dismiss();
-                  }}
-                />
-              ),
-              duration: Infinity,
-              position: "bottom-right",
-            }
-          );
-          return;
         }
 
-        toastLoadingId = toast("Update phone number!", {
-          position: "bottom-left",
-          style: { width: 320, background: "white" },
-        });
+        if (user?.id)
+          setAdmin({
+            _type: "admin",
+            username: user?.firstName,
+            _id: "seller-" + user?.id,
+            email: user?.emailAddresses[0].emailAddress,
+            geoPoint: {
+              lat: latitude,
+              lng: longitude,
+            },
+            address: {
+              pincode: placeResult?.properties?.postcode,
+              county: placeResult?.properties?.county,
+              state: placeResult?.properties?.state,
+              country: placeResult?.properties?.country,
+            },
+          });
+      };
+      //#endregion adminCreateOperations definition end
+
+      // ✅ FIXED: Properly awaiting geolocation
+      if (userEnrolled == null) {
+        try {
+          const coords = await getGeolocation();
+          console.log("Geolocation retrieved:", coords);
+          const { latitude, longitude } = coords ?? {
+            latitude: 22.6230272,
+            longitude: 88.4867072
+          };
+          await adminCreateOperations(latitude, longitude);
+          console.log("adminCreateOperations execution finished.");
+        } catch (error: GeolocationPositionError | any) {
+          const toastId = toast(<div>allow location</div>, {
+            position: "bottom-left",
+            style: { width: 320, background: "white", fontSize: "small" },
+            icon: <IoLocation size={25} />,
+          });
+          const toastIdForMsg = toast.error(error.message, {
+            position: "bottom-left",
+            style: { width: 320, background: "white", fontSize: "small" },
+          });
+
+          setTimeout(() => {
+            toast.dismiss(toastId);
+            toast.dismiss(toastIdForMsg);
+            setRetry((prev) => !prev);
+          }, 4000);
+        }
       }
 
-      if (user?.id)
-        setAdmin({
-          _type: "admin",
-          username: user?.firstName,
-          _id: "seller-" + user?.id,
-          email: user?.emailAddresses[0].emailAddress,
-          geoPoint: {
-            lat: latitude,
-            lng: longitude,
-          },
-          address: {
-            pincode: placeResult?.properties?.postcode,
-            county: placeResult?.properties?.county,
-            state: placeResult?.properties?.state,
-            country: placeResult?.properties?.country,
-          },
-        });
-    };
-    //#endregion adminCreateOperations definition end
-
-    // ✅ FIXED: Properly awaiting geolocation
-    if (userEnrolled == null) {
-      try {
-        const { latitude, longitude } = (await getGeolocation()) ?? {
-          latitude: 22.6230272,
-          longitude: 88.4867072
-        };
-        await adminCreateOperations(latitude, longitude);
-        console.log("<userEnrolled after calling adminCreateOperations>");
-      } catch (error: GeolocationPositionError | any) {
-        const toastId = toast(<div>allow location</div>, {
-          position: "bottom-left",
-          style: { width: 320, background: "white", fontSize: "small" },
-          icon: <IoLocation size={25} />,
-        });
-        const toastIdForMsg = toast.error(error.message, {
-          position: "bottom-left",
-          style: { width: 320, background: "white", fontSize: "small" },
-        });
-
-        setTimeout(() => {
-          toast.dismiss(toastId);
-          toast.dismiss(toastIdForMsg);
-          setRetry((prev) => !prev);
-        }, 4000);
-      }
     }
 
     setLoadingState(false);
