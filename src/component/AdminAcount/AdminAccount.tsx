@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import {
   ProfileManager,
@@ -21,7 +22,32 @@ const AdminAccount = () => {
   const { isPlanActiveState, setIsPlanActive } = useAdminStateContext()
   const { user } = useUser();
 
+  useEffect(() => {
+    if (!user?.id) return;
 
+    const eventSource = new EventSource('http://localhost:4000/events');
+
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.topic === 'subscription-notifications') {
+          const { sellerId, status } = data.payload;
+          // Matching with the ID format used in Kafka producer (which seems to be raw user.id)
+          if (sellerId === user.id && status === 'success') {
+            if (setIsPlanActive) {
+              setIsPlanActive(true);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error parsing SSE message:', error);
+      }
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, [user?.id, setIsPlanActive]);
   return (
     <>
       {defaultLoginAdminOrUser === 'admin' && (
