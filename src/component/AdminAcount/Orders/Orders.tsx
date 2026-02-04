@@ -52,7 +52,7 @@ const Orders = () => {
             if (!admin) return;
 
             const token = await getToken();
-            const response = await fetch(`http://localhost:5001/seller-orders/${admin._id}`, {
+            const response = await fetch(`http://localhost:5003/seller-orders/${admin._id}`, {
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': `Bearer ${token}`

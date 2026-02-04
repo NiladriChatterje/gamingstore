@@ -25,7 +25,7 @@ const AdminAccount = () => {
   useEffect(() => {
     if (!user?.id) return;
 
-    const eventSource = new EventSource('http://localhost:4000/events');
+    const eventSource = new EventSource(`http://localhost:4000/events?sellerId=${user.id}`);
 
     eventSource.onmessage = (event) => {
       try {
