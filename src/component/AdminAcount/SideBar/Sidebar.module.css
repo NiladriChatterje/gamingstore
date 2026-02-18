@@ -9,10 +9,12 @@
     width: 200px;
     margin: 10px 0;
     text-align: justify;
+    text-decoration: none;
     cursor: pointer;
-    background-color: rgba(255, 255, 255, 0.403);
     border-radius: 5px;
     transition: all 160ms;
+    background-color: rgb(255, 255, 255);
+    color: rgb(47, 47, 83);
 }
 
 #aside-container div:hover {
@@ -20,8 +22,14 @@
 }
 
 #aside-container>a {
+    display: block;
     text-decoration: none;
     color: rgb(70, 71, 108);
+}
+
+.Links div {
+    background-color: rgb(47, 47, 83) !important;
+    color: rgb(255, 255, 255) !important;
 }
 
 @media screen and (max-width:900px) {

@@ -25,26 +25,58 @@ const AdminAccount = () => {
   useEffect(() => {
     if (!user?.id) return;
 
-    const eventSource = new EventSource(`http://localhost:4000/events?sellerId=${user.id}`);
+    console.log('[FRONTEND SSE] 🔌 Initializing EventSource for seller:', `seller-${user.id}`);
+    const eventSource = new EventSource(`http://localhost:4000/events?sellerId=seller-${user.id}`);
+
+    eventSource.onopen = () => {
+      console.log('[FRONTEND SSE] Connection opened successfully');
+    };
+
+    eventSource.onerror = (error) => {
+      console.error('[FRONTEND SSE] Connection error:', error);
+      console.error('[FRONTEND SSE] ReadyState:', eventSource.readyState);
+    };
 
     eventSource.onmessage = (event) => {
+      console.log('[FRONTEND SSE] Raw event received:', event.data);
+
       try {
         const data = JSON.parse(event.data);
+        console.log('[FRONTEND SSE] Parsed data:', JSON.stringify(data, null, 2));
+
+        if (data.message === 'connected') {
+          console.log('[FRONTEND SSE] Connection confirmation received');
+          return;
+        }
+
         if (data.topic === 'subscription-notifications') {
+          console.log('[FRONTEND SSE] Subscription notification received');
           const { sellerId, status } = data.payload;
-          // Matching with the ID format used in Kafka producer (which seems to be raw user.id)
-          if (sellerId === user.id && status === 'success') {
+          console.log('[FRONTEND SSE] Checking - User ID:', `seller-${user.id}`, 'Payload sellerId:', sellerId, 'Status:', status);
+
+          // Matching with the ID format used in Kafka producer (which seems to be prefixed with 'seller-')
+          if (sellerId === `seller-${user.id}` && status === 'success') {
+            console.log('[FRONTEND SSE] ✅ Seller ID matches and status is success - updating state');
             if (setIsPlanActive) {
               setIsPlanActive(true);
+              console.log('[FRONTEND SSE] isPlanActive set to true');
+            } else {
+              console.warn('[FRONTEND SSE] setIsPlanActive is not available');
             }
+          } else {
+            console.log('[FRONTEND SSE] Condition not met - sellerId match:', sellerId === user.id, 'status success:', status === 'success');
           }
+        } else {
+          console.log('[FRONTEND SSE] Non-subscription notification:', data.topic);
         }
       } catch (error) {
-        console.error('Error parsing SSE message:', error);
+        console.error('[FRONTEND SSE] Error parsing SSE message:', error);
+        console.error('[FRONTEND SSE] Raw data:', event.data);
       }
     };
 
     return () => {
+      console.log('[FRONTEND SSE] 🔌 Closing EventSource connection');
       eventSource.close();
     };
   }, [user?.id, setIsPlanActive]);

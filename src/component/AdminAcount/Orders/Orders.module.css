@@ -36,6 +36,8 @@
     font-size: 12px;
     font-weight: 500;
     transition: all 0.3s ease;
+    font-family: "PT Sans", sans-serif;
+    text-transform: capitalize;
 }
 
 .filter-btn:hover {
@@ -113,7 +115,8 @@
     color: white;
     font-size: 11px;
     font-weight: 600;
-    text-transform: uppercase;
+    font-family: "PT Sans", sans-serif;
+    text-transform: capitalize;
 }
 
 .partial-warning {
@@ -136,7 +139,7 @@
     font-weight: 600;
     color: #555;
     margin: 0 0 10px 0;
-    text-transform: uppercase;
+    font-family: "PT Sans", sans-serif;
 }
 
 .products-list {
@@ -250,8 +253,8 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-transform: uppercase;
     letter-spacing: 0.5px;
+    font-family: "PT Sans", sans-serif;
 }
 
 .action-btn:hover {

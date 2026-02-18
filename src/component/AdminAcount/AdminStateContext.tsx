@@ -202,7 +202,7 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
       //#endregion adminCreateOperations definition end
 
       // ✅ FIXED: Properly awaiting geolocation
-      if (userEnrolled == null) {
+      if (userEnrolled == undefined) {
         try {
           const coords = await getGeolocation();
           console.log("Geolocation retrieved:", coords);

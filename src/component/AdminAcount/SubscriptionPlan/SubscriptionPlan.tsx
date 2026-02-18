@@ -49,7 +49,7 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                         //check payment_service
                         // const data = await response.text()
 
-                        if (response?.status == 200) {
+                        if (response.ok) {
                             setIsPlanActive(true);
                             navigate('/admin');
                         }
@@ -96,7 +96,7 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                         //check payment_service
                         // const data = await response.text();
 
-                        if (response?.status === 200) {
+                        if (response.ok) {
                             setIsPlanActive(true)
                             navigate('/admin')
                         }
@@ -148,7 +148,7 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                         //check payment_service
                         // const data = await response.text()
 
-                        if (response?.status == 200) {
+                        if (response.ok) {
                             setIsPlanActive(true);
                             navigate('/admin');
                         }

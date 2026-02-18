@@ -41,9 +41,17 @@ const Orders = () => {
     useEffect(() => {
         if (isSignedIn && admin) {
             fetchSellerOrders();
-            // Poll for new orders every 10 seconds
-            const interval = setInterval(fetchSellerOrders, 10000);
-            return () => clearInterval(interval);
+
+            // Real-time order updates via SSE
+            const eventSource = new EventSource(`http://localhost:4000/orders?sellerId=${admin._id}`);
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.topic === 'order-notifications' || data.topic === 'seller-order-notification-topic') {
+                    fetchSellerOrders();
+                }
+            };
+
+            return () => eventSource.close();
         }
     }, [isSignedIn, admin]);
 
@@ -165,7 +173,7 @@ const Orders = () => {
                         className={`${styles['filter-btn']} ${filter === status ? styles['active'] : ''}`}
                         onClick={() => setFilter(status)}
                     >
-                        {status.replace('_', ' ').toUpperCase()}
+                        {status.replace('_', ' ')}
                         {status !== 'all' && ` (${orders.filter(o => o.status === status).length})`}
                     </button>
                 ))}
@@ -191,14 +199,14 @@ const Orders = () => {
                                     className={styles['status-badge']}
                                     style={{ backgroundColor: getStatusColor(order.status) }}
                                 >
-                                    {order.status.replace('_', ' ').toUpperCase()}
+                                    {order.status.replace('_', ' ')}
                                 </span>
                             </div>
 
                             {/* Partial Fulfillment Warning */}
                             {order.isPartialFulfillment && (
                                 <div className={styles['partial-warning']}>
-                                    <p>This is a PARTIAL fulfillment order</p>
+                                    <p>This is a partial fulfillment order</p>
                                 </div>
                             )}
 
