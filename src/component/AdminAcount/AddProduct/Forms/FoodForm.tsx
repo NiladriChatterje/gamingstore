@@ -1,4 +1,4 @@
-import { ProductCategories } from "../../../../enums/enums";
+import { ProductCategories } from "@enums/enums";
 import BaseProductForm from "./BaseProductForm";
 
 const FoodForm = () => {

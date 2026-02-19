@@ -1,11 +1,12 @@
 import { FormEvent, useState, KeyboardEvent, useRef, ReactNode } from "react";
 import styles from "../AddProduct.module.css";
-import { IoIosArrowDropdownCircle, IoIosPersonAdd } from "react-icons/io";
+import { IoIosArrowDropdownCircle, IoIosPersonAdd, IoIosAddCircle } from "react-icons/io";
 import { AiFillCloseCircle, AiFillProduct } from "react-icons/ai";
 import {
     MdConfirmationNumber,
+    MdDelete,
     MdDeleteSweep,
-    MdOutlineProductionQuantityLimits,
+    MdOutlineProductionQuantityLimits
 } from "react-icons/md";
 import toast from "react-hot-toast";
 import { FaPercentage, FaRupeeSign } from "react-icons/fa";
@@ -39,6 +40,9 @@ const BaseProductForm = ({ category, additionalPayload = {}, children, validate 
     );
     const [price, setPrice] = useState<number>(() => 0);
     const [discount, setDiscount] = useState<number>(() => 0);
+    const [variationList, setVariationList] = useState<{ key: string; value: string }[]>(
+        () => [{ key: "", value: "" }]
+    );
     const [keyword, setKeyword] = useState<string>(() => "");
     const [imageToUrlPreviewMap, _] = useState<Map<Blob, string>>(
         () => new Map<Blob, string>()
@@ -105,6 +109,7 @@ const BaseProductForm = ({ category, additionalPayload = {}, children, validate 
                         imagesBase64: [...base64Images],
                         seller: admin?._id,
                         productDescription: productDescription,
+                        variations: variationList.filter(v => v.key || v.value),
                         _id: `product_${uuid7()}`,
                         ...additionalPayload
                     };
@@ -129,6 +134,7 @@ const BaseProductForm = ({ category, additionalPayload = {}, children, validate 
                         setImages([] as File[]);
                         setBlobUrlForPreview([] as string[]);
                         setKeywordArray([] as string[]);
+                        setVariationList([{ key: "", value: "" }]);
                         keywordsSet.clear();
                     }
                 }
@@ -201,6 +207,94 @@ const BaseProductForm = ({ category, additionalPayload = {}, children, validate 
                                 <span className={`${styles["span-category"]} ${styles["span-category-selected"]}`} style={{ cursor: 'default' }}>
                                     {category}
                                 </span>
+                            </div>
+                        </section>
+
+                        <section>
+                            <label>Variations</label>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "10px",
+                                    width: "100%"
+                                }}
+                            >
+                                {variationList.map((variation, index) => (
+                                    <div
+                                        key={index}
+                                        style={{
+                                            display: "flex",
+                                            gap: "10px",
+                                            alignItems: "center",
+                                            width: "100%"
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                backgroundColor: "rgba(255, 255, 255, 0.963)",
+                                                flex: 1
+                                            }}
+                                            className={styles["input-containers"]}
+                                        >
+                                            <input
+                                                value={variation.key}
+                                                placeholder="Key (e.g. Color)"
+                                                onChange={(e) => {
+                                                    const newList = [...variationList];
+                                                    newList[index].key = e.target.value;
+                                                    setVariationList(newList);
+                                                }}
+                                                type="text"
+                                            />
+                                        </div>
+                                        <div
+                                            style={{
+                                                backgroundColor: "rgba(255, 255, 255, 0.963)",
+                                                flex: 1
+                                            }}
+                                            className={styles["input-containers"]}
+                                        >
+                                            <input
+                                                value={variation.value}
+                                                placeholder="Value (e.g. Red)"
+                                                onChange={(e) => {
+                                                    const newList = [...variationList];
+                                                    newList[index].value = e.target.value;
+                                                    setVariationList(newList);
+                                                }}
+                                                type="text"
+                                            />
+                                        </div>
+                                        {variationList.length > 1 && (
+                                            <MdDelete
+                                                size={20}
+                                                color="#e53e3e"
+                                                cursor="pointer"
+                                                onClick={() => {
+                                                    setVariationList(variationList.filter((_, i) => i !== index));
+                                                }}
+                                            />
+                                        )}
+                                    </div>
+                                ))}
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        marginTop: "5px"
+                                    }}
+                                >
+                                    <IoIosAddCircle
+                                        size={32}
+                                        color="#4a5568"
+                                        cursor="pointer"
+                                        onClick={() => {
+                                            setVariationList([...variationList, { key: "", value: "" }]);
+                                        }}
+                                        title="Add Variation"
+                                    />
+                                </div>
                             </div>
                         </section>
 

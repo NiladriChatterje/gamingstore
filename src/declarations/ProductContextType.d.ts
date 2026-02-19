@@ -16,6 +16,7 @@ export declare type ProductType = {
   imagesBase64?: { size: number; extension: string; base64: string }[];
   image?: File[];
   modelNumber?: string;
+  variations?: { key: string; value: string }[];
   productDescription: string;
   quantity: number | null;
   keywords: string[];
