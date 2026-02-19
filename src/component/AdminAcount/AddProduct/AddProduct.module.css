@@ -390,3 +390,115 @@
     background-color: #f7fafc;
     border-color: #4299e1;
 }
+
+/* Store Grid Styles */
+.store-grid-container {
+    padding: 40px 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.grid-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #1a202c;
+    margin-bottom: 5px;
+    letter-spacing: -0.025em;
+}
+
+.store-grid {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 32px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.store-card {
+    width: 300px;
+    background-color: white;
+    border-radius: 16px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+.store-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border-color: #4299e1;
+}
+
+.store-icon-container {
+    width: 70px;
+    height: 70px;
+    background-color: #f0f9ff;
+    color: #3182ce;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 24px;
+    transition: all 0.4s ease;
+}
+
+.store-card:hover .store-icon-container {
+    background-color: #3182ce;
+    color: white;
+    transform: rotate(10deg) scale(1.1);
+}
+
+.store-info {
+    width: 100%;
+}
+
+.store-county {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #2d3748;
+    margin-bottom: 6px;
+}
+
+.store-pincode {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #4a5568;
+    background: #edf2f7;
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.store-address {
+    font-size: 0.875rem;
+    color: #718096;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

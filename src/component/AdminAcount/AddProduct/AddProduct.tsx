@@ -2,6 +2,7 @@ import { useState } from "react";
 import styles from "./AddProduct.module.css";
 import { ProductCategories } from "../../../enums/enums";
 import CategoryGrid from "./CategoryGrid";
+import StoreGrid from "./StoreGrid";
 import ClothingForm from "./Forms/ClothingForm";
 import FoodForm from "./Forms/FoodForm";
 import GadgetsForm from "./Forms/GadgetsForm";
@@ -9,9 +10,13 @@ import GroceriesForm from "./Forms/GroceriesForm";
 import HomeGoodsForm from "./Forms/HomeGoodsForm";
 import ToysForm from "./Forms/ToysForm";
 import { IoIosArrowBack } from "react-icons/io";
+import { useAdminStateContext } from "../AdminStateContext";
+import { AdminFieldsType } from "../../../declarations/AdminType";
 
 const AddProduct = () => {
+  const [selectedStore, setSelectedStore] = useState<AdminFieldsType | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const { admin } = useAdminStateContext();
 
   const renderForm = () => {
     switch (selectedCategory) {
@@ -34,8 +39,28 @@ const AddProduct = () => {
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      {!selectedCategory ? (
-        <CategoryGrid onSelect={setSelectedCategory} />
+      {!selectedStore ? (
+        admin && <StoreGrid admin={admin} onSelect={setSelectedStore} />
+      ) : !selectedCategory ? (
+        <div style={{ animation: 'fadeIn 0.3s ease-in-out' }}>
+          <div
+            className={styles["back-button-container"]}
+            onClick={() => setSelectedStore(null)}
+            style={{
+              padding: '10px 20px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              color: '#4a5568',
+              fontWeight: 600,
+              marginBottom: '10px'
+            }}
+          >
+            <IoIosArrowBack size={20} /> <span>Back to Store Selection</span>
+          </div>
+          <CategoryGrid onSelect={setSelectedCategory} />
+        </div>
       ) : (
         <div style={{ animation: 'fadeIn 0.3s ease-in-out', height: '100%' }}>
           <div
