@@ -11,27 +11,28 @@ import HomeGoodsForm from "./Forms/HomeGoodsForm";
 import ToysForm from "./Forms/ToysForm";
 import { IoIosArrowBack } from "react-icons/io";
 import { useAdminStateContext } from "../AdminStateContext";
-import { AdminFieldsType } from "../../../declarations/AdminType";
+import { Store } from "@/declarations/AdminType";
 
 const AddProduct = () => {
-  const [selectedStore, setSelectedStore] = useState<AdminFieldsType | null>(null);
+  const [selectedStore, setSelectedStore] = useState<Store | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { admin } = useAdminStateContext();
 
   const renderForm = () => {
+    if (!selectedStore) return null;
     switch (selectedCategory) {
       case ProductCategories.CLOTH:
-        return <ClothingForm />;
+        return <ClothingForm selectedStore={selectedStore} />;
       case ProductCategories.FOOD:
-        return <FoodForm />;
+        return <FoodForm selectedStore={selectedStore} />;
       case ProductCategories.GADGETS:
-        return <GadgetsForm />;
+        return <GadgetsForm selectedStore={selectedStore} />;
       case ProductCategories.GROCERIES:
-        return <GroceriesForm />;
+        return <GroceriesForm selectedStore={selectedStore} />;
       case ProductCategories.HOME_GOODS:
-        return <HomeGoodsForm />;
+        return <HomeGoodsForm selectedStore={selectedStore} />;
       case ProductCategories.TOYS:
-        return <ToysForm />;
+        return <ToysForm selectedStore={selectedStore} />;
       default:
         return null;
     }

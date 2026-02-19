@@ -1,8 +1,9 @@
-import { ProductCategories } from "../../../../enums/enums";
+import { ProductCategories } from "@enums/enums";
 import BaseProductForm from "./BaseProductForm";
+import { Store } from "@declarations/AdminType";
 
-const HomeGoodsForm = () => {
-    return <BaseProductForm category={ProductCategories.HOME_GOODS} />;
+const HomeGoodsForm = ({ selectedStore }: { selectedStore: Store }) => {
+    return <BaseProductForm category={ProductCategories.HOME_GOODS} selectedStore={selectedStore} />;
 };
 
 export default HomeGoodsForm;

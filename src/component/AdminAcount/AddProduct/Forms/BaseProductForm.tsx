@@ -11,23 +11,24 @@ import {
 import toast from "react-hot-toast";
 import { FaPercentage, FaRupeeSign } from "react-icons/fa";
 import { ImUpload } from "react-icons/im";
-import { EanUpcIsbnType, currency } from "../../../../enums/enums";
-import { ProductType } from "../../../../declarations/ProductContextType";
+import { EanUpcIsbnType, currency } from "@enums/enums";
+import { ProductType } from "@declarations/ProductContextType";
 import { useAdminStateContext } from "../../AdminStateContext";
 import { v7 as uuid7 } from "uuid";
-import { AdminFieldsType } from "../../../../declarations/AdminType";
+import { Store, AdminFieldsType } from "@declarations/AdminType";
 import { useAuth } from "@clerk/clerk-react";
 
 const keywordsSet = new Set<string>();
 
 interface BaseProductFormProps {
     category: string;
+    selectedStore: Store;
     additionalPayload?: Record<string, any>;
     children?: ReactNode;
     validate?: () => string | null;
 }
 
-const BaseProductForm = ({ category, additionalPayload = {}, children, validate }: BaseProductFormProps) => {
+const BaseProductForm = ({ category, selectedStore, additionalPayload = {}, children, validate }: BaseProductFormProps) => {
     const [eanUpc, setEacUpc] = useState<string>(() => "");
     const [productName, setProductName] = useState<string>(() => "");
     const [productDescription, setProductDescription] = useState<string>(
@@ -98,7 +99,8 @@ const BaseProductForm = ({ category, additionalPayload = {}, children, validate 
                         eanUpcIsbnGtinAsinType: eanUpcType,
                         eanUpcNumber: eanUpc,
                         quantity,
-                        pincode: admin?.address.pincode ?? '700135',
+                        pincode: selectedStore.pincode,
+                        storeId: selectedStore.id,
                         currency: currency.INR,
                         price: {
                             pdtPrice: price,

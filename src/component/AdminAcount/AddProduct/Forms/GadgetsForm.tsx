@@ -3,8 +3,9 @@ import BaseProductForm from "./BaseProductForm";
 import { useState, useRef } from "react";
 import styles from "../AddProduct.module.css";
 import { MdModelTraining } from "react-icons/md";
+import { Store } from "../../../../declarations/AdminType";
 
-const GadgetsForm = () => {
+const GadgetsForm = ({ selectedStore }: { selectedStore: Store }) => {
     const [modelNumber, setModelNumber] = useState("");
     const modelNumberRef = useRef<HTMLDivElement>(null);
 
@@ -18,6 +19,7 @@ const GadgetsForm = () => {
     return (
         <BaseProductForm
             category={ProductCategories.GADGETS}
+            selectedStore={selectedStore}
             additionalPayload={{ modelNumber }}
             validate={validate}
         >

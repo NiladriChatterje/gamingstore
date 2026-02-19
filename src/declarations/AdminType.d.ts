@@ -17,7 +17,17 @@ export declare interface AdminFieldsType {
     country: string;
     state: string;
   };
+
+  stores?: Store[];
 }
+type Store = {
+  id: number;
+  county: string;
+  pincode: string;
+  address: string;
+  state: string;
+  country: string;
+};
 
 type subscription = {
   transactionId: string;

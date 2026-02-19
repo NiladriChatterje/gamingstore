@@ -12,6 +12,7 @@ export declare type ProductType = {
     pdtPrice: number
   };
   pincode: string;
+  storeId: number;
   currency?: currency;
   imagesBase64?: { size: number; extension: string; base64: string }[];
   image?: File[];
