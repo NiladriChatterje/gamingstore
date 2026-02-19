@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import {
   ProfileManager,
@@ -13,14 +13,32 @@ import styles from './AdminAccount.module.css'
 import { IoLogOutOutline } from 'react-icons/io5'
 import { SignOutButton, useUser } from '@clerk/clerk-react'
 import SubscriptionPlan from './SubscriptionPlan/SubscriptionPlan'
+import StoreSetup from './StoreSetup/StoreSetup'
 import { useStateContext } from '../../StateContext'
 import { useAdminStateContext } from './AdminStateContext'
 import NotFound from '../../NotFound'
 
 const AdminAccount = () => {
   const { defaultLoginAdminOrUser } = useStateContext()
-  const { isPlanActiveState, setIsPlanActive } = useAdminStateContext()
+  const { isPlanActiveState, setIsPlanActive, admin, setAdmin } = useAdminStateContext()
   const { user } = useUser();
+
+  // How many stores the current subscription plan allots
+  const allottedStoreCount = useMemo(() => {
+    if (!admin?.subscriptionPlan?.length) return 0;
+    // Take the max storeAllotment from all subscription records (stacking plans)
+    return admin.subscriptionPlan.reduce(
+      (max: number, plan: any) => Math.max(max, plan.storeAllotment ?? 1),
+      0
+    );
+  }, [admin?.subscriptionPlan]);
+
+  // Whether all allotted stores have been configured
+  const storesConfigured = useMemo(() => {
+    if (!isPlanActiveState) return false;
+    if (allottedStoreCount === 0) return false;
+    return (admin?.stores?.length ?? 0) >= allottedStoreCount;
+  }, [isPlanActiveState, admin?.stores, allottedStoreCount]);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -54,7 +72,6 @@ const AdminAccount = () => {
           const { sellerId, status } = data.payload;
           console.log('[FRONTEND SSE] Checking - User ID:', `seller-${user.id}`, 'Payload sellerId:', sellerId, 'Status:', status);
 
-          // Matching with the ID format used in Kafka producer (which seems to be prefixed with 'seller-')
           if (sellerId === `seller-${user.id}` && status === 'success') {
             console.log('[FRONTEND SSE] ✅ Seller ID matches and status is success - updating state');
             if (setIsPlanActive) {
@@ -80,6 +97,54 @@ const AdminAccount = () => {
       eventSource.close();
     };
   }, [user?.id, setIsPlanActive]);
+
+  const renderContent = () => {
+    // 1. No active subscription → show plans
+    if (!isPlanActiveState) {
+      return (
+        <SubscriptionPlan
+          setIsPlanActive={setIsPlanActive as React.Dispatch<boolean>}
+        />
+      );
+    }
+
+    // 2. Subscription active but stores not configured yet → show store setup gate
+    if (!storesConfigured) {
+      return (
+        <StoreSetup
+          storeCount={allottedStoreCount}
+          onComplete={() => {
+            // Force a small re-render by touching admin state — stores were already
+            // updated optimistically in StoreSetup; this triggers the gate re-check.
+            setAdmin?.((prev: any) => ({ ...prev }));
+          }}
+        />
+      );
+    }
+
+    // 3. Everything ready → show full admin dashboard
+    return (
+      <div id={styles['admin-container']}>
+        <SideBar />
+        <section id={styles['admin-routes']}>
+          <Routes>
+            <Route index path='/' element={<Home />} />
+            <Route index path='/admin' element={<Home />} />
+            <Route path='/admin/orders' element={<Orders />} />
+            <Route path='/admin/sales' element={<h1>Sales</h1>} />
+            <Route path='/admin/edit-profile' element={<ProfileManager />} />
+            <Route path='/admin/add-product' element={<AddProduct />} />
+            <Route path='/admin/edit-product/' element={<EditProduct />} />
+            <Route path='/admin/edit-product/:product_id' element={<EditProductDetails />} />
+            <Route path='/admin/edit-bank' element={<h1>Edit bank account</h1>} />
+            <Route path='/admin/*' element={<NotFound />} />
+            <Route path='*' element={<><Navigate to={'/admin'} /></>} />
+          </Routes>
+        </section>
+      </div>
+    );
+  };
+
   return (
     <>
       {defaultLoginAdminOrUser === 'admin' && (
@@ -104,54 +169,7 @@ const AdminAccount = () => {
               style={{ position: 'fixed', top: 30, right: 60 }}
             />
           </SignOutButton>
-          <div id={styles['admin-container']}>
-            {isPlanActiveState && <SideBar />}
-
-            {isPlanActiveState ? (
-              <section id={styles['admin-routes']}>
-                <Routes>
-                  <Route index path='/' element={<Home />} />
-                  <Route index path='/admin' element={<Home />} />
-                  <Route path='/admin/orders' element={<Orders />} />
-                  <Route path='/admin/sales' element={<h1>Sales</h1>} />
-                  <Route
-                    path='/admin/edit-profile'
-                    element={<ProfileManager />}
-                  />
-                  <Route path='/admin/add-product' element={<AddProduct />} />
-                  <Route
-                    path='/admin/edit-product/'
-                    element={<EditProduct />}
-                  />
-                  <Route
-                    path='/admin/edit-product/:product_id'
-                    element={<EditProductDetails />}
-                  />
-                  <Route
-                    path='/admin/edit-bank'
-                    element={<h1>Edit bank account</h1>}
-                  />
-                  <Route path='/admin/*' element={<NotFound />} />
-                  <Route
-                    path='*'
-                    element={
-                      <>
-                        <Navigate to={'/admin'} />
-                      </>
-                    }
-                  />
-                </Routes>
-              </section>
-            ) : (
-              <SubscriptionPlan
-                setIsPlanActive={
-                  setIsPlanActive as React.Dispatch<
-                    React.SetStateAction<boolean>
-                  >
-                }
-              />
-            )}
-          </div>
+          {renderContent()}
           <span>e-cart</span>
         </div>
       )}

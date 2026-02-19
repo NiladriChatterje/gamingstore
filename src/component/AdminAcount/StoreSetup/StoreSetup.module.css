@@ -1,0 +1,249 @@
+.setup-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 30px;
+    gap: 30px;
+    animation: fadeSlideIn 0.35s ease-out;
+    overflow-y: auto;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Header ── */
+.setup-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    max-width: 780px;
+    width: 100%;
+    background: white;
+    border-radius: 12px;
+    padding: 24px 28px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.setup-header-icon {
+    flex-shrink: 0;
+    margin-top: 3px;
+    color: #4a5568;
+}
+
+.setup-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #1a202c;
+    margin: 0 0 5px;
+    letter-spacing: -0.02em;
+}
+
+.setup-subtitle {
+    font-size: 0.88rem;
+    margin: 0;
+    color: #718096;
+    line-height: 1.6;
+}
+
+/* ── Cards Grid ── */
+.cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 780px;
+}
+
+/* ── Store Card ── */
+.store-card {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.store-card.active {
+    border-color: #a0aec0;
+    box-shadow: 0 3px 16px rgba(0, 0, 0, 0.07);
+}
+
+.store-card.done {
+    border-color: #cbd5e0;
+    background: white;
+}
+
+/* ── Card Header ── */
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+}
+
+.card-header:hover {
+    background: #f7fafc;
+}
+
+.store-card.done .card-header {
+    cursor: default;
+}
+
+.store-card.done .card-header:hover {
+    background: white;
+}
+
+.card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    color: #4a5568;
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.store-card.done .card-icon {
+    color: #4a5568;
+    background: #f7fafc;
+}
+
+.store-card.active .card-icon {
+    color: #2d3748;
+    background: #edf2f7;
+}
+
+.card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0 0 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.done-pill {
+    font-size: 0.68rem;
+    font-weight: 700;
+    background: #2d3748;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.card-summary {
+    font-size: 0.8rem;
+    color: #a0aec0;
+    margin: 0;
+}
+
+/* ── Expandable Form ── */
+.card-form {
+    padding: 0 22px 22px;
+    border-top: 1px solid #edf2f7;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    animation: expandForm 0.2s ease-out;
+}
+
+@keyframes expandForm {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.field-row {
+    display: flex;
+    gap: 14px;
+}
+
+.field-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.field-group label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.field-group input {
+    padding: 9px 13px;
+    border: 1px solid #e2e8f0;
+    border-radius: 7px;
+    font-size: 0.875rem;
+    color: #2d3748;
+    outline: none;
+    background: white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field-group input:focus {
+    border-color: #a0aec0;
+    box-shadow: 0 0 0 3px rgba(160, 174, 192, 0.15);
+}
+
+.save-btn {
+    align-self: flex-end;
+    padding: 9px 24px;
+    background: #2d3748;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    letter-spacing: 0.02em;
+}
+
+.save-btn:hover:not(:disabled) {
+    background: #1a202c;
+    transform: translateY(-1px);
+}
+
+.save-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* ── All Done ── */
+.all-done {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #4a5568;
+    text-align: center;
+}

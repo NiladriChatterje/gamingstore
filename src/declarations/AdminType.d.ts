@@ -20,7 +20,7 @@ export declare interface AdminFieldsType {
 
   stores?: Store[];
 }
-type Store = {
+export type Store = {
   id: number;
   county: string;
   pincode: string;
@@ -34,7 +34,8 @@ type subscription = {
   orderId: string;
   paymentSignature: string;
   amount: number;
-  planSchemaList: plan; // Fixed: Changed from planSchemeList to planSchemaList to match Sanity schema
+  storeAllotment: number;  // number of stores the seller can configure under this plan
+  planSchemaList: plan;
 };
 
 interface plan {
