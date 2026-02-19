@@ -28,7 +28,7 @@ const StoreGrid = ({ admin, onSelect }: StoreGridProps) => {
                         onClick={() => onSelect(store)}
                     >
                         <div className={styles["store-icon-container"]}>
-                            <FaStore size={28} />
+                            <FaStore size={22} />
                         </div>
                         <div className={styles["store-info"]}>
                             <h3 className={styles["store-county"]}>{store.address.county}</h3>
