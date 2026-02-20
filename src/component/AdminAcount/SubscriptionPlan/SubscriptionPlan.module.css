@@ -68,8 +68,8 @@
 .store-badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    background: linear-gradient(135deg, #1f1f49, #3a3a7a);
+    gap: 6px;
+    background: #1f1f49;
     color: white;
     font-size: 0.78rem;
     font-weight: 700;
@@ -77,6 +77,5 @@
     border-radius: 20px;
     margin-bottom: 12px;
     letter-spacing: 0.03em;
-    box-shadow: 0 2px 8px rgba(31, 31, 73, 0.35);
     align-self: center;
 }

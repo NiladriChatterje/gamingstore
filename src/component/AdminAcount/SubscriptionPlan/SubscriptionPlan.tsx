@@ -102,8 +102,8 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
 
                     {/* Store allotment badge */}
                     <div className={styles['store-badge']}>
-                        <FaStore size={13} />
-                        <span>{plan.storeAllotment} {plan.storeAllotment === 1 ? 'Store' : 'Stores'}</span>
+                        <FaStore size={15} />
+                        <div>{plan.storeAllotment} {plan.storeAllotment === 1 ? 'Store' : 'Stores'}</div>
                     </div>
 
                     <article className={styles['subscription-content']}>

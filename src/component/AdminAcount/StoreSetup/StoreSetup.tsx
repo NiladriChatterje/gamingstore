@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaStore, FaCheckCircle } from "react-icons/fa";
 import { MdLocationPin } from "react-icons/md";
 import { useAdminStateContext } from "../AdminStateContext";
@@ -26,11 +26,38 @@ const StoreSetup = ({ storeCount, onComplete }: StoreSetupProps) => {
 
     // Track which card the seller is currently filling
     const [activeCard, setActiveCard] = useState<number | null>(null);
+    const existingStores = admin?.stores ?? [];
+
     // Track submitted forms per card index
-    const [submitted, setSubmitted] = useState<boolean[]>(Array(storeCount).fill(false));
+    const [submitted, setSubmitted] = useState<boolean[]>([]);
     // Form state per card
-    const [forms, setForms] = useState<StoreForm[]>(Array.from({ length: storeCount }, emptyForm));
+    const [forms, setForms] = useState<StoreForm[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+
+    // Keep arrays in sync if storeCount updates after initial mount
+    useEffect(() => {
+        setSubmitted(prev => {
+            if (prev.length === storeCount) return prev;
+            return Array.from({ length: storeCount }, (_, i) => i < existingStores.length);
+        });
+        setForms(prev => {
+            if (prev.length === storeCount) return prev;
+            return Array.from({ length: storeCount }, (_, i) => {
+                // preserve user edits if previously populated
+                if (i < prev.length && prev[i]) return prev[i];
+                if (i < existingStores.length) {
+                    const s = existingStores[i];
+                    return {
+                        pincode: s.pincode ?? "",
+                        county: s.county ?? "",
+                        state: s.state ?? "",
+                        country: s.country ?? "",
+                    };
+                }
+                return emptyForm();
+            });
+        });
+    }, [storeCount, existingStores.length]);
 
     const updateField = (cardIndex: number, field: keyof StoreForm, value: string) => {
         setForms(prev => {
@@ -74,11 +101,6 @@ const StoreSetup = ({ storeCount, onComplete }: StoreSetupProps) => {
                     ...prev,
                     stores: [...(prev?.stores ?? []), newStore],
                 }));
-
-                // If all stores are done, unlock the dashboard
-                if (updatedSubmitted.every(Boolean)) {
-                    setTimeout(() => onComplete(), 600);
-                }
             } else {
                 const err = await response.json();
                 toast.error(err?.error ?? "Failed to configure store.");
@@ -90,7 +112,7 @@ const StoreSetup = ({ storeCount, onComplete }: StoreSetupProps) => {
         }
     };
 
-    const allDone = submitted.every(Boolean);
+    const allDone = storeCount > 0 && submitted.length === storeCount && submitted.every(Boolean);
 
     return (
         <div className={styles["setup-container"]}>
@@ -203,10 +225,24 @@ const StoreSetup = ({ storeCount, onComplete }: StoreSetupProps) => {
             </div>
 
             {allDone && (
-                <p className={styles["all-done"]}>All stores configured! Redirecting to dashboard…</p>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', marginTop: '2rem' }}>
+                    <p className={styles["all-done"]}>All stores are successfully configured!</p>
+                    <button
+                        className={styles["save-btn"]}
+                        onClick={() => onComplete()}
+                        style={{ width: 'auto', padding: '0.75rem 2rem' }}
+                    >
+                        Go to Dashboard
+                    </button>
+                </div>
             )}
         </div>
     );
 };
 
 export default StoreSetup;
+
+
+
+
+
