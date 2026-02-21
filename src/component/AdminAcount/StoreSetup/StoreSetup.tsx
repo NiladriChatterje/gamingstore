@@ -76,7 +76,7 @@ const StoreSetup = ({ storeCount, onComplete }: StoreSetupProps) => {
         setLoading(true);
         try {
             const token = await getToken();
-            const response = await fetch("http://localhost:5002/configure-store", {
+            const response = await fetch("http://localhost:5003/configure-store", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -94,13 +94,6 @@ const StoreSetup = ({ storeCount, onComplete }: StoreSetupProps) => {
                 setSubmitted(updatedSubmitted);
                 setActiveCard(null);
                 toast.success(`Store ${cardIndex + 1} configured!`);
-
-                // Update local admin stores state so context is fresh
-                const newStore = { id: Date.now(), ...form, address: `${form.county}, ${form.state}` };
-                setAdmin?.((prev: any) => ({
-                    ...prev,
-                    stores: [...(prev?.stores ?? []), newStore],
-                }));
             } else {
                 const err = await response.json();
                 toast.error(err?.error ?? "Failed to configure store.");
@@ -229,7 +222,18 @@ const StoreSetup = ({ storeCount, onComplete }: StoreSetupProps) => {
                     <p className={styles["all-done"]}>All stores are successfully configured!</p>
                     <button
                         className={styles["save-btn"]}
-                        onClick={() => onComplete()}
+                        onClick={() => {
+                            const newStores = forms.map((f, i) => ({
+                                id: Date.now() + i,
+                                ...f,
+                                address: `${f.county}, ${f.state}`
+                            }));
+                            setAdmin?.((prev: any) => ({
+                                ...prev,
+                                stores: newStores
+                            }));
+                            onComplete();
+                        }}
                         style={{ width: 'auto', padding: '0.75rem 2rem' }}
                     >
                         Go to Dashboard
