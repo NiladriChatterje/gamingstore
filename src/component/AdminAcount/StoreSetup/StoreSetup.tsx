@@ -36,17 +36,11 @@ const StoreSetup = ({ storeCount, onComplete }: StoreSetupProps) => {
 
     // Keep arrays in sync if storeCount updates after initial mount
     useEffect(() => {
-        setSubmitted(prev => {
-            if (prev.length === storeCount) return prev;
-            return Array.from({ length: storeCount }, (_, i) => i < existingStores.length);
-        });
         setForms(prev => {
-            if (prev.length === storeCount) return prev;
+            if (prev.length === storeCount && existingStores.length === 0) return prev;
             return Array.from({ length: storeCount }, (_, i) => {
-                // preserve user edits if previously populated
-                if (i < prev.length && prev[i]) return prev[i];
-                if (i < existingStores.length) {
-                    const s = existingStores[i];
+                const s = existingStores[i];
+                if (s) {
                     return {
                         pincode: s.pincode ?? "",
                         county: s.county ?? "",
@@ -54,8 +48,13 @@ const StoreSetup = ({ storeCount, onComplete }: StoreSetupProps) => {
                         country: s.country ?? "",
                     };
                 }
-                return emptyForm();
+                return prev[i] || emptyForm();
             });
+        });
+
+        setSubmitted(prev => {
+            if (prev.length === storeCount && prev.filter(Boolean).length === existingStores.length) return prev;
+            return Array.from({ length: storeCount }, (_, i) => i < existingStores.length);
         });
     }, [storeCount, existingStores.length]);
 
@@ -73,6 +72,13 @@ const StoreSetup = ({ storeCount, onComplete }: StoreSetupProps) => {
             toast.error("Please fill all store fields.");
             return;
         }
+
+        const isDuplicateLocal = forms.some((f, idx) => idx !== cardIndex && submitted[idx] && f.pincode === form.pincode);
+        if (isDuplicateLocal) {
+            toast.error(`Pincode ${form.pincode} is already configured in another card.`);
+            return;
+        }
+
         setLoading(true);
         try {
             const token = await getToken();
@@ -83,17 +89,19 @@ const StoreSetup = ({ storeCount, onComplete }: StoreSetupProps) => {
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
+                    storeId: form.pincode,
                     sellerId: admin?._id,
                     ...form,
                 }),
             });
 
             if (response.ok) {
+                await response.json();
                 const updatedSubmitted = [...submitted];
                 updatedSubmitted[cardIndex] = true;
                 setSubmitted(updatedSubmitted);
                 setActiveCard(null);
-                toast.success(`Store ${cardIndex + 1} configured!`);
+                toast.success(`Store configured successfully!`);
             } else {
                 const err = await response.json();
                 toast.error(err?.error ?? "Failed to configure store.");
@@ -222,21 +230,50 @@ const StoreSetup = ({ storeCount, onComplete }: StoreSetupProps) => {
                     <p className={styles["all-done"]}>All stores are successfully configured!</p>
                     <button
                         className={styles["save-btn"]}
-                        onClick={() => {
-                            const newStores = forms.map((f, i) => ({
-                                id: Date.now() + i,
-                                ...f,
-                                address: `${f.county}, ${f.state}`
-                            }));
-                            setAdmin?.((prev: any) => ({
-                                ...prev,
-                                stores: newStores
-                            }));
-                            onComplete();
+                        disabled={loading}
+                        onClick={async () => {
+                            setLoading(true);
+                            try {
+                                const token = await getToken();
+                                const adminId = admin?._id;
+                                const response = await fetch(`http://localhost:5003/fetch-admin-data/${adminId}`, {
+                                    headers: { Authorization: `Bearer ${token}` }
+                                });
+                                if (response.ok) {
+                                    const data = await response.json();
+                                    const actualStores = data.stores || [];
+                                    if (actualStores.length >= storeCount) {
+                                        setAdmin?.(data);
+                                        onComplete();
+                                    } else {
+                                        toast.error("Not all stores are verified in the database!");
+                                        setForms(() => Array.from({ length: storeCount }, (_, i) => {
+                                            const s = actualStores[i];
+                                            if (s) {
+                                                return {
+                                                    pincode: s.pincode ?? "",
+                                                    county: s.county ?? "",
+                                                    state: s.state ?? "",
+                                                    country: s.country ?? "",
+                                                };
+                                            }
+                                            return emptyForm();
+                                        }));
+
+                                        setSubmitted(Array.from({ length: storeCount }, (_, i) => i < actualStores.length));
+                                    }
+                                } else {
+                                    toast.error("Failed to fetch fresh store data.");
+                                }
+                            } catch (e) {
+                                toast.error("Failed to verify store records.");
+                            } finally {
+                                setLoading(false);
+                            }
                         }}
                         style={{ width: 'auto', padding: '0.75rem 2rem' }}
                     >
-                        Go to Dashboard
+                        {loading ? "Verifying..." : "Go to Dashboard"}
                     </button>
                 </div>
             )}
