@@ -116,7 +116,7 @@ const Body = () => {
           zIndex: 5,
         }}>
         <div id={styles['modal-header']}>
-          <span>Upcoming Products</span>
+          <span>Featured Products</span>
           <IoIosCloseCircle
             size={28}
             onClick={() => {
