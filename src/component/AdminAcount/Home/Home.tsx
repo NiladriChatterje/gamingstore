@@ -3,7 +3,7 @@ import styles from './Home.module.css';
 import { useUser, useAuth } from '@clerk/clerk-react';
 import { Line } from 'react-chartjs-2';
 import { FaDollarSign, FaChartLine, FaShoppingCart, FaArrowUp, FaChevronDown, FaChevronUp, FaTags } from 'react-icons/fa';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -38,6 +38,8 @@ interface DashboardMetrics {
     totalProductsInInventory: { value: string | number; trend: string; numericValue: number };
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5003';
+
 const Home = () => {
     const { isSignedIn } = useUser();
     const { getToken } = useAuth();
@@ -47,46 +49,35 @@ const Home = () => {
     const [dashboardMetrics, setDashboardMetrics] = useState<DashboardMetrics | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const hasDateChanged = useRef(false);
     const {
         admin,
         fromDate,
         setFromDate,
         toDate,
         setToDate,
-        fetchFilteredStatistics
     } = useAdminStateContext();
 
-    if (!isSignedIn)
-        <Navigate to={'/user'} />
+    // Bug fix #1: Added missing `return` — without it the component continues
+    // to render even when the user is not signed in.
+    if (!isSignedIn) {
+        return <Navigate to={'/user'} />;
+    }
 
-    // Handle date change and fetch filtered data
-    const handleDateChange = async (type: 'from' | 'to', date: Date | null) => {
-        if (type === 'from') {
-            setFromDate?.(date);
-        } else {
-            setToDate?.(date);
-        }
-
-        // Fetch filtered statistics when both dates are available
-        const updatedFromDate = type === 'from' ? date : fromDate;
-        const updatedToDate = type === 'to' ? date : toDate;
-
-        if (updatedFromDate && updatedToDate) {
-            // Use a small delay to ensure state is updated
-            setTimeout(() => {
-                fetchDashboardMetrics(true);
-            }, 100);
-        }
-    };
-
-    // Format date for input field
+    // Bug fix #2: Uses local date components instead of toISOString() to avoid
+    // timezone off-by-one errors (e.g. IST users seeing previous day's date).
     const formatDateForInput = (date: Date | null): string => {
         if (!date) return '';
-        return date.toISOString().split('T')[0];
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     };
 
-    // Fetch dashboard metrics from backend
-    const fetchDashboardMetrics = async (useCurrentDateFilter = false) => {
+    // Bug fix #3: Wrapped in useCallback with explicit date parameters instead
+    // of reading fromDate/toDate from closure. This prevents stale closures and
+    // avoids unnecessary re-fetches when dates change.
+    const fetchDashboardMetrics = useCallback(async (filterFromDate?: Date | null, filterToDate?: Date | null) => {
         try {
             setLoading(true);
             setError(null);
@@ -97,11 +88,10 @@ const Home = () => {
 
             const token = await getToken();
 
-            // Build URL with date parameters if filtering is requested and dates are available
-            let url = `http://localhost:5003/${admin._id}/dashboard-metrics`;
-            if (useCurrentDateFilter && fromDate && toDate) {
-                const fromDateISO = fromDate.toISOString();
-                const toDateISO = toDate.toISOString();
+            let url = `${API_BASE_URL}/${admin._id}/dashboard-metrics`;
+            if (filterFromDate && filterToDate) {
+                const fromDateISO = filterFromDate.toISOString();
+                const toDateISO = filterToDate.toISOString();
                 url += `?fromDate=${fromDateISO}&toDate=${toDateISO}`;
             }
 
@@ -125,23 +115,39 @@ const Home = () => {
         } finally {
             setLoading(false);
         }
+    }, [admin?._id, getToken]);
+
+    // Bug fix #4: Replaced async function with setTimeout race condition.
+    // Now simply updates state; the useEffect below triggers the actual fetch.
+    const handleDateChange = (type: 'from' | 'to', date: Date | null) => {
+        hasDateChanged.current = true;
+        if (type === 'from') {
+            setFromDate?.(date);
+        } else {
+            setToDate?.(date);
+        }
     };
 
-    // Effect to fetch data on component mount
+    // Fetch data on component mount (without date filter)
     useEffect(() => {
         if (isSignedIn && admin?._id) {
             fetchDashboardMetrics();
         }
-    }, [isSignedIn, admin?._id]);
+    }, [isSignedIn, admin?._id, fetchDashboardMetrics]);
 
-    // Effect to trigger chart re-render when date range or metrics change
+    // Bug fix #5: Replaced the empty/useless useEffect + setTimeout pattern.
+    // This effect properly triggers a filtered fetch whenever the user changes
+    // dates, without relying on fragile setTimeout delays.
     useEffect(() => {
-        // This effect ensures the chart updates when fromDate, toDate, or dashboardMetrics change
-        // The chart data generation function will be called automatically due to React's re-rendering
-    }, [fromDate, toDate, dashboardMetrics]);
+        if (!hasDateChanged.current) return;
+        if (fromDate && toDate) {
+            fetchDashboardMetrics(fromDate, toDate);
+        }
+    }, [fromDate, toDate, fetchDashboardMetrics]);
 
-    // Performance cards data - now dynamic based on API response or fallback to defaults
-    const performanceCards = [
+    // Bug fix #6: Memoized performanceCards to avoid unnecessary re-renders.
+    // Also fixed inconsistent id ('Total Products' → 'total-products').
+    const performanceCards = useMemo(() => [
         {
             id: 'sales',
             label: 'Total Sales',
@@ -203,7 +209,7 @@ const Home = () => {
             cardClass: 'products-card'
         },
         {
-            id: 'Total Products',
+            id: 'total-products',
             label: 'Total Products',
             value: dashboardMetrics?.totalProductsInInventory?.value || '0',
             trend: dashboardMetrics?.totalProductsInInventory?.trend || '+0% from last month',
@@ -212,86 +218,77 @@ const Home = () => {
             backgroundColor: '#ffebee',
             cardClass: 'categories-card'
         }
-    ];
+    ], [dashboardMetrics]);
 
-    // Check scroll position and update navigation button states
-    const checkScrollPosition = () => {
+    // Bug fix #7: Memoized scroll callbacks and fixed event listener cleanup
+    // to capture the element reference outside the closure (avoids stale ref).
+    const checkScrollPosition = useCallback(() => {
         if (topLayerRef.current) {
             const { scrollTop, scrollHeight, clientHeight } = topLayerRef.current;
-            // Add small tolerance for floating point precision
             const tolerance = 1;
             setCanScrollUp(scrollTop > tolerance);
             setCanScrollDown(scrollTop < scrollHeight - clientHeight - tolerance);
         }
-    };
+    }, []);
 
-    // Scroll functions
-    const scrollUp = () => {
+    const scrollUp = useCallback(() => {
         if (topLayerRef.current) {
             const cardHeight = topLayerRef.current.scrollHeight / Math.ceil(performanceCards.length / 3);
             topLayerRef.current.scrollBy({ top: -cardHeight, behavior: 'smooth' });
         }
-    };
+    }, [performanceCards.length]);
 
-    const scrollDown = () => {
+    const scrollDown = useCallback(() => {
         if (topLayerRef.current) {
             const cardHeight = topLayerRef.current.scrollHeight / Math.ceil(performanceCards.length / 3);
             topLayerRef.current.scrollBy({ top: cardHeight, behavior: 'smooth' });
         }
-    };
+    }, [performanceCards.length]);
 
-    // Check scroll position on component mount and scroll events
+    // Bug fix #8: Fixed scroll useEffect — captures element reference for proper
+    // cleanup, and depends on stable callback instead of unstable function reference.
     useEffect(() => {
-        // Small delay to ensure DOM is fully rendered
         const timer = setTimeout(() => {
             checkScrollPosition();
         }, 100);
 
         const handleScroll = () => checkScrollPosition();
+        const element = topLayerRef.current;
 
-        if (topLayerRef.current) {
-            topLayerRef.current.addEventListener('scroll', handleScroll);
-            return () => {
-                clearTimeout(timer);
-                if (topLayerRef.current) {
-                    topLayerRef.current.removeEventListener('scroll', handleScroll);
-                }
-            };
+        if (element) {
+            element.addEventListener('scroll', handleScroll);
         }
 
-        return () => clearTimeout(timer);
-    }, [performanceCards.length]);
+        return () => {
+            clearTimeout(timer);
+            if (element) {
+                element.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, [checkScrollPosition]);
 
-    // Generate date labels and data based on selected date range
-    const generateDateRangeData = () => {
-        const startDate = fromDate || new Date(new Date().getFullYear(), 0, 1); // Default to start of current year
-        const endDate = toDate || new Date(); // Default to current date
+    // Bug fix #9: Memoized chart data generation and added division-by-zero
+    // guard for totalDuration. Removed unused `interval` variable in favor of
+    // direct intervalDays comparisons.
+    const chartData = useMemo(() => {
+        const startDate = fromDate || new Date(new Date().getFullYear(), 0, 1);
+        const endDate = toDate || new Date();
 
         const labels: string[] = [];
         const salesData: number[] = [];
         const profitData: number[] = [];
         const ordersData: number[] = [];
 
-        // Calculate the time difference and determine appropriate interval
         const timeDiff = endDate.getTime() - startDate.getTime();
         const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-        let interval: 'day' | 'week' | 'month' = 'day';
         let intervalDays = 1;
-
-        // Determine appropriate interval based on date range
         if (daysDiff > 365) {
-            interval = 'month';
             intervalDays = 30;
         } else if (daysDiff > 60) {
-            interval = 'week';
             intervalDays = 7;
-        } else {
-            interval = 'day';
-            intervalDays = 1;
         }
 
-        // Generate data points for the selected time range
         const currentDate = new Date(startDate);
         const finalSalesValue = dashboardMetrics?.totalSales?.numericValue || 9800;
         const finalProfitValue = dashboardMetrics?.totalProfit?.numericValue || 3900;
@@ -300,11 +297,10 @@ const Home = () => {
         let dataPointIndex = 0;
 
         while (currentDate <= endDate) {
-            // Format label based on interval
             let label = '';
-            if (interval === 'day') {
+            if (intervalDays === 1) {
                 label = currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-            } else if (interval === 'week') {
+            } else if (intervalDays === 7) {
                 const weekEnd = new Date(currentDate);
                 weekEnd.setDate(weekEnd.getDate() + 6);
                 label = `${currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
@@ -314,15 +310,14 @@ const Home = () => {
 
             labels.push(label);
 
-            // Calculate progress through the time range
             const totalDuration = endDate.getTime() - startDate.getTime();
-            const currentProgress = (currentDate.getTime() - startDate.getTime()) / totalDuration;
+            const currentProgress = totalDuration > 0
+                ? (currentDate.getTime() - startDate.getTime()) / totalDuration
+                : 0;
 
-            // Generate realistic data progression with some variation
-            const baseVariation = 0.15; // 15% variation
+            const baseVariation = 0.15;
             const randomFactor = (Math.sin(dataPointIndex * 0.5) * 0.5 + 0.5) * baseVariation + (1 - baseVariation);
 
-            // Calculate values with progressive growth and variation
             const salesValue = Math.round(finalSalesValue * currentProgress * randomFactor);
             const profitValue = Math.round(finalProfitValue * currentProgress * randomFactor);
             const ordersValue = Math.round(finalOrdersValue * currentProgress * randomFactor);
@@ -331,8 +326,7 @@ const Home = () => {
             profitData.push(Math.max(0, profitValue));
             ordersData.push(Math.max(0, ordersValue));
 
-            // Move to next interval
-            if (interval === 'month') {
+            if (intervalDays === 30) {
                 currentDate.setMonth(currentDate.getMonth() + 1);
             } else {
                 currentDate.setDate(currentDate.getDate() + intervalDays);
@@ -341,47 +335,43 @@ const Home = () => {
             dataPointIndex++;
         }
 
-        return { labels, salesData, profitData, ordersData };
-    };
+        return {
+            labels,
+            datasets: [
+                {
+                    label: 'Sales ($)',
+                    data: salesData,
+                    borderColor: 'rgb(25, 118, 210)',
+                    backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                    tension: 0.4,
+                    borderWidth: 2,
+                    fill: false,
+                },
+                {
+                    label: 'Profit ($)',
+                    data: profitData,
+                    borderColor: 'rgb(56, 142, 60)',
+                    backgroundColor: 'rgba(56, 142, 60, 0.1)',
+                    tension: 0.4,
+                    borderWidth: 2,
+                    fill: false,
+                },
+                {
+                    label: 'Orders',
+                    data: ordersData,
+                    borderColor: 'rgb(194, 24, 91)',
+                    backgroundColor: 'rgba(194, 24, 91, 0.1)',
+                    tension: 0.4,
+                    borderWidth: 2,
+                    fill: false,
+                    yAxisID: 'y1',
+                },
+            ],
+        };
+    }, [fromDate, toDate, dashboardMetrics]);
 
-    const { labels: chartLabels, salesData: chartSalesData, profitData: chartProfitData, ordersData: chartOrdersData } = generateDateRangeData();
-
-    const chartData = {
-        labels: chartLabels,
-        datasets: [
-            {
-                label: 'Sales ($)',
-                data: chartSalesData,
-                borderColor: 'rgb(25, 118, 210)',
-                backgroundColor: 'rgba(25, 118, 210, 0.1)',
-                tension: 0.4,
-                borderWidth: 2,
-                fill: false,
-            },
-            {
-                label: 'Profit ($)',
-                data: chartProfitData,
-                borderColor: 'rgb(56, 142, 60)',
-                backgroundColor: 'rgba(56, 142, 60, 0.1)',
-                tension: 0.4,
-                borderWidth: 2,
-                fill: false,
-            },
-            {
-                label: 'Orders',
-                data: chartOrdersData,
-                borderColor: 'rgb(194, 24, 91)',
-                backgroundColor: 'rgba(194, 24, 91, 0.1)',
-                tension: 0.4,
-                borderWidth: 2,
-                fill: false,
-                yAxisID: 'y1',
-            },
-        ],
-    };
-
-    // Generate chart title based on date range
-    const getChartTitle = () => {
+    // Memoized chart title to avoid recalculation on every render
+    const chartTitle = useMemo(() => {
         if (fromDate && toDate) {
             const startDateStr = fromDate.toLocaleDateString('en-US', {
                 month: 'short',
@@ -396,10 +386,11 @@ const Home = () => {
             return `Performance Tracking: ${startDateStr} - ${endDateStr}`;
         }
         return 'Performance Tracking Over Time';
-    };
+    }, [fromDate, toDate]);
 
-    // Chart options configuration with dual y-axis
-    const chartOptions: ChartOptions<'line'> = {
+    // Bug fix #10: Memoized chart options to prevent Chart.js from re-rendering
+    // on every parent render. Also moved getChartTitle() into the memoized chartTitle.
+    const chartOptions: ChartOptions<'line'> = useMemo(() => ({
         responsive: true,
         maintainAspectRatio: false,
         interaction: {
@@ -420,7 +411,7 @@ const Home = () => {
             },
             title: {
                 display: true,
-                text: getChartTitle(),
+                text: chartTitle,
                 font: {
                     size: 18,
                     weight: 'bold',
@@ -515,7 +506,7 @@ const Home = () => {
                 }
             },
         },
-    };
+    }), [chartTitle]);
 
     return (
         <main id={styles['container']}>
