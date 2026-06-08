@@ -1,0 +1,40 @@
+#outer-container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    height: 100svh;
+    justify-content: center;
+    align-items: center;
+}
+
+#avatar-container {
+    position: fixed;
+    top: 30px;
+    left: 60px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+#admin-routes {
+    width: 100%;
+    max-width: 700px;
+    padding: 10px;
+}
+
+#avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+
+}
+
+#admin-container {
+    width: 70%;
+    height: 50%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+@media screen and (max-width:900px) {}

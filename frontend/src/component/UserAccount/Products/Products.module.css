@@ -1,0 +1,135 @@
+#pdt_container {
+  padding: 35px 0;
+  width: 70%;
+  height: 450px;
+  display: flex;
+  overflow-y: auto;
+  flex-wrap: wrap;
+  justify-content: center;
+  transition: opacity 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeIn 0.12s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+#pagination{
+  padding: 20px 0;
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-btn {
+  color: rgb(30, 28, 41);
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-btn:hover {
+  color: rgb(45, 42, 60);
+  transform: scale(1.15);
+}
+
+.pagination-btn:active {
+  transform: scale(0.9);
+}
+
+.page-number {
+  padding: 0 20px;
+  font-weight: 700;
+  color: rgb(30, 28, 41);
+  font-size: 1.1em;
+  min-width: 50px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#category-list{
+   display: flex;
+   gap: 25px;
+}
+#category-list > span{
+  padding: 6px 16px;
+  font-size: 0.75em;
+  font-weight: 600;
+  background-color: white;
+  color: rgb(30, 28, 41);
+  border-radius: 6px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+#category-list >span:hover{
+  background-color: rgb(30, 28, 41);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+#category-list > span:active {
+  transform: translateY(0px);
+}
+#search-bar{
+  width: 350px;
+  margin-top: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background-color: white;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+#search-bar > input[type="text"]{
+  outline: none;
+  border: none;
+  width: 280px;
+}
+#product-container-wrapper{
+     height: 100dvh;
+     width: 100%;
+      display: flex;
+       flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+       gap: 20px;
+}
+@media all and (max-width:1200px) {
+  #pdt_container {
+    margin-top: 15%;
+    width: 95%;
+  }
+}
+
+.loader {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 16px solid rgba(30, 28, 41, 0.1);
+  border-top: 16px solid rgb(30, 28, 41);
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

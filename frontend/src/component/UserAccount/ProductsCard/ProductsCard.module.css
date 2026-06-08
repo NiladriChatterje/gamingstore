@@ -1,0 +1,66 @@
+#card {
+    font-size: 0.75em;
+    background-image: url('../../../assets/ProductCard.svg');
+    width: 200px;
+    text-align: center;
+    height: 260px;
+    position: relative;
+    border-radius: 10px;
+    background-color: transparent;
+    display: flex;
+    margin: 50px 20px;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 10px;
+    object-fit: contain;
+}
+
+#card button:hover {
+    background-color: rgb(45, 45, 45);
+    color: rgb(255, 255, 255)
+}
+
+#card button {
+    z-index: 5;
+    background-color: rgb(255, 255, 255);
+    border-style: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: rgb(38, 38, 38);
+    gap: 10px;
+}
+
+#card:hover img {
+    transform: translateY(-20px);
+}
+
+#card img {
+    object-fit: contain;
+    filter: drop-shadow(5px 5px 5px rgba(102, 93, 93, 0.497));
+    height: 120px;
+    width: 120px;
+    transition: all;
+    transition-duration: 120ms;
+    position: relative;
+    top:-60px;
+}
+
+#card h2 {
+    position: relative;
+
+}
+
+#card h3 {
+    margin: 0;
+}
+
+@media all and (max-width:1200px) {
+    #card {
+        font-size: 1em;
+        width: 250px;
+    }
+}
