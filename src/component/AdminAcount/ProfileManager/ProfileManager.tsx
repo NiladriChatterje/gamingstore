@@ -34,22 +34,21 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
   const [state, setState] = useState<string>(admin?.address?.state ?? "");
   const [county, setCounty] = useState<string>(admin?.address?.county ?? "");
   const [email, setEmail] = useState<string>(admin?.email ?? user?.emailAddresses[0]?.emailAddress ?? "");
-  const [phone, setPhone] = useState<string>(admin?.phone as unknown as string ?? "");
+  const [phone, setPhone] = useState<string>(admin?.phone != null ? String(admin.phone) : "");
   const [geoPrefilled, setGeoPrefilled] = useState(false);
   const [fetchingAddress, setFetchingAddress] = useState(false);
 
-  // Sync form fields when admin data loads asynchronously from the context
+  // Sync form fields when admin or user data loads asynchronously
   useEffect(() => {
-    if (!admin) return;
-    setUsername(prev => admin.username ?? prev);
-    setGstin(prev => admin.gstin ?? prev);
-    setpinCode(prev => admin.address?.pincode ?? prev);
-    setCounty(prev => admin.address?.county ?? prev);
-    setState(prev => admin.address?.state ?? prev);
-    setCountry(prev => admin.address?.country ?? prev);
-    setEmail(prev => admin.email ?? prev);
-    setPhone(prev => (admin.phone as unknown as string) ?? prev);
-  }, [admin]);
+    setUsername(prev => admin?.username ?? user?.firstName ?? prev);
+    setGstin(prev => admin?.gstin ?? prev);
+    setpinCode(prev => admin?.address?.pincode ?? prev);
+    setCounty(prev => admin?.address?.county ?? prev);
+    setState(prev => admin?.address?.state ?? prev);
+    setCountry(prev => admin?.address?.country ?? prev);
+    setEmail(prev => admin?.email ?? user?.emailAddresses[0]?.emailAddress ?? prev);
+    setPhone(prev => admin?.phone != null ? String(admin.phone) : prev);
+  }, [admin, user]);
 
   // Derive whether all required fields are filled
   const isFormValid =
