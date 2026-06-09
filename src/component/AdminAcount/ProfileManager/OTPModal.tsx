@@ -55,8 +55,8 @@ const OTPMailModal = ({ OTP }: { OTP: number | undefined }, mailRef: React.Ref<H
                 <input onClick={() => { index = 5 }} onKeyDown={VerifyOTP} ref={(el: HTMLInputElement) => { otpBlockRef?.current?.push(el) }} maxLength={1} type='text' className={styles['otp-block']} />
             </section>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-                <button id={styles['verify']} onClick={fetchOTP}>Verify</button>
-                <button id={styles['verify']} onClick={() => { mailRef?.current?.close() }}>Close</button>
+                <button type="button" id={styles['verify']} onClick={fetchOTP}>Verify</button>
+                <button type="button" id={styles['verify']} onClick={() => { mailRef?.current?.close() }}>Close</button>
             </div>
         </dialog>
     )
