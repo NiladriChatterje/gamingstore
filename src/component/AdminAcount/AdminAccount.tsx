@@ -33,6 +33,17 @@ const AdminAccount = () => {
     );
   }, [admin?.subscriptionPlan]);
 
+  // Whether the seller has filled all required profile fields
+  const isProfileComplete = useMemo(() => {
+    const addr = admin?.address;
+    const hasAddress = Boolean(
+      addr?.pincode && addr?.county && addr?.state && addr?.country
+    );
+    const hasPhone = Boolean(admin?.phone);
+    const hasGstin = Boolean(admin?.gstin && admin?.gstin.length >= 15);
+    return hasAddress && hasPhone && hasGstin;
+  }, [admin?.address, admin?.phone, admin?.gstin]);
+
   // Whether all allotted stores have been configured
   const storesConfigured = useMemo(() => {
     if (!isPlanActiveState) return false;
@@ -108,7 +119,15 @@ const AdminAccount = () => {
       );
     }
 
-    // 2. Subscription active but stores not configured yet → show store setup gate
+    // 2. Subscription active but profile incomplete → lock in Profile section
+    //    Seller MUST fill address, phone, and GSTIN and save to backend before proceeding
+    if (!isProfileComplete) {
+      return (
+        <ProfileManager onboarding={true} />
+      );
+    }
+
+    // 3. Subscription active, profile done, but stores not configured yet → store setup gate
     if (!storesConfigured) {
       return (
         <StoreSetup
@@ -122,7 +141,7 @@ const AdminAccount = () => {
       );
     }
 
-    // 3. Everything ready → show full admin dashboard
+    // 4. Everything ready → show full admin dashboard
     return (
       <div id={styles['admin-container']}>
         <SideBar />

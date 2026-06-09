@@ -237,3 +237,26 @@
 .action-button:active {
     transform: translateY(0);
 }
+
+/* Onboarding banner */
+.onboarding-banner {
+    text-align: center;
+    padding: 24px 20px 8px;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 8px;
+}
+
+.onboarding-banner h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #1a202c;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+}
+
+.onboarding-banner p {
+    font-size: 0.85rem;
+    color: #718096;
+    margin: 0;
+    line-height: 1.5;
+}

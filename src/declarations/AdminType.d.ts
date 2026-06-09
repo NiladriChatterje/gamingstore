@@ -3,7 +3,7 @@ export declare interface AdminFieldsType {
   _id: string;
   gstin?: string;
   username: string | null | undefined;
-  geoPoint: {
+  geoPoint?: {
     lat: number;
     lng: number;
   };
@@ -11,7 +11,7 @@ export declare interface AdminFieldsType {
   email: string | null | undefined;
   subscriptionPlan?: subscription[] | undefined | null;
   isPlanActive?: boolean;
-  address: {
+  address?: {
     pincode: string;
     county: string;
     country: string;

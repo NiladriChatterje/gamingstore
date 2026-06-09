@@ -12,7 +12,7 @@ import { ProductType } from "../../declarations/ProductContextType";
 import toast from "react-hot-toast";
 import { AdminFieldsType } from "../../declarations/AdminType.ts";
 import { SignOutButton, useUser, useAuth } from "@clerk/clerk-react";
-import { IoLocation, IoLogOutOutline } from "react-icons/io5";
+import { IoLogOutOutline } from "react-icons/io5";
 import ServiceUnavailable from "../../assets/serviceUavailable.svg";
 import { MdReplayCircleFilled } from "react-icons/md";
 
@@ -37,23 +37,6 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
   const { user, isLoaded, isSignedIn } = useUser();
   const { getToken } = useAuth();
 
-  // ✅ Promisified Geolocation API
-  const getGeolocation = (): Promise<{ latitude: number; longitude: number }> => {
-    return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-        },
-        (error) => {
-          reject(error);
-        }
-      );
-    });
-  };
-
   async function checkAdminEnrolled(): Promise<AdminFieldsType | undefined> {
     const token = await getToken()
     console.log("Auth token fetched for checkAdminEnrolled.");
@@ -69,168 +52,21 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
           }
         }
       );
+      console.log("[AdminStateContext] fetch-admin-data status:", response.status, "ok:", response.ok);
       if (response.status === 404) {
-        console.log('Server returned 404: Admin not enrolled');
+        console.log('Server returned 404: Admin not enrolled — will be created on profile save');
         userEnrolled = undefined;
-        throw new Error("admin not found!!. in catch block, creation will be encountered");
       } else if (response.ok) {
         userEnrolled = await response.json();
         console.log('Server returned 200: Admin enrolled:', userEnrolled)
       } else {
         console.log('Server returned error status:', response.status);
+        userEnrolled = undefined;
       }
     } catch (err) {
       console.log('Fetch error during enrollment check:', err);
+      console.log("[AdminStateContext] network error — will allow flow without admin data");
       userEnrolled = undefined;
-
-      console.log("Final userEnrolled state before potential creation:", userEnrolled);
-      let toastLoadingId: string | undefined;
-      let placeResult: {
-        properties: {
-          postcode: string;
-          county: string;
-          state: string;
-          country: string;
-        };
-      };
-
-      //#region adminCreateOperations definition
-      const adminCreateOperations = async (latitude: number, longitude: number) => {
-        console.log("<adminCreateOperations called>");
-        let token = await getToken();
-        console.log("geolocation fetched: ", latitude, longitude);
-        if (!user?.phoneNumbers[0]?.phoneNumber && !userEnrolled?.phone) {
-          if (toastLoadingId) toast.dismiss(toastLoadingId);
-
-          const responseGeo = await fetch(
-            `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${import.meta.env.VITE_GEOAPIFY_API}`,
-            {
-              method: "GET",
-              headers: {
-                "Accept": "application/json"
-              }
-            }
-          );
-          const { features } = await responseGeo.json();
-          placeResult = features[0];
-          console.log("reverse geocoding : ", placeResult);
-
-          try {
-            const res: Response = await fetch(
-              `http://localhost:5003/create-admin`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  "Accept": "application/json",
-                  "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                  _type: "seller",
-                  username: user?.firstName,
-                  _id: user?.id,
-                  email: user?.emailAddresses[0].emailAddress,
-                  geoPoint: {
-                    lat: latitude,
-                    lng: longitude,
-                  },
-                  address: {
-                    pincode: placeResult?.properties?.postcode,
-                    county: placeResult?.properties?.county,
-                    state: placeResult?.properties?.state,
-                    country: placeResult?.properties?.country,
-                  },
-                }),
-              }
-            );
-
-            const result = await res.text();
-            if (!res.ok) throw new Error(result);
-          } catch (err: Error | any) {
-            console.log("error in creating admin doc : ", err);
-            toast.dismiss();
-            toast.error(err.message, {
-              position: "bottom-left",
-              style: { width: 320, background: "white" },
-            });
-            toast.loading(
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span>Retry</span>
-              </div>,
-              {
-                icon: (
-                  <MdReplayCircleFilled
-                    cursor={"pointer"}
-                    size={25}
-                    onClick={() => {
-                      setRetry((prev) => !prev);
-                      toast.dismiss();
-                    }}
-                  />
-                ),
-                duration: Infinity,
-                position: "bottom-right",
-              }
-            );
-            return;
-          }
-
-          toastLoadingId = toast("Update phone number!", {
-            position: "bottom-left",
-            style: { width: 320, background: "white" },
-          });
-        }
-
-        if (user?.id)
-          setAdmin({
-            _type: "admin",
-            username: user?.firstName,
-            _id: "seller-" + user?.id,
-            email: user?.emailAddresses[0].emailAddress,
-            geoPoint: {
-              lat: latitude,
-              lng: longitude,
-            },
-            address: {
-              pincode: placeResult?.properties?.postcode,
-              county: placeResult?.properties?.county,
-              state: placeResult?.properties?.state,
-              country: placeResult?.properties?.country,
-            },
-          });
-      };
-      //#endregion adminCreateOperations definition end
-
-      // ✅ FIXED: Properly awaiting geolocation
-      if (userEnrolled == undefined) {
-        try {
-          const coords = await getGeolocation();
-          console.log("Geolocation retrieved:", coords);
-          const { latitude, longitude } = coords ?? {
-            latitude: 22.6230272,
-            longitude: 88.4867072
-          };
-          await adminCreateOperations(latitude, longitude);
-          console.log("adminCreateOperations execution finished.");
-        } catch (error: GeolocationPositionError | any) {
-          const toastId = toast(<div>allow location</div>, {
-            position: "bottom-left",
-            style: { width: 320, background: "white", fontSize: "small" },
-            icon: <IoLocation size={25} />,
-          });
-          const toastIdForMsg = toast.error(error.message, {
-            position: "bottom-left",
-            style: { width: 320, background: "white", fontSize: "small" },
-          });
-
-          setTimeout(() => {
-            toast.dismiss(toastId);
-            toast.dismiss(toastIdForMsg);
-            setRetry((prev) => !prev);
-          }, 4000);
-        }
-      }
-
     }
 
     setLoadingState(false);
@@ -279,10 +115,15 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     async function mainCheck() {
+      console.log("[AdminStateContext] mainCheck() start");
       try {
         const result: AdminFieldsType | undefined = await checkAdminEnrolled();
+        console.log("[AdminStateContext] mainCheck() got result:", result);
 
-        if (result == null) return;
+        if (result == null) {
+          // Admin not enrolled yet — that's fine, let SubscriptionPlan / ProfileManager handle onboarding
+          return;
+        }
 
         console.log('subscription plan from server : ', result.isPlanActive);
         if (result.isPlanActive) {
@@ -341,35 +182,6 @@ export const AdminStateContext = ({ children }: { children: ReactNode }) => {
   }, [user, isLoaded, retry, isSignedIn]);
 
   if (loadingState) return <PreLoader />;
-
-  if (admin == null)
-    return (
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100dvh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          objectFit: "contain",
-        }}
-      >
-        <SignOutButton>
-          <IoLogOutOutline
-            onClick={() => {
-              localStorage.setItem("loginusertype", "user");
-            }}
-            cursor={"pointer"}
-            size={25}
-            style={{ position: "fixed", top: 30, right: 60 }}
-          />
-        </SignOutButton>
-        <img height={"100%"} src={ServiceUnavailable} alt="" />
-      </div>
-    );
 
   return (
     <AdminContext.Provider

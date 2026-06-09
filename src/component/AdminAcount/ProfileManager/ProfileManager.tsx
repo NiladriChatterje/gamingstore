@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./ProfileManager.module.css";
 import { MdEdit, MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
 import { FaPhone, FaUser } from "react-icons/fa6";
@@ -13,14 +13,18 @@ import { SiFreelancermap } from "react-icons/si";
 import { RiLandscapeFill } from "react-icons/ri";
 import { useAdminStateContext } from "../AdminStateContext";
 
-const ProfileManager = () => {
-  const { admin } = useAdminStateContext();
+interface ProfileManagerProps {
+  onboarding?: boolean;
+}
+
+const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
+  const { admin, setAdmin } = useAdminStateContext();
   const { user } = useUser();
   const { getToken } = useAuth();
 
   console.log("admin ", admin);
 
-  const [disable, setDisable] = useState<boolean>(true);
+  const [disable, setDisable] = useState<boolean>(!onboarding);
   const [toggleCountryCode, setToggleCountryCode] = useState<boolean>(false);
   const [gstin, setGstin] = useState<string>(admin?.gstin ?? "");
   const [username, setUsername] = useState<string>(admin?.username ?? "");
@@ -30,9 +34,43 @@ const ProfileManager = () => {
   const [county, setCounty] = useState<string>(admin?.address?.county ?? "");
   const [email, setEmail] = useState<string>(admin?.email ?? "");
   const [phone, setPhone] = useState<string>(admin?.phone as unknown as string ?? "");
+  const [geoPrefilled, setGeoPrefilled] = useState(false);
   const [OTP, setOTP] = useState<number>(0);
   const modalRef = useRef<HTMLDialogElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // On mount (onboarding mode), try geolocation to prefill address fields
+  useEffect(() => {
+    if (!onboarding || geoPrefilled) return;
+
+    if (!navigator.geolocation) return;
+
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords: { latitude, longitude } }) => {
+        try {
+          const response = await fetch(
+            `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${import.meta.env.VITE_GEOAPIFY_API}`,
+            { headers: { "Accept": "application/json" } }
+          );
+          const { features } = await response.json();
+          if (features?.length > 0) {
+            const props = features[0].properties;
+            setpinCode(props.postcode ?? pincode);
+            setCounty(props.county ?? county);
+            setState(props.state ?? state);
+            setCountry(props.country ?? country);
+            setGeoPrefilled(true);
+          }
+        } catch (e) {
+          console.log("[ProfileManager] reverse geocoding prefill failed:", e);
+        }
+      },
+      () => {
+        console.log("[ProfileManager] geolocation denied — manual address entry required");
+      },
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 }
+    );
+  }, [onboarding]);
 
   async function onClickMailVerify() {
     try {
@@ -88,13 +126,49 @@ const ProfileManager = () => {
     }
     try {
       const token = await getToken();
+      const sellerId = admin?._id ?? `seller-${user?.id}`;
+
+      // Step 1: Create admin if it doesn't exist yet
+      if (!admin?._id) {
+        const createBody: any = {
+          _type: "seller",
+          username: user?.firstName,
+          _id: user?.id,
+          email: email || user?.emailAddresses[0]?.emailAddress,
+          phone: Number(phone),
+          gstin,
+          address: {
+            pincode,
+            county,
+            country,
+            state,
+          },
+        };
+
+        const createRes = await fetch("http://localhost:5003/create-admin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(createBody),
+        });
+
+        if (!createRes.ok) {
+          const errText = await createRes.text();
+          throw new Error(errText);
+        }
+      }
+
+      // Step 2: Update admin info (works for both new and existing admins)
       const response = await fetch("http://localhost:5003/update-admin-info", {
         headers: {
           "content-type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
-          _id: admin?._id,
+          _id: sellerId,
           gstin,
           address: {
             pincode,
@@ -107,7 +181,25 @@ const ProfileManager = () => {
         }),
       });
       console.log("update response ", response);
-      if (response.ok) setDisable(true);
+      if (response.ok) {
+        setDisable(true);
+        // Update admin context so the profile-complete gate re-evaluates
+        setAdmin?.((prev: any) => ({
+          ...prev,
+          _id: sellerId,
+          _type: "admin",
+          username: user?.firstName,
+          gstin,
+          phone: Number(phone),
+          email,
+          address: {
+            pincode,
+            county,
+            country,
+            state,
+          },
+        }));
+      }
       return Promise.resolve();
     } catch (err) {
       console.log(err);
@@ -139,6 +231,12 @@ const ProfileManager = () => {
       }}
       id={styles["form-container"]}
     >
+      {onboarding && (
+        <div className={styles["onboarding-banner"]}>
+          <h2>Complete Your Profile</h2>
+          <p>Please fill in your address, phone number, and GSTIN before you can access the dashboard.</p>
+        </div>
+      )}
       <div className={styles["scroll-container"]}>
         <div id={styles["form-input-field-container"]} ref={scrollContainerRef}>
           <div

@@ -3,13 +3,13 @@ import Checkout from '../../../utils/Checkout';
 import styles from './SubscriptionPlan.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useAdminStateContext } from '../AdminStateContext';
-import { useAuth } from '@clerk/clerk-react';
+import { useAuth, useUser } from '@clerk/clerk-react';
 import { FaStore } from 'react-icons/fa6';
 
 // Plan definitions — single source of truth for prices, features, validity and store count
 const PLANS = [
     {
-        price: Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_1),
+        price: Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_1) || 599,
         validity: 175, // days
         storeAllotment: 1,
         features: [
@@ -21,7 +21,7 @@ const PLANS = [
         ],
     },
     {
-        price: Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_2),
+        price: Number(import.meta.env.VITE_SUBSCRIPTION_PLAN_2) || 899,
         validity: 365,
         storeAllotment: 3,
         features: [
@@ -56,6 +56,7 @@ const PLANS = [
 
 const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch<boolean> }) => {
     const { admin } = useAdminStateContext();
+    const { user } = useUser();
     const navigate = useNavigate();
     const { getToken } = useAuth();
 
@@ -65,6 +66,7 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
         _payment_signature: string,
         _order_id: string
     ) => {
+        const sellerId = admin?._id ?? `seller-${user?.id}`;
         const response = await fetch('http://localhost:5000/seller-subscription', {
             method: 'POST',
             headers: {
@@ -72,7 +74,7 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
                 Authorization: `Bearer ${await getToken()}`,
             },
             body: JSON.stringify({
-                _id: admin?._id,
+                _id: sellerId,
                 subscriptionPlan: {
                     amount: plan.price,
                     storeAllotment: plan.storeAllotment,
