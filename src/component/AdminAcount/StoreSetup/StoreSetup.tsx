@@ -7,6 +7,9 @@ import toast from "react-hot-toast";
 import styles from "./StoreSetup.module.css";
 
 interface StoreForm {
+    store_name: string;
+    address_line1: string;
+    address_line2: string;
     pincode: string;
     county: string;
     state: string;
@@ -19,7 +22,7 @@ interface StoreSetupProps {
     onGoBack?: () => void;   // called when user clicks "Go Back" to edit profile
 }
 
-const emptyForm = (): StoreForm => ({ pincode: "", county: "", state: "", country: "" });
+const emptyForm = (): StoreForm => ({ store_name: "", address_line1: "", address_line2: "", pincode: "", county: "", state: "", country: "" });
 
 const StoreSetup = ({ storeCount, onComplete, onGoBack }: StoreSetupProps) => {
     const { admin, setAdmin } = useAdminStateContext();
@@ -43,6 +46,9 @@ const StoreSetup = ({ storeCount, onComplete, onGoBack }: StoreSetupProps) => {
                 const s = existingStores[i];
                 if (s) {
                     return {
+                        store_name: s.store_name ?? "",
+                        address_line1: s.address_line1 ?? "",
+                        address_line2: s.address_line2 ?? "",
                         pincode: s.pincode ?? "",
                         county: s.county ?? "",
                         state: s.state ?? "",
@@ -69,8 +75,8 @@ const StoreSetup = ({ storeCount, onComplete, onGoBack }: StoreSetupProps) => {
 
     const handleSave = async (cardIndex: number) => {
         const form = forms[cardIndex];
-        if (!form.pincode || !form.county || !form.state || !form.country) {
-            toast.error("Please fill all store fields.");
+        if (!form.store_name || !form.address_line1 || !form.pincode || !form.county || !form.state || !form.country) {
+            toast.error("Please fill all required store fields (store name, address, pincode, etc.).");
             return;
         }
 
@@ -88,12 +94,17 @@ const StoreSetup = ({ storeCount, onComplete, onGoBack }: StoreSetupProps) => {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    storeId: form.pincode,
-                    sellerId: admin?._id,
-                    ...form,
-                }),
+                },                    body: JSON.stringify({
+                        storeId: form.pincode,
+                        sellerId: admin?._id,
+                        store_name: form.store_name,
+                        address_line1: form.address_line1,
+                        address_line2: form.address_line2,
+                        pincode: form.pincode,
+                        county: form.county,
+                        state: form.state,
+                        country: form.country,
+                    }),
             });
 
             if (response.ok) {
@@ -170,7 +181,7 @@ const StoreSetup = ({ storeCount, onComplete, onGoBack }: StoreSetupProps) => {
                                     </h3>
                                     {isDone ? (
                                         <p className={styles["card-summary"]}>
-                                            {form.county}, {form.state} — {form.pincode}
+                                            {form.store_name} — {form.county}, {form.state} — {form.pincode}
                                         </p>
                                     ) : (
                                         <p className={styles["card-summary"]}>
@@ -185,16 +196,36 @@ const StoreSetup = ({ storeCount, onComplete, onGoBack }: StoreSetupProps) => {
                                 <div className={styles["card-form"]}>
                                     <div className={styles["field-row"]}>
                                         <div className={styles["field-group"]}>
-                                            <label>County / City</label>
+                                            <label>Store Name *</label>
                                             <input
                                                 type="text"
-                                                placeholder="e.g. Kolkata"
-                                                value={form.county}
-                                                onChange={e => updateField(idx, "county", e.target.value)}
+                                                placeholder="e.g. My Downtown Store"
+                                                value={form.store_name}
+                                                onChange={e => updateField(idx, "store_name", e.target.value)}
                                             />
                                         </div>
                                         <div className={styles["field-group"]}>
-                                            <label>Pincode</label>
+                                            <label>Address Line 1 *</label>
+                                            <input
+                                                type="text"
+                                                placeholder="e.g. 123 Main Street"
+                                                value={form.address_line1}
+                                                onChange={e => updateField(idx, "address_line1", e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className={styles["field-row"]}>
+                                        <div className={styles["field-group"]}>
+                                            <label>Address Line 2</label>
+                                            <input
+                                                type="text"
+                                                placeholder="e.g. Suite 100 (optional)"
+                                                value={form.address_line2}
+                                                onChange={e => updateField(idx, "address_line2", e.target.value)}
+                                            />
+                                        </div>
+                                        <div className={styles["field-group"]}>
+                                            <label>Pincode *</label>
                                             <input
                                                 type="text"
                                                 maxLength={6}
@@ -206,7 +237,16 @@ const StoreSetup = ({ storeCount, onComplete, onGoBack }: StoreSetupProps) => {
                                     </div>
                                     <div className={styles["field-row"]}>
                                         <div className={styles["field-group"]}>
-                                            <label>State</label>
+                                            <label>County / City *</label>
+                                            <input
+                                                type="text"
+                                                placeholder="e.g. Kolkata"
+                                                value={form.county}
+                                                onChange={e => updateField(idx, "county", e.target.value)}
+                                            />
+                                        </div>
+                                        <div className={styles["field-group"]}>
+                                            <label>State *</label>
                                             <input
                                                 type="text"
                                                 placeholder="e.g. West Bengal"
@@ -214,14 +254,19 @@ const StoreSetup = ({ storeCount, onComplete, onGoBack }: StoreSetupProps) => {
                                                 onChange={e => updateField(idx, "state", e.target.value)}
                                             />
                                         </div>
+                                    </div>
+                                    <div className={styles["field-row"]}>
                                         <div className={styles["field-group"]}>
-                                            <label>Country</label>
+                                            <label>Country *</label>
                                             <input
                                                 type="text"
                                                 placeholder="e.g. India"
                                                 value={form.country}
                                                 onChange={e => updateField(idx, "country", e.target.value)}
                                             />
+                                        </div>
+                                        <div className={styles["field-group"]}>
+                                            {/* placeholder to balance layout */}
                                         </div>
                                     </div>
                                     <button
@@ -263,12 +308,15 @@ const StoreSetup = ({ storeCount, onComplete, onGoBack }: StoreSetupProps) => {
                                         setForms(() => Array.from({ length: storeCount }, (_, i) => {
                                             const s = actualStores[i];
                                             if (s) {
-                                                return {
-                                                    pincode: s.pincode ?? "",
-                                                    county: s.county ?? "",
-                                                    state: s.state ?? "",
-                                                    country: s.country ?? "",
-                                                };
+                                            return {
+                                                store_name: s.store_name ?? "",
+                                                address_line1: s.address_line1 ?? "",
+                                                address_line2: s.address_line2 ?? "",
+                                                pincode: s.pincode ?? "",
+                                                county: s.county ?? "",
+                                                state: s.state ?? "",
+                                                country: s.country ?? "",
+                                            };
                                             }
                                             return emptyForm();
                                         }));
