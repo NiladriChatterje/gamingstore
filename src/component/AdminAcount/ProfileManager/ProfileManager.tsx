@@ -38,6 +38,19 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
   const [geoPrefilled, setGeoPrefilled] = useState(false);
   const [fetchingAddress, setFetchingAddress] = useState(false);
 
+  // Sync form fields when admin data loads asynchronously from the context
+  useEffect(() => {
+    if (!admin) return;
+    setUsername(prev => admin.username ?? prev);
+    setGstin(prev => admin.gstin ?? prev);
+    setpinCode(prev => admin.address?.pincode ?? prev);
+    setCounty(prev => admin.address?.county ?? prev);
+    setState(prev => admin.address?.state ?? prev);
+    setCountry(prev => admin.address?.country ?? prev);
+    setEmail(prev => admin.email ?? prev);
+    setPhone(prev => (admin.phone as unknown as string) ?? prev);
+  }, [admin]);
+
   // Derive whether all required fields are filled
   const isFormValid =
     username.trim().length > 0 &&
