@@ -186,49 +186,18 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
     }
     try {
       const token = await getToken();
-      const sellerId = admin?._id ?? `seller-${user?.id}`;
+      const sellerId = admin?._id ?? user?.id;
 
-      // Step 1: Create admin if it doesn't exist yet
-      if (!admin?._id) {
-        const createBody: any = {
-          _type: "seller",
-          username: user?.firstName,
-          _id: user?.id,
-          email: email || user?.emailAddresses[0]?.emailAddress,
-          phone: Number(phone),
-          gstin,
-          address: {
-            pincode,
-            county,
-            country,
-            state,
-          },
-        };
-
-        const createRes = await fetch("http://localhost:5003/create-admin", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify(createBody),
-        });
-
-        if (!createRes.ok) {
-          const errText = await createRes.text();
-          throw new Error(errText);
-        }
-      }
-
-      // Step 2: Update admin info (works for both new and existing admins)
+      // Single upsert call — backend creates if new, updates if existing
       const response = await fetch("http://localhost:5003/update-admin-info", {
+        method: "PATCH",
         headers: {
           "content-type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           _id: sellerId,
+          username: user?.firstName,
           gstin,
           address: {
             pincode,
@@ -243,10 +212,12 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
       console.log("update response ", response);
       if (response.ok) {
         setDisable(true);
-        // Update admin context so the profile-complete gate re-evaluates
+        // Use prefixed ID for context to match what the DB has (seller-{ClerkID})
+        // This ensures subsequent saves find the record and route to update-topic
+        const contextId = admin?._id ?? `seller-${user?.id}`;
         setAdmin?.((prev: any) => ({
           ...prev,
-          _id: sellerId,
+          _id: contextId,
           _type: "admin",
           username: user?.firstName,
           gstin,
