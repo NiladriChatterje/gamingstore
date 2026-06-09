@@ -16,11 +16,12 @@ interface StoreForm {
 interface StoreSetupProps {
     storeCount: number;
     onComplete: () => void;  // called when all stores are configured
+    onGoBack?: () => void;   // called when user clicks "Go Back" to edit profile
 }
 
 const emptyForm = (): StoreForm => ({ pincode: "", county: "", state: "", country: "" });
 
-const StoreSetup = ({ storeCount, onComplete }: StoreSetupProps) => {
+const StoreSetup = ({ storeCount, onComplete, onGoBack }: StoreSetupProps) => {
     const { admin, setAdmin } = useAdminStateContext();
     const { getToken } = useAuth();
 
@@ -117,6 +118,18 @@ const StoreSetup = ({ storeCount, onComplete }: StoreSetupProps) => {
 
     return (
         <div className={styles["setup-container"]}>
+            {/* Go Back button */}
+            {onGoBack && (
+                <div className={styles["back-bar"]}>
+                    <button
+                        className={styles["back-btn"]}
+                        onClick={onGoBack}
+                        type="button"
+                    >
+                        ← Back to Profile
+                    </button>
+                </div>
+            )}
             <div className={styles["setup-header"]}>
                 <MdLocationPin size={38} className={styles["setup-header-icon"]} />
                 <div>

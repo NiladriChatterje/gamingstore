@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import {
   ProfileManager,
@@ -22,6 +22,9 @@ const AdminAccount = () => {
   const { defaultLoginAdminOrUser } = useStateContext()
   const { isPlanActiveState, setIsPlanActive, admin, setAdmin } = useAdminStateContext()
   const { user } = useUser();
+
+  // Allows navigating back to ProfileManager from StoreSetup during onboarding
+  const [goBackToProfile, setGoBackToProfile] = useState(false);
 
   // How many stores the current subscription plan allots
   const allottedStoreCount = useMemo(() => {
@@ -121,9 +124,13 @@ const AdminAccount = () => {
 
     // 2. Subscription active but profile incomplete → lock in Profile section
     //    Seller MUST fill address, phone, and GSTIN and save to backend before proceeding
-    if (!isProfileComplete) {
+    //    Or the seller clicked "Go Back" from StoreSetup to re-edit their profile
+    if (goBackToProfile || !isProfileComplete) {
       return (
-        <ProfileManager onboarding={true} />
+        <ProfileManager
+          onboarding={true}
+          onSave={() => setGoBackToProfile(false)}
+        />
       );
     }
 
@@ -137,6 +144,7 @@ const AdminAccount = () => {
             // updated optimistically in StoreSetup; this triggers the gate re-check.
             setAdmin?.((prev: any) => ({ ...prev }));
           }}
+          onGoBack={() => setGoBackToProfile(true)}
         />
       );
     }

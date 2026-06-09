@@ -16,9 +16,10 @@ import { useAdminStateContext } from "../AdminStateContext";
 
 interface ProfileManagerProps {
   onboarding?: boolean;
+  onSave?: () => void;
 }
 
-const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
+const ProfileManager = ({ onboarding, onSave }: ProfileManagerProps) => {
   const { admin, setAdmin } = useAdminStateContext();
   const { user } = useUser();
   const { getToken } = useAuth();
@@ -237,6 +238,8 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
             state,
           },
         }));
+        // Notify parent (AdminAccount) that profile was saved successfully
+        onSave?.();
       }
       return Promise.resolve();
     } catch (err) {
