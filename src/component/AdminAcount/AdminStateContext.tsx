@@ -11,9 +11,7 @@ import type { AdminContextType } from "@declarations/AdminContextType.ts";
 import { ProductType } from "../../declarations/ProductContextType";
 import toast from "react-hot-toast";
 import { AdminFieldsType } from "../../declarations/AdminType.ts";
-import { SignOutButton, useUser, useAuth } from "@clerk/clerk-react";
-import { IoLogOutOutline } from "react-icons/io5";
-import ServiceUnavailable from "../../assets/serviceUavailable.svg";
+import { useUser, useAuth } from "@clerk/clerk-react";
 import { MdReplayCircleFilled } from "react-icons/md";
 
 const AdminContext = createContext<Partial<AdminContextType>>({});

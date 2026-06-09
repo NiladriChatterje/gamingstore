@@ -22,24 +22,27 @@ export declare interface AdminFieldsType {
 }
 export type Store = {
   id: number;
-  county: string;
+  store_number?: number;
   pincode: string;
-  address: string;
+  shard_host?: string;
+  store_name?: string;
+  address_line1?: string;
+  address_line2?: string;
+  county: string;
   state: string;
   country: string;
 };
 
 type subscription = {
+  _key?: string;            // auto-generated DB row id (returned from MySQL)
   transactionId: string;
   orderId: string;
   paymentSignature: string;
-  amount: number;
-  storeAllotment: number;  // number of stores the seller can configure under this plan
-  planSchemaList: plan;
+  amount?: number;
+  storeAllotment: number;   // number of stores the seller can configure under this plan
+  planSchemaList: {
+    activeDate: Date;
+    expireDate: Date;
+  };
 };
-
-interface plan {
-  activeDate: Date;
-  expireDate: Date;
-}
 

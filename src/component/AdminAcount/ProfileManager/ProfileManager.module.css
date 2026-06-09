@@ -238,6 +238,19 @@
     transform: translateY(0);
 }
 
+.action-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.action-button:disabled:hover {
+    background-color: rgb(52, 48, 105);
+    transform: none;
+    box-shadow: none;
+}
+
 /* Onboarding banner */
 .onboarding-banner {
     text-align: center;

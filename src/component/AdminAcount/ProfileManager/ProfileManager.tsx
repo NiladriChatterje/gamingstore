@@ -32,9 +32,20 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
   const [country, setCountry] = useState<string>(admin?.address?.country ?? "");
   const [state, setState] = useState<string>(admin?.address?.state ?? "");
   const [county, setCounty] = useState<string>(admin?.address?.county ?? "");
-  const [email, setEmail] = useState<string>(admin?.email ?? "");
+  const [email, setEmail] = useState<string>(admin?.email ?? user?.emailAddresses[0]?.emailAddress ?? "");
   const [phone, setPhone] = useState<string>(admin?.phone as unknown as string ?? "");
   const [geoPrefilled, setGeoPrefilled] = useState(false);
+
+  // Derive whether all required fields are filled
+  const isFormValid =
+    username.trim().length > 0 &&
+    gstin.length === 15 &&
+    phone.length === 10 &&
+    email.trim().length > 0 &&
+    pincode.trim().length > 0 &&
+    county.trim().length > 0 &&
+    country.trim().length > 0 &&
+    state.trim().length > 0;
   const [OTP, setOTP] = useState<number>(0);
   const modalRef = useRef<HTMLDialogElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -71,22 +82,6 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
       { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 }
     );
   }, [onboarding]);
-
-  async function onClickMailVerify() {
-    try {
-      const { data }: { data: { OTP: number } } = await axios.post(
-        "http://localhost:5000/fetch-mail-otp",
-        {
-          recipient: phone,
-        }
-      );
-      if (data.OTP === -1) throw new Error("Resend!");
-      setOTP(data.OTP);
-      toast("OTP sent");
-    } catch (e: Error | any) {
-      toast.error(e.message);
-    }
-  }
 
   async function onClickPhoneVerify() {
     try {
@@ -356,37 +351,19 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
             </div>
           </section>
           <section>
-            <OTPModal OTP={OTP} ref={modalRef} />
             <div
               style={{
-                backgroundColor: disable
-                  ? "rgba(255, 255, 255, 0.563)"
-                  : "rgba(255, 255, 255, 0.963)",
+                backgroundColor: "rgba(255, 255, 255, 0.563)",
               }}
               id={styles["mail-input"]}
             >
               <MdOutlineMarkEmailUnread />
               <input
                 value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
                 name={"email"}
-                disabled={disable}
-                placeholder={admin?.email ?? "example@domain.com"}
+                placeholder={admin?.email ?? user?.emailAddresses[0]?.emailAddress ?? "example@domain.com"}
+                readOnly
               />
-            </div>
-            <div id={styles["verify-span-btn"]}>
-              <span
-                onClick={() => {
-                  if (!disable) {
-                    onClickMailVerify();
-                    modalRef?.current?.showModal();
-                  }
-                }}
-              >
-                Verify
-              </span>
             </div>
           </section>
           <section data-label="address">
@@ -513,8 +490,9 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
         <button
           type="button"
           className={styles["action-button"]}
+          disabled={disable || !isFormValid}
           onClick={async () => {
-            if (!disable)
+            if (!disable && isFormValid)
               toast.promise(handleUpdate(), {
                 loading: "updating...",
                 success: "Profile Updated!",
