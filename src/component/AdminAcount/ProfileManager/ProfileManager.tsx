@@ -3,6 +3,7 @@ import styles from "./ProfileManager.module.css";
 import { MdEdit, MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
 import { FaPhone, FaUser } from "react-icons/fa6";
 import { IoIosPersonAdd } from "react-icons/io";
+import { MdMyLocation } from "react-icons/md";
 import { useUser, useAuth } from "@clerk/clerk-react";
 import { MdOutlineMarkEmailUnread, MdSignpost } from "react-icons/md";
 import axios from "axios";
@@ -35,6 +36,7 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
   const [email, setEmail] = useState<string>(admin?.email ?? user?.emailAddresses[0]?.emailAddress ?? "");
   const [phone, setPhone] = useState<string>(admin?.phone as unknown as string ?? "");
   const [geoPrefilled, setGeoPrefilled] = useState(false);
+  const [fetchingAddress, setFetchingAddress] = useState(false);
 
   // Derive whether all required fields are filled
   const isFormValid =
@@ -50,37 +52,88 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
   const modalRef = useRef<HTMLDialogElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  // Reusable function: fetch current location via geolocation, then reverse-geocode via Geoapify
+  async function fetchAddressFromGeolocation() {
+    if (fetchingAddress) return;
+
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported on this device or browser.");
+      return;
+    }
+
+    setFetchingAddress(true);
+
+    try {
+      // Wrap getCurrentPosition in a Promise for unified error handling
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: false,
+          timeout: 10000,
+          maximumAge: 60000,
+        });
+      });
+
+      const { latitude, longitude } = position.coords;
+
+      const response = await fetch(
+        `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${import.meta.env.VITE_GEOAPIFY_API}`,
+        { headers: { "Accept": "application/json" } }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Geoapify returned ${response.status}`);
+      }
+
+      const { features } = await response.json();
+
+      if (!features?.length) {
+        toast.error("No address found for your current location. Please enter it manually.");
+        return;
+      }
+
+      const props = features[0].properties;
+      setpinCode(props.postcode ?? "");
+      setCounty(props.county ?? "");
+      setState(props.state ?? "");
+      setCountry(props.country ?? "");
+      setGeoPrefilled(true);
+      toast.success("Address fields filled from your location!");
+
+    } catch (err: any) {
+      // Differentiate geolocation errors from API / network errors
+      if (err instanceof GeolocationPositionError) {
+        switch (err.code) {
+          case GeolocationPositionError.PERMISSION_DENIED:
+            toast.error(
+              "Location access was denied. Please enable location permissions in your browser settings."
+            );
+            break;
+          case GeolocationPositionError.TIMEOUT:
+            toast.error("Location request timed out. Please try again.");
+            break;
+          case GeolocationPositionError.POSITION_UNAVAILABLE:
+            toast.error(
+              "Your location could not be determined. Ensure GPS/Wi-Fi is enabled."
+            );
+            break;
+          default:
+            toast.error("Failed to get your location. Please try again.");
+        }
+      } else if (err instanceof TypeError || err.message?.includes("fetch")) {
+        toast.error("Failed to fetch address details. Check your internet connection.");
+      } else {
+        console.log("[ProfileManager] reverse geocoding failed:", err);
+        toast.error("Could not fetch address details. Please enter them manually.");
+      }
+    } finally {
+      setFetchingAddress(false);
+    }
+  }
+
   // On mount (onboarding mode), try geolocation to prefill address fields
   useEffect(() => {
     if (!onboarding || geoPrefilled) return;
-
-    if (!navigator.geolocation) return;
-
-    navigator.geolocation.getCurrentPosition(
-      async ({ coords: { latitude, longitude } }) => {
-        try {
-          const response = await fetch(
-            `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${import.meta.env.VITE_GEOAPIFY_API}`,
-            { headers: { "Accept": "application/json" } }
-          );
-          const { features } = await response.json();
-          if (features?.length > 0) {
-            const props = features[0].properties;
-            setpinCode(props.postcode ?? pincode);
-            setCounty(props.county ?? county);
-            setState(props.state ?? state);
-            setCountry(props.country ?? country);
-            setGeoPrefilled(true);
-          }
-        } catch (e) {
-          console.log("[ProfileManager] reverse geocoding prefill failed:", e);
-        }
-      },
-      () => {
-        console.log("[ProfileManager] geolocation denied — manual address entry required");
-      },
-      { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 }
-    );
+    fetchAddressFromGeolocation();
   }, [onboarding]);
 
   async function onClickPhoneVerify() {
@@ -371,6 +424,17 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
               style={{ display: "flex", flexDirection: "column", gap: "15px" }}
             >
               <legend>Address</legend>
+              {!disable && (
+                <button
+                  type="button"
+                  className={styles["fetch-address-btn"]}
+                  onClick={fetchAddressFromGeolocation}
+                  disabled={fetchingAddress}
+                >
+                  <MdMyLocation size={16} />
+                  {fetchingAddress ? "Fetching..." : "Fetch Address Details"}
+                </button>
+              )}
               <section>
                 <div
                   style={{

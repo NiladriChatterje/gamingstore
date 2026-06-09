@@ -251,6 +251,41 @@
     box-shadow: none;
 }
 
+/* Fetch address button */
+.fetch-address-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px dashed #4299e1;
+    border-radius: 8px;
+    background-color: rgba(66, 153, 225, 0.06);
+    color: #3182ce;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.fetch-address-btn:hover {
+    background-color: rgba(66, 153, 225, 0.12);
+    border-color: #3182ce;
+}
+
+.fetch-address-btn:active {
+    background-color: rgba(66, 153, 225, 0.18);
+}
+
+.fetch-address-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    border-color: #a0aec0;
+    color: #718096;
+    background-color: rgba(160, 174, 192, 0.08);
+}
+
 /* Onboarding banner */
 .onboarding-banner {
     text-align: center;
