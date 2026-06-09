@@ -72,9 +72,10 @@ const SubscriptionPlan = ({ setIsPlanActive }: { setIsPlanActive: React.Dispatch
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${await getToken()}`,
-            },
-            body: JSON.stringify({
+            },                    body: JSON.stringify({
                 _id: sellerId,
+                username: user?.firstName,
+                email: user?.emailAddresses[0]?.emailAddress,
                 subscriptionPlan: {
                     amount: plan.price,
                     storeAllotment: plan.storeAllotment,

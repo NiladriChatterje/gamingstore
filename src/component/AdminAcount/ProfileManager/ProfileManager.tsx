@@ -38,17 +38,24 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
   const [geoPrefilled, setGeoPrefilled] = useState(false);
   const [fetchingAddress, setFetchingAddress] = useState(false);
 
+  // Derived: the effective username — prefer admin's stored name, but never show 'Unknown'
+  // (SubscriptionConsumers may create a placeholder row with username='Unknown' before
+  //  CreateAdminConsumer has processed the full profile, so fall back to Clerk's firstName).
+  const effectiveUsername = (admin?.username && admin.username !== 'Unknown')
+    ? admin.username
+    : (user?.firstName ?? '');
+
   // Sync form fields when admin or user data loads asynchronously
   useEffect(() => {
-    setUsername(prev => admin?.username ?? user?.firstName ?? prev);
+    setUsername(prev => effectiveUsername || prev);
     setGstin(prev => admin?.gstin ?? prev);
     setpinCode(prev => admin?.address?.pincode ?? prev);
     setCounty(prev => admin?.address?.county ?? prev);
     setState(prev => admin?.address?.state ?? prev);
     setCountry(prev => admin?.address?.country ?? prev);
-    setEmail(prev => admin?.email ?? user?.emailAddresses[0]?.emailAddress ?? prev);
+    setEmail(prev => user?.emailAddresses[0]?.emailAddress ?? admin?.email ?? prev);
     setPhone(prev => admin?.phone != null ? String(admin.phone) : prev);
-  }, [admin, user]);
+  }, [admin, user, effectiveUsername]);
 
   // Derive whether all required fields are filled
   const isFormValid =
@@ -205,7 +212,7 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
             country,
             state,
           },
-          email,
+          email: user?.emailAddresses[0]?.emailAddress ?? email,
           phone: Number(phone),
         }),
       });
@@ -222,7 +229,7 @@ const ProfileManager = ({ onboarding }: ProfileManagerProps) => {
           username: user?.firstName,
           gstin,
           phone: Number(phone),
-          email,
+          email: user?.emailAddresses[0]?.emailAddress ?? email,
           address: {
             pincode,
             county,
