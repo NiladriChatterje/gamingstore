@@ -148,7 +148,11 @@ const EditProductDetails = () => {
   }, []);
 
   async function submitProductUpdate(allImages: { size: number; extension: string; base64: string }[]) {
-    if (!product) return;
+    console.log('[EditProduct] submitProductUpdate called', { allImagesLen: allImages.length, hasProduct: !!product, checked, modelNumber });
+    if (!product) {
+      console.log('[EditProduct] submitProductUpdate: no product, returning');
+      return;
+    }
 
     const formData: ProductType = {
       _id: product._id,
@@ -187,7 +191,7 @@ const EditProductDetails = () => {
       },
       body: JSON.stringify({
         ...formData,
-        geoPoint: { lat: admin?.geoPoint.lat, lng: admin?.geoPoint.lng }
+        geoPoint: { lat: admin?.geoPoint?.lat ?? null, lng: admin?.geoPoint?.lng ?? null }
       }),
     })
 
@@ -211,17 +215,21 @@ const EditProductDetails = () => {
 
   async function handleSubmitPdt(e: FormEvent) {
     e.preventDefault()
+    console.log('[EditProduct] handleSubmitPdt called', { product: !!product, eanUpc, quantity, price, keywordLen: keywordArray.length, imagesLen: images.length });
     if (!product) {
       toast('Product data not loaded yet — please wait and try again.')
       return
     }
-    if (!eanUpc || quantity == null || !price || !keywordArray.length) {
+    if (!eanUpc || quantity == null || price == null || !keywordArray.length) {
+      console.log('[EditProduct] validation failed', { eanUpc, quantity, price, keywordLen: keywordArray.length });
       toast('Please fill necessary fields!')
       return
     }
 
+    console.log('[EditProduct] validation passed, images.length:', images.length, 'existingBase64Images:', existingBase64Images.length);
     if (images.length === 0) {
       // No new file uploads — send existing DB images as-is
+      console.log('[EditProduct] calling submitProductUpdate with existing images only');
       await submitProductUpdate(existingBase64Images);
       return;
     }
