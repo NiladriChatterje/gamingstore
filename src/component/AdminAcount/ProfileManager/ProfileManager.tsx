@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./ProfileManager.module.css";
-import { MdEdit, MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 import { FaPhone, FaUser } from "react-icons/fa6";
 import { IoIosPersonAdd } from "react-icons/io";
 import { MdMyLocation } from "react-icons/md";
@@ -13,6 +13,8 @@ import { FaCity, FaFileInvoiceDollar } from "react-icons/fa";
 import { SiFreelancermap } from "react-icons/si";
 import { RiLandscapeFill } from "react-icons/ri";
 import { useAdminStateContext } from "../AdminStateContext";
+
+
 
 interface ProfileManagerProps {
   onboarding?: boolean;
@@ -70,7 +72,6 @@ const ProfileManager = ({ onboarding, onSave }: ProfileManagerProps) => {
     state.trim().length > 0;
   const [OTP, setOTP] = useState<number>(0);
   const modalRef = useRef<HTMLDialogElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Reusable function: fetch current location via geolocation, then reverse-geocode via Geoapify
   async function fetchAddressFromGeolocation() {
@@ -247,134 +248,87 @@ const ProfileManager = ({ onboarding, onSave }: ProfileManagerProps) => {
       return Promise.reject();
     }
   }
-
-  const scrollUp = () => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      const scrollAmount = container.clientHeight * 0.8;
-      container.scrollBy({ top: -scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  const scrollDown = () => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      const scrollAmount = container.clientHeight * 0.8;
-      container.scrollBy({ top: scrollAmount, behavior: 'smooth' });
-    }
-  };
-
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleUpdate();
-      }}
-      id={styles["form-container"]}
-    >
+    <div className={styles.card}>
       {onboarding && (
         <div className={styles["onboarding-banner"]}>
           <h2>Complete Your Profile</h2>
           <p>Please fill in your address, phone number, and GSTIN before you can access the dashboard.</p>
         </div>
       )}
-      <div className={styles["scroll-container"]}>
-        <div id={styles["form-input-field-container"]} ref={scrollContainerRef}>
-          <div
-            style={{
-              backgroundColor: disable
-                ? "rgba(255, 255, 255, 0.563)"
-                : "rgba(255, 255, 255, 0.963)",
-            }}
-            id={styles["username-input"]}
-          >
-            <FaUser />
-            <input
-              name={"username"}
-              value={username}
-              onChange={(e) => {
-                setUsername(e.target.value);
-              }}
-              placeholder={user?.firstName ?? ""}
-              disabled={disable}
-            />
-          </div>
-          <section>
-            <div
-              style={{
-                backgroundColor: disable
-                  ? "rgba(255, 255, 255, 0.563)"
-                  : "rgba(255, 255, 255, 0.963)",
-              }}
-              id={styles["phone-input"]}
-            >
-              <FaFileInvoiceDollar />
+
+      {!onboarding && (
+        <div className={styles["card-header"]}>
+          <h2>Profile Settings</h2>
+          <p>Manage your account details and address information.</p>
+        </div>
+      )}
+
+      <div className={styles["card-body"]}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleUpdate();
+          }}
+          id={styles["form-container"]}
+        >
+          {/* Username */}
+          <div className={styles["field-group"]}>
+            <label className={styles["field-label"]}>Full Name</label>
+            <div className={`${styles["input-wrapper"]} ${disable ? styles.disabled : ""}`}>
+              <FaUser className={styles["input-icon"]} />
               <input
-                name={"gstin"}
+                name="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder={user?.firstName ?? ""}
+                disabled={disable}
+              />
+            </div>
+          </div>
+
+          {/* GSTIN */}
+          <div className={styles["field-group"]}>
+            <label className={styles["field-label"]}>GSTIN</label>
+            <div className={`${styles["input-wrapper"]} ${disable ? styles.disabled : ""}`}>
+              <FaFileInvoiceDollar className={styles["input-icon"]} />
+              <input
+                name="gstin"
                 value={gstin}
-                onChange={(e) => {
-                  setGstin(e.target.value);
-                }}
-                placeholder={"GSTIN"}
+                onChange={(e) => setGstin(e.target.value)}
+                placeholder="GSTIN"
                 type="text"
                 maxLength={15}
                 minLength={15}
                 disabled={disable}
               />
             </div>
-          </section>
-          <section>
-            <OTPModal OTP={OTP} ref={modalRef} />
-            <div
-              style={{
-                backgroundColor: disable
-                  ? "rgba(255, 255, 255, 0.563)"
-                  : "rgba(255, 255, 255, 0.963)",
-              }}
-              id={styles["phone-input"]}
-            >
-              <div id={styles["phone-country-code"]}>
+          </div>
+
+          {/* Phone */}
+          <div className={styles["field-group"]}>
+            <label className={styles["field-label"]}>Phone Number</label>
+            <div className={`${styles["input-wrapper"]} ${disable ? styles.disabled : ""}`}>
+              <div className={styles["phone-country-code"]}>
                 <FaPhone
-                  cursor={"pointer"}
+                  className={styles["input-icon"]}
+                  cursor="pointer"
                   onClick={() => {
                     if (!disable) setToggleCountryCode((prev) => !prev);
                   }}
                 />
                 {!disable && (
-                  <section
-                    className={`${toggleCountryCode ? "" : styles["country-code-list"]
-                      }`}
-                  >
-                    <dl
-                      onClick={() => {
-                        setToggleCountryCode(false);
-                      }}
-                    >
-                      (+91)IN
-                    </dl>
-                    <dl
-                      onClick={() => {
-                        setToggleCountryCode(false);
-                      }}
-                    >
-                      (+144)US
-                    </dl>
-                    <dl
-                      onClick={() => {
-                        setToggleCountryCode(false);
-                      }}
-                    >
-                      (+92)PAK
-                    </dl>
-                  </section>
+                  <div className={`${styles["country-dropdown"]} ${toggleCountryCode ? "" : styles.hidden}`}>
+                    <dl onClick={() => setToggleCountryCode(false)}>(+91)IN</dl>
+                    <dl onClick={() => setToggleCountryCode(false)}>(+144)US</dl>
+                    <dl onClick={() => setToggleCountryCode(false)}>(+92)PAK</dl>
+                  </div>
                 )}
               </div>
               <input
                 value={phone}
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                }}
-                name={"phone"}
+                onChange={(e) => setPhone(e.target.value)}
+                name="phone"
                 placeholder={admin?.phone as unknown as string ?? "xxx-xxx-xxxx"}
                 type="tel"
                 maxLength={10}
@@ -383,8 +337,9 @@ const ProfileManager = ({ onboarding, onSave }: ProfileManagerProps) => {
                 required
               />
             </div>
-            <div id={styles["verify-span-btn"]}>
+            <div className={styles["verify-btn-row"]}>
               <span
+                className={styles["verify-btn"]}
                 onClick={() => {
                   if (!disable) {
                     onClickPhoneVerify();
@@ -392,175 +347,135 @@ const ProfileManager = ({ onboarding, onSave }: ProfileManagerProps) => {
                   }
                 }}
               >
-                Verify
+                Verify Phone
               </span>
             </div>
-          </section>
-          <section>
-            <div
-              style={{
-                backgroundColor: "rgba(255, 255, 255, 0.563)",
-              }}
-              id={styles["mail-input"]}
-            >
-              <MdOutlineMarkEmailUnread />
+            <OTPModal OTP={OTP} ref={modalRef} />
+          </div>
+
+          {/* Email */}
+          <div className={styles["field-group"]}>
+            <label className={styles["field-label"]}>Email</label>
+            <div className={`${styles["input-wrapper"]} ${styles.disabled}`}>
+              <MdOutlineMarkEmailUnread className={styles["input-icon"]} />
               <input
                 value={email}
-                name={"email"}
+                name="email"
                 placeholder={admin?.email ?? user?.emailAddresses[0]?.emailAddress ?? "example@domain.com"}
                 readOnly
               />
             </div>
-          </section>
-          <section data-label="address">
-            <fieldset
-              style={{ display: "flex", flexDirection: "column", gap: "15px" }}
-            >
-              <legend>Address</legend>
-              {!disable && (
-                <button
-                  type="button"
-                  className={styles["fetch-address-btn"]}
-                  onClick={fetchAddressFromGeolocation}
-                  disabled={fetchingAddress}
-                >
-                  <MdMyLocation size={16} />
-                  {fetchingAddress ? "Fetching..." : "Fetch Address Details"}
-                </button>
-              )}
-              <section>
-                <div
-                  style={{
-                    backgroundColor: disable
-                      ? "rgba(255, 255, 255, 0.563)"
-                      : "rgba(255, 255, 255, 0.963)",
-                  }}
-                  id={styles["phone-input"]}
-                >
-                  <MdSignpost />
+          </div>
+
+          {/* Address */}
+          <div className={styles["address-section"]}>
+            <h3 className={styles["address-title"]}>Address</h3>
+
+            {!disable && (
+              <button
+                type="button"
+                className={styles["fetch-address-btn"]}
+                onClick={fetchAddressFromGeolocation}
+                disabled={fetchingAddress}
+              >
+                <MdMyLocation size={16} />
+                {fetchingAddress ? "Fetching..." : "Fetch Address Details"}
+              </button>
+            )}
+
+            <div className={styles["address-grid"]}>
+              <div className={styles["field-group"]}>
+                <label className={styles["field-label"]}>PIN Code</label>
+                <div className={`${styles["input-wrapper"]} ${disable ? styles.disabled : ""}`}>
+                  <MdSignpost className={styles["input-icon"]} />
                   <input
                     value={pincode}
                     onChange={(e) => setpinCode(e.target.value)}
-                    name={"pincode"}
+                    name="pincode"
                     placeholder={admin?.address?.pincode ?? "PIN code"}
                     maxLength={6}
-                    minLength={6}
                     type="text"
                     disabled={disable}
                   />
                 </div>
-              </section>
-              <section>
-                <div
-                  style={{
-                    backgroundColor: disable
-                      ? "rgba(255, 255, 255, 0.563)"
-                      : "rgba(255, 255, 255, 0.963)",
-                  }}
-                  id={styles["phone-input"]}
-                >
-                  <FaCity />
+              </div>
+
+              <div className={styles["field-group"]}>
+                <label className={styles["field-label"]}>County / District</label>
+                <div className={`${styles["input-wrapper"]} ${disable ? styles.disabled : ""}`}>
+                  <FaCity className={styles["input-icon"]} />
                   <input
                     value={county}
-                    onChange={(e) => {
-                      setCounty(e.target.value);
-                    }}
-                    name={"county"}
+                    onChange={(e) => setCounty(e.target.value)}
+                    name="county"
                     placeholder={admin?.address?.county ?? "county"}
                     type="text"
                     disabled={disable}
                   />
                 </div>
-              </section>
-              <section>
-                <div
-                  style={{
-                    backgroundColor: disable
-                      ? "rgba(255, 255, 255, 0.563)"
-                      : "rgba(255, 255, 255, 0.963)",
-                  }}
-                  id={styles["phone-input"]}
-                >
-                  <SiFreelancermap />
+              </div>
+
+              <div className={styles["field-group"]}>
+                <label className={styles["field-label"]}>Country</label>
+                <div className={`${styles["input-wrapper"]} ${disable ? styles.disabled : ""}`}>
+                  <SiFreelancermap className={styles["input-icon"]} />
                   <input
                     value={country}
-                    onChange={(e) => {
-                      setCountry(e.target.value);
-                    }}
-                    name={"country"}
+                    onChange={(e) => setCountry(e.target.value)}
+                    name="country"
                     placeholder={admin?.address?.country ?? "country"}
                     type="text"
                     disabled={disable}
                   />
                 </div>
-              </section>
-              <section>
-                <div
-                  style={{
-                    backgroundColor: disable
-                      ? "rgba(255, 255, 255, 0.563)"
-                      : "rgba(255, 255, 255, 0.963)",
-                  }}
-                  id={styles["phone-input"]}
-                >
-                  <RiLandscapeFill />
+              </div>
+
+              <div className={styles["field-group"]}>
+                <label className={styles["field-label"]}>State</label>
+                <div className={`${styles["input-wrapper"]} ${disable ? styles.disabled : ""}`}>
+                  <RiLandscapeFill className={styles["input-icon"]} />
                   <input
                     value={state}
-                    onChange={(e) => {
-                      setState(e.target.value);
-                    }}
-                    name={"state"}
+                    onChange={(e) => setState(e.target.value)}
+                    name="state"
                     placeholder={admin?.address?.state ?? "state"}
                     type="text"
                     disabled={disable}
                   />
                 </div>
-              </section>
-            </fieldset>
-          </section>
-        </div>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
-      <button
-        type="button"
-        className={`${styles["scroll-button"]} ${styles["scroll-up"]}`}
-        onClick={scrollUp}
-      >
-        <MdKeyboardArrowUp size={16} />
-      </button>
-      <button
-        type="button"
-        className={`${styles["scroll-button"]} ${styles["scroll-down"]}`}
-        onClick={scrollDown}
-      >
-        <MdKeyboardArrowDown size={16} />
-      </button>
-      <section className={styles["action-buttons"]}>
+
+      <div className={styles["card-footer"]}>
         <button
           type="button"
-          className={styles["action-button"]}
-          onClick={() => {
-            setDisable((prev) => !prev);
-          }}
+          className={`${styles["action-btn"]} ${styles["edit-btn"]}`}
+          onClick={() => setDisable((prev) => !prev)}
         >
-          <MdEdit size={18} />
+          <MdEdit size={16} />
+          {disable ? "Edit" : "Cancel"}
         </button>
         <button
           type="button"
-          className={styles["action-button"]}
+          className={`${styles["action-btn"]} ${styles["save-btn"]}`}
           disabled={disable || !isFormValid}
           onClick={async () => {
             if (!disable && isFormValid)
               toast.promise(handleUpdate(), {
-                loading: "updating...",
+                loading: "Updating...",
                 success: "Profile Updated!",
-                error: "Updation failed!",
+                error: "Update failed!",
               });
           }}
         >
-          <IoIosPersonAdd size={18} />
+          <IoIosPersonAdd size={16} />
+          Save Changes
         </button>
-      </section>
-    </form>
+      </div>
+    </div>
   );
 };
 
