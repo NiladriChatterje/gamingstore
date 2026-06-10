@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 import styles from './Home.module.css';
 import { useUser, useAuth } from '@clerk/clerk-react';
 import { Line } from 'react-chartjs-2';
-import { FaDollarSign, FaChartLine, FaShoppingCart, FaArrowUp, FaChevronDown, FaChevronUp, FaTags } from 'react-icons/fa';
+import { FaDollarSign, FaChartLine, FaShoppingCart, FaArrowUp, FaTags, FaUsers, FaBox } from 'react-icons/fa';
 import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import {
     Chart as ChartJS,
@@ -13,6 +13,7 @@ import {
     Title,
     Tooltip,
     Legend,
+    Filler,
     ChartOptions
 } from 'chart.js';
 import { useAdminStateContext } from '../AdminStateContext';
@@ -25,7 +26,8 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    Filler
 );
 
 interface DashboardMetrics {
@@ -44,8 +46,6 @@ const Home = () => {
     const { isSignedIn } = useUser();
     const { getToken } = useAuth();
     const topLayerRef = useRef<HTMLElement>(null);
-    const [canScrollUp, setCanScrollUp] = useState(false);
-    const [canScrollDown, setCanScrollDown] = useState(false);
     const [dashboardMetrics, setDashboardMetrics] = useState<DashboardMetrics | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -145,9 +145,8 @@ const Home = () => {
         }
     }, [fromDate, toDate, fetchDashboardMetrics]);
 
-    // Bug fix #6: Memoized performanceCards to avoid unnecessary re-renders.
-    // Also fixed inconsistent id ('Total Products' → 'total-products').
-    const performanceCards = useMemo(() => [
+    // Left snap-scrollable column cards (4 core metrics)
+    const leftSnapCards = useMemo(() => [
         {
             id: 'sales',
             label: 'Total Sales',
@@ -156,7 +155,6 @@ const Home = () => {
             icon: FaDollarSign,
             iconColor: '#1976d2',
             backgroundColor: '#e3f2fd',
-            cardClass: 'sales-card'
         },
         {
             id: 'profit',
@@ -166,7 +164,6 @@ const Home = () => {
             icon: FaChartLine,
             iconColor: '#388e3c',
             backgroundColor: '#e8f5e9',
-            cardClass: 'profit-card'
         },
         {
             id: 'orders',
@@ -176,18 +173,20 @@ const Home = () => {
             icon: FaShoppingCart,
             iconColor: '#c2185b',
             backgroundColor: '#fce4ec',
-            cardClass: 'orders-card'
         },
         {
-            id: 'customers',
-            label: 'Active Customers',
-            value: dashboardMetrics?.activeCustomers?.value || '0',
-            trend: dashboardMetrics?.activeCustomers?.trend || '+0% from last month',
-            icon: FaDollarSign,
-            iconColor: '#7b1fa2',
-            backgroundColor: '#f3e5f5',
-            cardClass: 'customers-card'
+            id: 'products-sold',
+            label: 'Products Sold',
+            value: dashboardMetrics?.productsSold?.value || '0',
+            trend: dashboardMetrics?.productsSold?.trend || '+0% from last month',
+            icon: FaBox,
+            iconColor: '#388e3c',
+            backgroundColor: '#e8f5e8',
         },
+    ], [dashboardMetrics]);
+
+    // Right top row cards (3 complementary metrics)
+    const rightTopCards = useMemo(() => [
         {
             id: 'revenue',
             label: 'Monthly Revenue',
@@ -196,17 +195,15 @@ const Home = () => {
             icon: FaChartLine,
             iconColor: '#f57c00',
             backgroundColor: '#fff3e0',
-            cardClass: 'revenue-card'
         },
         {
-            id: 'products',
-            label: 'Products Sold',
-            value: dashboardMetrics?.productsSold?.value || '0',
-            trend: dashboardMetrics?.productsSold?.trend || '+0% from last month',
-            icon: FaShoppingCart,
-            iconColor: '#388e3c',
-            backgroundColor: '#e8f5e8',
-            cardClass: 'products-card'
+            id: 'customers',
+            label: 'Active Customers',
+            value: dashboardMetrics?.activeCustomers?.value || '0',
+            trend: dashboardMetrics?.activeCustomers?.trend || '+0% from last month',
+            icon: FaUsers,
+            iconColor: '#7b1fa2',
+            backgroundColor: '#f3e5f5',
         },
         {
             id: 'total-products',
@@ -216,56 +213,8 @@ const Home = () => {
             icon: FaTags,
             iconColor: '#d32f2f',
             backgroundColor: '#ffebee',
-            cardClass: 'categories-card'
-        }
+        },
     ], [dashboardMetrics]);
-
-    // Bug fix #7: Memoized scroll callbacks and fixed event listener cleanup
-    // to capture the element reference outside the closure (avoids stale ref).
-    const checkScrollPosition = useCallback(() => {
-        if (topLayerRef.current) {
-            const { scrollTop, scrollHeight, clientHeight } = topLayerRef.current;
-            const tolerance = 1;
-            setCanScrollUp(scrollTop > tolerance);
-            setCanScrollDown(scrollTop < scrollHeight - clientHeight - tolerance);
-        }
-    }, []);
-
-    const scrollUp = useCallback(() => {
-        if (topLayerRef.current) {
-            const cardHeight = topLayerRef.current.scrollHeight / Math.ceil(performanceCards.length / 3);
-            topLayerRef.current.scrollBy({ top: -cardHeight, behavior: 'smooth' });
-        }
-    }, [performanceCards.length]);
-
-    const scrollDown = useCallback(() => {
-        if (topLayerRef.current) {
-            const cardHeight = topLayerRef.current.scrollHeight / Math.ceil(performanceCards.length / 3);
-            topLayerRef.current.scrollBy({ top: cardHeight, behavior: 'smooth' });
-        }
-    }, [performanceCards.length]);
-
-    // Bug fix #8: Fixed scroll useEffect — captures element reference for proper
-    // cleanup, and depends on stable callback instead of unstable function reference.
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            checkScrollPosition();
-        }, 100);
-
-        const handleScroll = () => checkScrollPosition();
-        const element = topLayerRef.current;
-
-        if (element) {
-            element.addEventListener('scroll', handleScroll);
-        }
-
-        return () => {
-            clearTimeout(timer);
-            if (element) {
-                element.removeEventListener('scroll', handleScroll);
-            }
-        };
-    }, [checkScrollPosition]);
 
     // Bug fix #9: Memoized chart data generation and added division-by-zero
     // guard for totalDuration. Removed unused `interval` variable in favor of
@@ -335,58 +284,50 @@ const Home = () => {
             dataPointIndex++;
         }
 
+        const salesColor = '#6366f1';
+        const profitColor = '#22c55e';
+        const ordersColor = '#ec4899';
+
         return {
             labels,
             datasets: [
                 {
                     label: 'Sales ($)',
                     data: salesData,
-                    borderColor: 'rgb(25, 118, 210)',
-                    backgroundColor: 'rgba(25, 118, 210, 0.1)',
-                    tension: 0.4,
-                    borderWidth: 2,
-                    fill: false,
+                    borderColor: salesColor,
+                    backgroundColor: 'rgba(99, 102, 241, 0.08)',
+                    tension: 0.35,
+                    borderWidth: 2.5,
+                    fill: true,
+                    pointRadius: 0,
+                    pointHoverRadius: 5,
                 },
                 {
                     label: 'Profit ($)',
                     data: profitData,
-                    borderColor: 'rgb(56, 142, 60)',
-                    backgroundColor: 'rgba(56, 142, 60, 0.1)',
-                    tension: 0.4,
-                    borderWidth: 2,
-                    fill: false,
+                    borderColor: profitColor,
+                    backgroundColor: 'rgba(34, 197, 94, 0.08)',
+                    tension: 0.35,
+                    borderWidth: 2.5,
+                    fill: true,
+                    pointRadius: 0,
+                    pointHoverRadius: 5,
                 },
                 {
                     label: 'Orders',
                     data: ordersData,
-                    borderColor: 'rgb(194, 24, 91)',
-                    backgroundColor: 'rgba(194, 24, 91, 0.1)',
-                    tension: 0.4,
-                    borderWidth: 2,
-                    fill: false,
+                    borderColor: ordersColor,
+                    backgroundColor: 'rgba(236, 72, 153, 0.08)',
+                    tension: 0.35,
+                    borderWidth: 2.5,
+                    fill: true,
+                    pointRadius: 0,
+                    pointHoverRadius: 5,
                     yAxisID: 'y1',
                 },
             ],
         };
     }, [fromDate, toDate, dashboardMetrics]);
-
-    // Memoized chart title to avoid recalculation on every render
-    const chartTitle = useMemo(() => {
-        if (fromDate && toDate) {
-            const startDateStr = fromDate.toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric'
-            });
-            const endDateStr = toDate.toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric'
-            });
-            return `Performance Tracking: ${startDateStr} - ${endDateStr}`;
-        }
-        return 'Performance Tracking Over Time';
-    }, [fromDate, toDate]);
 
     // Bug fix #10: Memoized chart options to prevent Chart.js from re-rendering
     // on every parent render. Also moved getChartTitle() into the memoized chartTitle.
@@ -400,29 +341,40 @@ const Home = () => {
         plugins: {
             legend: {
                 position: 'top' as const,
+                align: 'end' as const,
                 labels: {
-                    padding: 15,
+                    padding: 16,
                     font: {
                         size: 12,
                         family: "'Inter', sans-serif",
+                        weight: '500',
                     },
                     usePointStyle: true,
+                    pointStyle: 'circle',
                 },
             },
             title: {
-                display: true,
-                text: chartTitle,
-                font: {
-                    size: 18,
-                    weight: 'bold',
-                    family: "'Inter', sans-serif",
-                },
-                padding: {
-                    top: 10,
-                    bottom: 20,
-                },
+                display: false,
             },
             tooltip: {
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                titleColor: '#1a202c',
+                titleFont: {
+                    size: 13,
+                    weight: '600',
+                    family: "'Inter', sans-serif",
+                },
+                bodyColor: '#475569',
+                bodyFont: {
+                    size: 12,
+                    family: "'Inter', sans-serif",
+                },
+                borderColor: 'rgba(0, 0, 0, 0.06)',
+                borderWidth: 1,
+                padding: 12,
+                cornerRadius: 8,
+                boxPadding: 6,
+                usePointStyle: true,
                 callbacks: {
                     label: function (context) {
                         let label = context.dataset.label || '';
@@ -447,12 +399,18 @@ const Home = () => {
                 grid: {
                     display: false,
                 },
+                border: {
+                    display: false,
+                },
                 ticks: {
                     font: {
-                        size: 10,
+                        size: 11,
+                        family: "'Inter', sans-serif",
                     },
-                    maxRotation: 45,
+                    color: '#94a3b8',
+                    maxRotation: 35,
                     minRotation: 0,
+                    padding: 8,
                 },
             },
             y: {
@@ -460,53 +418,94 @@ const Home = () => {
                 display: true,
                 position: 'left' as const,
                 beginAtZero: true,
+                border: {
+                    display: false,
+                },
                 grid: {
                     color: 'rgba(0, 0, 0, 0.05)',
+                    drawTicks: false,
                 },
                 ticks: {
                     font: {
                         size: 11,
+                        family: "'Inter', sans-serif",
                     },
+                    color: '#94a3b8',
+                    padding: 8,
                     callback: function (value) {
                         return '$' + Number(value).toLocaleString();
                     }
                 },
-                title: {
-                    display: true,
-                    text: 'Sales & Profit ($)',
-                    font: {
-                        size: 12,
-                        weight: 'bold',
-                    }
-                }
             },
             y1: {
                 type: 'linear' as const,
                 display: true,
                 position: 'right' as const,
                 beginAtZero: true,
+                border: {
+                    display: false,
+                },
                 grid: {
-                    drawOnChartArea: false,
+                    display: false,
                 },
                 ticks: {
                     font: {
                         size: 11,
+                        family: "'Inter', sans-serif",
                     },
+                    color: '#94a3b8',
+                    padding: 8,
                     callback: function (value) {
                         return Number(value).toLocaleString();
                     }
                 },
-                title: {
-                    display: true,
-                    text: 'Orders',
-                    font: {
-                        size: 12,
-                        weight: 'bold',
-                    }
-                }
             },
         },
-    }), [chartTitle]);
+        animation: {
+            duration: 1000,
+            easing: 'easeOutQuart' as const,
+        },
+    }), []);
+
+    const renderCard = (card: {
+        id: string;
+        label: string;
+        value: string;
+        trend: string;
+        icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+        iconColor: string;
+        backgroundColor: string;
+    }, className: string) => {
+        const IconComponent = card.icon;
+        return (
+            <article key={card.id} className={className}>
+                <header className={styles['card-header']}>
+                    <div
+                        className={styles['icon-wrapper']}
+                        style={{ backgroundColor: card.backgroundColor }}
+                        aria-hidden="true"
+                    >
+                        <IconComponent
+                            className={styles['card-icon']}
+                            style={{ color: card.iconColor }}
+                        />
+                    </div>
+                    <span className={styles['card-label']}>{card.label}</span>
+                </header>
+                <h2 className={styles['card-value']}>{card.value}</h2>
+                <aside className={styles['card-trend']}>
+                    <FaArrowUp className={styles['trend-icon']} aria-hidden="true" />
+                    <span>{card.trend}</span>
+                </aside>
+            </article>
+        );
+    };
+
+    const renderLoading = () => (
+        <div className={styles['loading-state']}>
+            Loading dashboard metrics...
+        </div>
+    );
 
     return (
         <main id={styles['container']}>
@@ -541,89 +540,44 @@ const Home = () => {
             </section>
 
             {error && (
-                <div style={{
-                    padding: '1rem',
-                    marginBottom: '1rem',
-                    backgroundColor: '#fee',
-                    border: '1px solid #fcc',
-                    borderRadius: '4px',
-                    color: '#c33'
-                }}>
+                <div className={styles['error-banner']}>
                     Error loading dashboard: {error}
                 </div>
             )}
 
-            <div className={styles['cards-container']}>
+            <div className={styles['dashboard-content']}>
+                {/* Left column — snap-scrollable metrics */}
                 <section
                     ref={topLayerRef}
-                    id={styles['top-layer']}
-                    aria-label="Performance metrics"
-                    onScroll={checkScrollPosition}
+                    className={styles['left-column']}
+                    aria-label="Key performance metrics"
                 >
                     {loading ? (
-                        <div style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: '200px',
-                            fontSize: '1.2rem',
-                            color: '#666'
-                        }}>
-                            Loading dashboard metrics...
-                        </div>
+                        renderLoading()
                     ) : (
-                        performanceCards.map((card) => {
-                            const IconComponent = card.icon;
-                            return (
-                                <article key={card.id} className={`${styles['brief-cards']} ${styles[card.cardClass]}`}>
-                                    <header className={styles['card-header']}>
-                                        <div
-                                            className={styles['icon-wrapper']}
-                                            style={{ backgroundColor: card.backgroundColor }}
-                                            aria-hidden="true"
-                                        >
-                                            <IconComponent
-                                                className={styles['card-icon']}
-                                                style={{ color: card.iconColor }}
-                                            />
-                                        </div>
-                                        <span className={styles['card-label']}>{card.label}</span>
-                                    </header>
-                                    <h2 className={styles['card-value']}>{card.value}</h2>
-                                    <aside className={styles['card-trend']}>
-                                        <FaArrowUp className={styles['trend-icon']} aria-hidden="true" />
-                                        <span>{card.trend}</span>
-                                    </aside>
-                                </article>
-                            );
-                        })
+                        leftSnapCards.map(card =>
+                            renderCard(card, `${styles['snap-card']} ${styles['brief-cards']}`)
+                        )
                     )}
                 </section>
 
-                {canScrollUp && (
-                    <button
-                        className={`${styles['scroll-button']} ${styles['scroll-up']}`}
-                        onClick={scrollUp}
-                        aria-label="Scroll up to see previous cards"
-                    >
-                        <FaChevronUp />
-                    </button>
-                )}
+                {/* Right column — top row stats + line chart */}
+                <div className={styles['right-column']}>
+                    <div className={styles['right-top-row']}>
+                        {loading ? (
+                            renderLoading()
+                        ) : (
+                            rightTopCards.map(card =>
+                                renderCard(card, `${styles['right-stat-card']} ${styles['brief-cards']}`)
+                            )
+                        )}
+                    </div>
 
-                {canScrollDown && (
-                    <button
-                        className={`${styles['scroll-button']} ${styles['scroll-down']}`}
-                        onClick={scrollDown}
-                        aria-label="Scroll down to see more cards"
-                    >
-                        <FaChevronDown />
-                    </button>
-                )}
+                    <section className={styles['graph-container']} aria-label="Performance chart">
+                        <Line data={chartData} options={chartOptions} />
+                    </section>
+                </div>
             </div>
-
-            <section id={styles['graph']} aria-label="Performance chart">
-                <Line data={chartData} options={chartOptions} />
-            </section>
         </main>
     )
 }
