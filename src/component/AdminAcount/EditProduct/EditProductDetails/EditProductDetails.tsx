@@ -1,4 +1,4 @@
-import { FormEvent, useState, KeyboardEvent, useRef, useEffect } from 'react'
+import { FormEvent, useState, KeyboardEvent, useRef, useEffect, useCallback } from 'react'
 import styles from './EditProductDetails.module.css'
 import { IoIosArrowDropdownCircle, IoIosPersonAdd } from 'react-icons/io'
 import { AiFillCloseCircle, AiFillProduct } from 'react-icons/ai'
@@ -9,15 +9,13 @@ import {
   MdOutlineProductionQuantityLimits,
 } from 'react-icons/md'
 import toast from 'react-hot-toast'
-import { FaRupeeSign } from 'react-icons/fa'
+import { FaPercentage, FaRupeeSign } from 'react-icons/fa'
 import { ImUpload } from 'react-icons/im'
-import { EanUpcIsbnType, currency } from '../../../../enums/enums'
-import { ProductType } from '../../../../declarations/ProductContextType'
+import { EanUpcIsbnType, currency } from '@enums/enums'
+import { ProductType } from '@declarations/ProductContextType'
 import { useParams } from 'react-router-dom'
-import { useAdminStateContext } from '../../../../component/AdminAcount/AdminStateContext'
+import { useAdminStateContext } from '../../AdminStateContext'
 import { useAuth } from '@clerk/clerk-react'
-
-const keywordsSet = new Set<string>()
 
 const ProductCategories: string[] = [
   'clothing',
@@ -27,7 +25,7 @@ const ProductCategories: string[] = [
   'toys',
 ]
 
-const AddProduct = () => {
+const EditProductDetails = () => {
   const [modelNumber, setModelNumber] = useState<string>(() => '')
   const [eanUpc, setEacUpc] = useState<string>(() => '')
   const [category, setCategory] = useState<string>(() => ProductCategories[0])
@@ -38,52 +36,82 @@ const AddProduct = () => {
   const [eanUpcType, setEacUpcType] = useState<EanUpcIsbnType>(
     () => EanUpcIsbnType.EAN,
   )
-
-  const [product, setProduct] = useState<ProductType[]>([]);
+  const [product, setProduct] = useState<ProductType | null>(null);
   const [price, setPrice] = useState<number>(() => 0)
   const [discount, setDiscount] = useState<number>(() => 0)
   const [keyword, setKeyword] = useState<string>(() => '')
-  const [imageToUrlPreviewMap, _] = useState<Map<Blob, string>>(
+  const [imageToUrlPreviewMap] = useState<Map<Blob, string>>(
     () => new Map<Blob, string>(),
   )
   const [keywordArray, setKeywordArray] = useState<string[]>(() => [])
-  const [toggleEacUpcType, setToggleEacUpcType] = useState<boolean>(() => false) //close the dropdown
+  const [toggleEacUpcType, setToggleEacUpcType] = useState<boolean>(() => false)
   const [checked, setChecked] = useState<boolean>(() => false)
   const [blobUrlForPreview, setBlobUrlForPreview] = useState<string[]>(() => [])
 
-  const keywordsRef = useRef<HTMLDivElement>(null) //for horizontal scrolling
+  const keywordsRef = useRef<HTMLDivElement>(null)
   const modelNumberRef = useRef<HTMLDivElement>(null)
   const ImageInputRef = useRef<HTMLInputElement>(null)
   const imageCarouselContainerRef = useRef<HTMLDivElement>(null)
   const spanCategoryRef = useRef<HTMLSpanElement[]>([]);
+  const keywordsSet = useRef<Set<string>>(new Set());
 
   const { product_id } = useParams<{ product_id?: string }>()
   const { admin } = useAdminStateContext();
   const { getToken } = useAuth();
 
-  (async () => {
+  // Fetch product details once on mount
+  useEffect(() => {
     if (!product_id) {
       window.history.back()
       return
     }
-    const token = await getToken();
-    try {
-      const result = await fetch(
-        `http://localhost:5002/fetch-product/${product_id}`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        },
-      )
-      const data: ProductType[] = await result.json();
-      setProduct(data);
-      console.log("ProductDetail of the product in editProductDetails page : " + data)
-    } catch (e) {
 
-    }
-  })()
+    let cancelled = false;
+
+    (async () => {
+      const token = await getToken();
+      try {
+        const result = await fetch(
+          `http://localhost:5002/fetch-product/${product_id}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          },
+        )
+        const data: ProductType[] = await result.json();
+        if (cancelled || !data.length) return;
+
+        const p = data[0];
+        setProduct(p);
+        setProductName(p.productName || '');
+        setCategory(p.category || ProductCategories[0]);
+        setEacUpc(p.eanUpcNumber || '');
+        setEacUpcType(p.eanUpcIsbnGtinAsinType || EanUpcIsbnType.EAN);
+        setQuantity(p.quantity || 0);
+        setPrice(p.price?.pdtPrice || 0);
+        setDiscount(p.price?.discountPercentage || 0);
+        setProductDescription(p.productDescription || '');
+        setKeywordArray(p.keywords || []);
+        if (p.modelNumber) {
+          setModelNumber(p.modelNumber);
+          setChecked(true);
+        }
+        // Populate keywordsSet for dedup
+        (p.keywords || []).forEach(k => keywordsSet.current.add(k.toLowerCase()));
+      } catch (e) {
+        console.error("Failed to fetch product:", e);
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [product_id]);
+
+  // Reset spanCategoryRef on category change to avoid stale closures
+  useEffect(() => {
+    spanCategoryRef.current = [];
+  }, []);
 
   async function handleSubmitPdt(e: FormEvent) {
     e.preventDefault()
@@ -107,7 +135,7 @@ const AddProduct = () => {
 
         if (base64Images.length === images.length) {
           const formData: ProductType = {
-            _id: product[0]._id,
+            _id: product!._id,
             productName: productName,
             category,
             eanUpcIsbnGtinAsinType: eanUpcType,
@@ -170,6 +198,7 @@ const AddProduct = () => {
 
   function fillKeywordsArray(e: KeyboardEvent) {
     if (e.key === 'Tab') {
+      e.preventDefault()
       if (keywordArray.length > 30) {
         toast.error('limit reached')
         return
@@ -646,7 +675,7 @@ const AddProduct = () => {
               </div>
             </section>
             <section>
-              <label>Discount :</label>
+              <label>Product Description :</label>
               <div>
                 <div
                   data-section={'product-description'}
@@ -703,4 +732,4 @@ const AddProduct = () => {
   )
 }
 
-export default AddProduct
+export default EditProductDetails
