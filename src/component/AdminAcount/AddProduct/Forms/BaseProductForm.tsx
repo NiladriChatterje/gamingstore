@@ -64,6 +64,26 @@ const BaseProductForm = ({ category, selectedStore, additionalPayload = {}, chil
     const { getToken } = useAuth();
     const { admin }: { admin?: AdminFieldsType } = useAdminStateContext();
 
+    function resetForm() {
+        setProductName("");
+        setProductDescription("");
+        setPrice(0);
+        setDiscount(0);
+        setQuantity(0);
+        setEacUpc("");
+        setKeyword("");
+        setImages([] as File[]);
+        setBlobUrlForPreview([] as string[]);
+        setKeywordArray([] as string[]);
+        setVariationList([{ key: "", value: "" }]);
+        setEacUpcType(EanUpcIsbnType.EAN);
+        imageToUrlPreviewMap.clear();
+        keywordsSet.clear();
+        if (ImageInputRef.current) {
+            ImageInputRef.current.value = "";
+        }
+    }
+
     async function handleSubmitPdt(e: FormEvent) {
         e.preventDefault();
         if (!eanUpc || !quantity || !price || !keywordArray.length) {
@@ -129,15 +149,7 @@ const BaseProductForm = ({ category, selectedStore, additionalPayload = {}, chil
 
                     if (response?.ok) {
                         toast.success("Product added successfully!");
-                        setProductName("");
-                        setPrice(0);
-                        setQuantity(0);
-                        setEacUpc("");
-                        setImages([] as File[]);
-                        setBlobUrlForPreview([] as string[]);
-                        setKeywordArray([] as string[]);
-                        setVariationList([{ key: "", value: "" }]);
-                        keywordsSet.clear();
+                        resetForm();
                     }
                 }
             });

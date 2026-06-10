@@ -1,4 +1,4 @@
-import { FormEvent, useState, KeyboardEvent, useRef, useEffect, useCallback } from 'react'
+import { FormEvent, useState, KeyboardEvent, useRef, useEffect } from 'react'
 import styles from './EditProductDetails.module.css'
 import { IoIosArrowDropdownCircle, IoIosPersonAdd } from 'react-icons/io'
 import { AiFillCloseCircle, AiFillProduct } from 'react-icons/ai'
