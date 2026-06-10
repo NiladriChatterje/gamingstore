@@ -215,7 +215,7 @@ const EditProductDetails = () => {
       toast('Product data not loaded yet — please wait and try again.')
       return
     }
-    if (!eanUpc || !quantity || !price || !keywordArray.length) {
+    if (!eanUpc || quantity == null || !price || !keywordArray.length) {
       toast('Please fill necessary fields!')
       return
     }
@@ -660,10 +660,13 @@ const EditProductDetails = () => {
                   }}
                   style={{
                     display: 'flex',
-                    gap: 15,
-                    marginTop: 10,
-                    width: 390,
-                    overflow: 'auto clip',
+                    gap: 10,
+                    marginTop: 8,
+                    width: '100%',
+                    maxWidth: '100%',
+                    overflowX: 'auto',
+                    overflowY: 'hidden',
+                    paddingBottom: 4,
                   }}
                 >
                   {blobUrlForPreview?.map((item, i) => {

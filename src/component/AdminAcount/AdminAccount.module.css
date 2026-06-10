@@ -19,7 +19,11 @@
 #admin-routes {
     width: 100%;
     max-width: 1100px;
+    height: 100%;
+    min-height: 0;
     padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 #avatar {
