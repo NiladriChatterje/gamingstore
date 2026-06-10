@@ -96,40 +96,40 @@ const EditProduct = () => {
           setEditProductForm?.(item)
         }}
       >
-        <div className={styles.productImage}>
+        <div className={styles.productThumb}>
           {item.imagesBase64 && item.imagesBase64.length > 0 ? (
             <img
               src={item.imagesBase64[0].base64}
               alt={item.productName}
-              className={styles.image}
+              className={styles.thumbImg}
             />
           ) : (
-            <div className={styles.noImage}>No Image</div>
+            <div className={styles.thumbPlaceholder}>📦</div>
           )}
         </div>
 
-        <div className={styles.productInfo}>
-          <h3 className={styles.productName}>{item.productName}</h3>
-          <p className={styles.category}>{item.category}</p>
-          <div className={styles.priceQuantity}>
+        <div className={styles.productBody}>
+          <div className={styles.bodyTop}>
+            <span className={styles.bodyName}>{item.productName}</span>
+            <span className={styles.bodyCategory}>{item.category}</span>
+          </div>
+          <div className={styles.bodyBottom}>
             {item.price && (
-              <span className={styles.price}>
+              <span className={styles.bodyPrice}>
                 {item.price.currency} {item.price.pdtPrice}
               </span>
             )}
-            <span className={styles.quantity}>Qty: {item.quantity}</span>
+            <span className={styles.bodyQty}>Qty: {item.quantity}</span>
+            {item.price?.discountPercentage !== undefined && item.price.discountPercentage > 0 && (
+              <span className={styles.bodyDiscount}>
+                -{item.price.discountPercentage}%
+              </span>
+            )}
           </div>
-          {item.price?.discountPercentage !== undefined && item.price.discountPercentage > 0 && (
-            <span className={styles.discount}>
-              {item.price.discountPercentage}% OFF
-            </span>
-          )}
         </div>
 
-        <div className={styles.productActions}>
-          <button className={styles.editButton}>
-            Edit Product
-          </button>
+        <div className={styles.productChevron}>
+          <span>›</span>
         </div>
       </div>
     );
