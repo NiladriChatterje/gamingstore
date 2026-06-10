@@ -13,7 +13,7 @@ import { FaPercentage, FaRupeeSign } from 'react-icons/fa'
 import { ImUpload } from 'react-icons/im'
 import { EanUpcIsbnType, currency } from '@enums/enums'
 import { ProductType } from '@declarations/ProductContextType'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useAdminStateContext } from '../../AdminStateContext'
 import { useAuth } from '@clerk/clerk-react'
 
@@ -47,6 +47,12 @@ const EditProductDetails = () => {
   const [toggleEacUpcType, setToggleEacUpcType] = useState<boolean>(() => false)
   const [checked, setChecked] = useState<boolean>(() => false)
   const [blobUrlForPreview, setBlobUrlForPreview] = useState<string[]>(() => [])
+  // Track existing base64 images from DB so they're preserved on update
+  const [existingBase64Images, setExistingBase64Images] = useState<
+    { size: number; extension: string; base64: string }[]
+  >([]);
+  // Blob URLs for existing images (used to differentiate from new uploads on delete)
+  const existingBlobUrls = useRef<string[]>([]);
 
   const keywordsRef = useRef<HTMLDivElement>(null)
   const modelNumberRef = useRef<HTMLDivElement>(null)
@@ -58,8 +64,39 @@ const EditProductDetails = () => {
   const { product_id } = useParams<{ product_id?: string }>()
   const { admin } = useAdminStateContext();
   const { getToken } = useAuth();
+  const navigate = useNavigate();
 
-  // Fetch product details once on mount
+  // Helper to populate all form fields from a product object
+  function populateFormFromProduct(p: ProductType) {
+    setProduct(p);
+    setProductName(p.productName || '');
+    setCategory(p.category || ProductCategories[0]);
+    setEacUpc(p.eanUpcNumber || '');
+    setEacUpcType(p.eanUpcIsbnGtinAsinType || EanUpcIsbnType.EAN);
+    setQuantity(p.quantity ?? 0);
+    setPrice(p.price?.pdtPrice || 0);
+    setDiscount(p.price?.discountPercentage || 0);
+    setProductDescription(p.productDescription || '');
+    setKeywordArray(p.keywords || []);
+    keywordsSet.current.clear();
+    (p.keywords || []).forEach(k => keywordsSet.current.add(k.toLowerCase()));
+    if (p.modelNumber) {
+      setModelNumber(p.modelNumber);
+      setChecked(true);
+    } else {
+      setModelNumber('');
+      setChecked(false);
+    }
+
+    // Load existing images into preview carousel and track originals
+    const existingImgs = p.imagesBase64 || [];
+    setExistingBase64Images(existingImgs);
+    existingBlobUrls.current = existingImgs.map(img => img.base64);
+    setBlobUrlForPreview([...existingBlobUrls.current]);
+    setImages([]);
+  }
+
+  // Fetch product details on mount — no fallback, navigate back on failure
   useEffect(() => {
     if (!product_id) {
       window.history.back()
@@ -67,6 +104,7 @@ const EditProductDetails = () => {
     }
 
     let cancelled = false;
+    let errorTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
     (async () => {
       const token = await getToken();
@@ -80,115 +118,133 @@ const EditProductDetails = () => {
             }
           },
         )
-        const data: ProductType[] = await result.json();
-        if (cancelled || !data.length) return;
-
-        const p = data[0];
-        setProduct(p);
-        setProductName(p.productName || '');
-        setCategory(p.category || ProductCategories[0]);
-        setEacUpc(p.eanUpcNumber || '');
-        setEacUpcType(p.eanUpcIsbnGtinAsinType || EanUpcIsbnType.EAN);
-        setQuantity(p.quantity || 0);
-        setPrice(p.price?.pdtPrice || 0);
-        setDiscount(p.price?.discountPercentage || 0);
-        setProductDescription(p.productDescription || '');
-        setKeywordArray(p.keywords || []);
-        if (p.modelNumber) {
-          setModelNumber(p.modelNumber);
-          setChecked(true);
+        if (!cancelled && result.ok) {
+          const data: ProductType[] = await result.json();
+          if (data && data.length > 0) {
+            populateFormFromProduct(data[0]);
+            return;
+          }
         }
-        // Populate keywordsSet for dedup
-        (p.keywords || []).forEach(k => keywordsSet.current.add(k.toLowerCase()));
       } catch (e) {
-        console.error("Failed to fetch product:", e);
+        console.error("Failed to fetch product from API:", e);
+      }
+
+      // Fetch failed — show error and go back
+      if (!cancelled) {
+        toast.error('Failed to fetch product data. Redirecting back...');
+        errorTimeoutId = setTimeout(() => navigate('/admin/edit-product'), 1200);
       }
     })();
 
-    return () => { cancelled = true; };
-  }, [product_id]);
+    return () => {
+      cancelled = true;
+      if (errorTimeoutId) clearTimeout(errorTimeoutId);
+    };
+  }, [product_id, getToken, navigate]);
 
   // Reset spanCategoryRef on category change to avoid stale closures
   useEffect(() => {
     spanCategoryRef.current = [];
   }, []);
 
+  async function submitProductUpdate(allImages: { size: number; extension: string; base64: string }[]) {
+    if (!product) return;
+
+    const formData: ProductType = {
+      _id: product._id,
+      productName,
+      category,
+      eanUpcIsbnGtinAsinType: eanUpcType,
+      eanUpcNumber: eanUpc,
+      quantity,
+      pincode: product?.pincode ?? admin?.address.pincode ?? '700135',
+      currency: currency.INR,
+      price: {
+        pdtPrice: price,
+        discountPercentage: discount,
+        currency: 'INR'
+      },
+      keywords: keywordArray,
+      imagesBase64: allImages,
+      seller: admin?._id,
+      productDescription,
+    }
+    if (checked) {
+      if (!modelNumber) {
+        toast('Model number for gadgets are mandatory!')
+        return
+      }
+      formData.modelNumber = modelNumber
+    }
+
+    const token = await getToken();
+    const response = await fetch('http://localhost:5002/update-product', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        "x-admin-id": admin?._id ?? ''
+      },
+      body: JSON.stringify({
+        ...formData,
+        geoPoint: { lat: admin?.geoPoint.lat, lng: admin?.geoPoint.lng }
+      }),
+    })
+
+    // Clearing form data on successful transfer
+    if (response?.ok) {
+      toast.success('Product updated successfully!')
+      setModelNumber('')
+      setProductName('')
+      setPrice(0)
+      setQuantity(0)
+      setDiscount(0)
+      setEacUpc('')
+      setImages([])
+      setBlobUrlForPreview([])
+      setKeywordArray([])
+      keywordsSet.clear()
+      setExistingBase64Images([])
+      existingBlobUrls.current = []
+    }
+  }
+
   async function handleSubmitPdt(e: FormEvent) {
     e.preventDefault()
+    if (!product) {
+      toast('Product data not loaded yet — please wait and try again.')
+      return
+    }
     if (!eanUpc || !quantity || !price || !keywordArray.length) {
       toast('Please fill necessary fields!')
       return
     }
 
-    const base64Images: { size: number; extension: string; base64: string }[] =
-      []
+    if (images.length === 0) {
+      // No new file uploads — send existing DB images as-is
+      await submitProductUpdate(existingBase64Images);
+      return;
+    }
+
+    // Convert newly uploaded File objects to base64
+    const base64Images: { size: number; extension: string; base64: string }[] = []
+    let processedCount = 0;
 
     for (let image of images) {
       const fileReader = new FileReader()
       fileReader.addEventListener('load', async () => {
-        if (fileReader.result)
+        if (fileReader.result) {
           base64Images.push({
             size: image.size,
             extension: image.type.split('/')[1],
             base64: fileReader.result as string,
           })
+        }
 
-        if (base64Images.length === images.length) {
-          const formData: ProductType = {
-            _id: product!._id,
-            productName: productName,
-            category,
-            eanUpcIsbnGtinAsinType: eanUpcType,
-            eanUpcNumber: eanUpc,
-            quantity,
-            pincode: admin?.address.pincode ?? '700135',
-            currency: currency.INR,
-            price: {
-              pdtPrice: price,
-              discountPercentage: discount,
-              currency: 'INR'
-            },
-            keywords: keywordArray,
-            imagesBase64: [...base64Images],
-            seller: admin?._id,
-            productDescription: productDescription,
-          }
-          if (checked) {
-            if (!modelNumber) {
-              toast('Model number for gadgets are mandatory!')
-              return
-            }
-            formData.modelNumber = modelNumber
-          }
-
-          const token = await getToken();
-          const response = await fetch('http://localhost:5002/update-product', {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-              "x-admin-id": admin?._id ?? ''
-            },
-            body: JSON.stringify({
-              ...formData,
-              geoPoint: { lat: admin?.geoPoint.lat, lng: admin?.geoPoint.lng }
-            }),
-          })
-
-          //clearing form data on successful transfer
-          if (response?.ok) {
-            toast.success('Product added successfully!')
-            setModelNumber('')
-            setProductName('')
-            setPrice(0)
-            setQuantity(0)
-            setDiscount(0)
-            setEacUpc('')
-            setImages([] as File[])
-            setBlobUrlForPreview([] as string[])
-            setKeywordArray([] as string[])
-            keywordsSet.clear()
-          }
+        processedCount++;
+        if (processedCount === images.length) {
+          // Merge remaining existing images + new uploads
+          await submitProductUpdate([...existingBase64Images, ...base64Images]);
         }
       });
 
@@ -610,31 +666,49 @@ const EditProductDetails = () => {
                     overflow: 'auto clip',
                   }}
                 >
-                  {blobUrlForPreview?.map((item, i) => (
-                    <figure
-                      key={i}
-                      className={styles['image-preview-container']}
-                    >
-                      <img src={item} className={styles['preview-images']} />
-                      <figcaption
-                        onClick={() => {
-                          setImages(
-                            images.filter(
-                              img => item !== imageToUrlPreviewMap.get(img),
-                            ),
-                          )
-                          setBlobUrlForPreview(
-                            blobUrlForPreview.filter(
-                              itemUrl => itemUrl !== item,
-                            ),
-                          )
-                        }}
-                        className={styles['bottom-label-delete-image']}
+                  {blobUrlForPreview?.map((item, i) => {
+                    const isExisting = existingBlobUrls.current.includes(item);
+                    return (
+                      <figure
+                        key={i}
+                        className={styles['image-preview-container']}
                       >
-                        <MdDeleteSweep />
-                      </figcaption>
-                    </figure>
-                  ))}
+                        <img src={item} className={styles['preview-images']} />
+                        {isExisting && (
+                          <span className={styles['existing-badge']}>DB</span>
+                        )}
+                        <figcaption
+                          onClick={() => {
+                            if (isExisting) {
+                              const idx = existingBlobUrls.current.indexOf(item);
+                              existingBlobUrls.current.splice(idx, 1);
+                              setExistingBase64Images(prev =>
+                                prev.filter((_, i) => i !== idx),
+                              );
+                              setBlobUrlForPreview(prev =>
+                                prev.filter(url => url !== item),
+                              );
+                            } else {
+                              setImages(
+                                images.filter(
+                                  img =>
+                                    item !== imageToUrlPreviewMap.get(img),
+                                ),
+                              );
+                              setBlobUrlForPreview(
+                                blobUrlForPreview.filter(
+                                  itemUrl => itemUrl !== item,
+                                ),
+                              );
+                            }
+                          }}
+                          className={styles['bottom-label-delete-image']}
+                        >
+                          <MdDeleteSweep />
+                        </figcaption>
+                      </figure>
+                    );
+                  })}
                 </div>
               </div>
             </section>

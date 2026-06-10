@@ -89,6 +89,21 @@
   background-color: rgba(187, 1, 1, 0.825);
 }
 
+.existing-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  z-index: 3;
+  pointer-events: none;
+}
+
 #keyword-list {
   width: 370px;
   padding: 5px 10px;
