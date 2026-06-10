@@ -5,3 +5,7 @@ export { default as Home } from './Home/Home'
 export { default as EditProduct } from './EditProduct/EditProduct';
 export { default as EditProductDetails } from './EditProduct/EditProductDetails/EditProductDetails';
 export { default as Orders } from './Orders/Orders';
+export { default as Sales } from './Sales/Sales';
+export { default as Payout } from './Payout/Payout';
+export { default as StoreManagement } from './StoreManagement/StoreManagement';
+export { default as SubscriptionView } from './SubscriptionView/SubscriptionView';

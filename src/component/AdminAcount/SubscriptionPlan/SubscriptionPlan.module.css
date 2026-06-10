@@ -1,81 +1,243 @@
-#subscription-container {
-    display: flex;
-    width: 80%;
-    justify-content: space-between;
-    gap: 30px;
-    padding: 1px 5px;
-    overflow-y: auto;
-    flex-wrap: wrap;
-    height: 450px;
+/* ========== Viewport-constrained wrapper ========== */
+.pageWrapper {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f1f5f9;
+  z-index: 10;
 }
 
-.subscription-plans {
-    background-color: white;
-    border-radius: 5px;
-    padding: 15px 25px;
-    height: 400px;
-    width: 250px;
-    box-shadow: 0 0 10px -5px grey;
-    transition: transform 60ms ease-in;
-    display: flex;
-    flex-direction: column;
+.pageContent {
+  width: 100%;
+  max-width: 1100px;
+  max-height: 90dvh;
+  overflow-y: auto;
+  padding: 32px 24px;
+  box-sizing: border-box;
 }
 
-.subscription-plans span {
-    margin-bottom: 10px;
-    font-size: 1.2em;
-    font-weight: bold;
-    text-align: center;
+.pageContent::-webkit-scrollbar {
+  width: 6px;
+}
+.pageContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+.pageContent::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
 }
 
-.purchase-btn {
-    padding: 4px 15px;
-    cursor: pointer;
-    color: white;
-    font-weight: 400;
-    border-style: none;
-    border-radius: 5px;
-    outline: none;
-    background-color: rgb(31, 31, 73);
-    transition: background-color 90ms ease;
+/* ========== Header ========== */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 36px;
+  text-align: left;
 }
 
-.purchase-btn:hover {
-    background-color: rgb(45, 45, 67);
+.headerIcon {
+  color: #d97706;
+  background: #fef3c7;
+  padding: 12px;
+  border-radius: 14px;
+  flex-shrink: 0;
 }
 
-.subscription-plans:hover {
-    transform: scale(1.02);
+.title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.02em;
 }
 
-.subscription-content {
-    padding: 5px 0;
-    flex: 1;
-    overflow-y: auto;
-    margin-bottom: 15px;
+.subtitle {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
 }
 
-.subscription-content ul {
-    margin: 0;
-    padding-left: 20px;
+/* ========== Plans Grid ========== */
+.plansGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: start;
 }
 
-.subscription-content li {
-    margin-bottom: 8px;
-    line-height: 1.4;
+/* ========== Plan Card ========== */
+.planCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.store-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #1f1f49;
-    color: white;
-    font-size: 0.78rem;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-bottom: 12px;
-    letter-spacing: 0.03em;
-    align-self: center;
+.planCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.highlighted {
+  border-color: #d97706;
+  box-shadow: 0 0 0 2px #fef3c7, 0 4px 12px rgba(217, 119, 6, 0.1);
+  transform: scale(1.03);
+}
+
+.highlighted:hover {
+  transform: scale(1.03) translateY(-4px);
+}
+
+.popularBadge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: linear-gradient(135deg, #d97706, #f59e0b);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 5px 16px;
+  border-radius: 0 16px 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ========== Plan Content ========== */
+.planContent {
+  padding: 24px 24px 0;
+}
+
+.planLabel {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 12px 0;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-bottom: 14px;
+}
+
+.priceSymbol {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.priceAmount {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.pricePeriod {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin-left: 2px;
+}
+
+.storeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #1f1f49;
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+}
+
+/* ========== Features ========== */
+.featureList {
+  list-style: none;
+  padding: 20px 24px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.featureList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: #475569;
+  line-height: 1.4;
+}
+
+.checkIcon {
+  color: #16a34a;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ========== Footer / CTA ========== */
+.planFooter {
+  padding: 0 24px 20px;
+  margin-top: auto;
+}
+
+.planFooter button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #1e293b;
+  color: white;
+}
+
+.planFooter button:hover {
+  background: #0f172a;
+  transform: translateY(-1px);
+}
+
+.highlighted .planFooter button {
+  background: #d97706;
+}
+
+.highlighted .planFooter button:hover {
+  background: #b45309;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 900px) {
+  .plansGrid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .highlighted {
+    transform: none;
+  }
+
+  .highlighted:hover {
+    transform: translateY(-4px);
+  }
+
+  .pageContent {
+    padding: 24px 16px;
+  }
 }

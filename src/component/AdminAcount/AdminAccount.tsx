@@ -8,6 +8,10 @@ import {
   EditProduct,
   EditProductDetails,
   Orders,
+  Sales,
+  Payout,
+  StoreManagement,
+  SubscriptionView,
 } from './component'
 import styles from './AdminAccount.module.css'
 import { IoLogOutOutline } from 'react-icons/io5'
@@ -158,12 +162,14 @@ const AdminAccount = () => {
             <Route index path='/' element={<Home />} />
             <Route index path='/admin' element={<Home />} />
             <Route path='/admin/orders' element={<Orders />} />
-            <Route path='/admin/sales' element={<h1>Sales</h1>} />
+            <Route path='/admin/sales' element={<Sales />} />
             <Route path='/admin/edit-profile' element={<ProfileManager />} />
             <Route path='/admin/add-product' element={<AddProduct />} />
             <Route path='/admin/edit-product/' element={<EditProduct />} />
             <Route path='/admin/edit-product/:product_id' element={<EditProductDetails />} />
-            <Route path='/admin/edit-bank' element={<h1>Edit bank account</h1>} />
+            <Route path='/admin/stores' element={<StoreManagement />} />
+            <Route path='/admin/subscription' element={<SubscriptionView />} />
+            <Route path='/admin/payout' element={<Payout />} />
             <Route path='/admin/*' element={<NotFound />} />
             <Route path='*' element={<><Navigate to={'/admin'} /></>} />
           </Routes>
@@ -197,7 +203,6 @@ const AdminAccount = () => {
             />
           </SignOutButton>
           {renderContent()}
-          <span>e-cart</span>
         </div>
       )}
     </>

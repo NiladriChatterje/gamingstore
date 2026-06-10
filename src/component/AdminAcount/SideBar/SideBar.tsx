@@ -8,19 +8,39 @@ const SideBar = () => {
     const [linkNo, setLinkNo] = useState<number>(0);
 
     useEffect(() => {
-        ref.current.children[previous.current].classList.remove(styles.Links);
-        ref.current.children[linkNo].classList.add(styles.Links);
+        if (ref.current?.children) {
+            if (ref.current.children[previous.current]) {
+                ref.current.children[previous.current].classList.remove(styles.Links);
+            }
+            if (ref.current.children[linkNo]) {
+                ref.current.children[linkNo].classList.add(styles.Links);
+            }
+        }
     }, [linkNo]);
+
+    const items = [
+        { label: 'Overview', to: '/admin' },
+        { label: 'Orders', to: '/admin/orders' },
+        { label: 'Sales', to: '/admin/sales' },
+        { label: 'Profile', to: '/admin/edit-profile' },
+        { label: 'Add Product', to: '/admin/add-product' },
+        { label: 'Edit Product', to: '/admin/edit-product' },
+        { label: 'Store Management', to: '/admin/stores' },
+        { label: 'Subscription', to: '/admin/subscription' },
+        { label: 'Payout', to: '/admin/payout' },
+    ];
 
     return (
         <aside ref={ref} id={styles['aside-container']}>
-            <Link onClick={() => { previous.current = linkNo; setLinkNo(0) }} to={'/admin'}><div>Overview</div></Link>
-            <Link onClick={() => { previous.current = linkNo; setLinkNo(1) }} to={'/admin/orders'}><div>Orders</div></Link>
-            <Link onClick={() => { previous.current = linkNo; setLinkNo(2) }} to={'/admin/edit-profile'}><div>Profile</div></Link>
-            <Link onClick={() => { previous.current = linkNo; setLinkNo(3) }} to={'/admin/edit-bank'}><div>Sales</div></Link>
-            <Link onClick={() => { previous.current = linkNo; setLinkNo(4) }} to={'/admin/add-product'}><div>Add Product</div></Link>
-            <Link onClick={() => { previous.current = linkNo; setLinkNo(5) }} to={'/admin/edit-product'}><div>Edit Product</div></Link>
-            <Link onClick={() => { previous.current = linkNo; setLinkNo(6) }} to={'/admin/edit-bank'}><div>Connect Wallet</div></Link>
+            {items.map((item, i) => (
+                <Link
+                    key={item.to}
+                    onClick={() => { previous.current = linkNo; setLinkNo(i) }}
+                    to={item.to}
+                >
+                    <div>{item.label}</div>
+                </Link>
+            ))}
         </aside>
     )
 }
