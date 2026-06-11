@@ -239,9 +239,9 @@ const Home = () => {
         }
 
         const currentDate = new Date(startDate);
-        const finalSalesValue = dashboardMetrics?.totalSales?.numericValue || 9800;
-        const finalProfitValue = dashboardMetrics?.totalProfit?.numericValue || 3900;
-        const finalOrdersValue = dashboardMetrics?.ordersServed?.numericValue || 147;
+        const finalSalesValue = dashboardMetrics?.totalSales?.numericValue || 0;
+        const finalProfitValue = dashboardMetrics?.totalProfit?.numericValue || 0;
+        const finalOrdersValue = dashboardMetrics?.ordersServed?.numericValue || 0;
 
         let dataPointIndex = 0;
 
