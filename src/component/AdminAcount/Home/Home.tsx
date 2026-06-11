@@ -1,34 +1,19 @@
 import { Navigate } from 'react-router-dom';
 import styles from './Home.module.css';
 import { useUser, useAuth } from '@clerk/clerk-react';
-import { Line } from 'react-chartjs-2';
 import { FaDollarSign, FaChartLine, FaShoppingCart, FaArrowUp, FaTags, FaUsers, FaBox } from 'react-icons/fa';
 import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
+    AreaChart,
+    Area,
+    XAxis,
+    YAxis,
+    CartesianGrid,
     Tooltip,
     Legend,
-    Filler,
-    ChartOptions
-} from 'chart.js';
+    ResponsiveContainer
+} from 'recharts';
 import { useAdminStateContext } from '../AdminStateContext';
-
-// Register Chart.js components
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-    Filler
-);
 
 interface DashboardMetrics {
     totalSales: { value: string; trend: string; numericValue: number };
@@ -284,188 +269,14 @@ const Home = () => {
             dataPointIndex++;
         }
 
-        const salesColor = '#6366f1';
-        const profitColor = '#22c55e';
-        const ordersColor = '#ec4899';
-
-        return {
-            labels,
-            datasets: [
-                {
-                    label: 'Sales ($)',
-                    data: salesData,
-                    borderColor: salesColor,
-                    backgroundColor: 'rgba(99, 102, 241, 0.08)',
-                    tension: 0.35,
-                    borderWidth: 2.5,
-                    fill: true,
-                    pointRadius: 0,
-                    pointHoverRadius: 5,
-                },
-                {
-                    label: 'Profit ($)',
-                    data: profitData,
-                    borderColor: profitColor,
-                    backgroundColor: 'rgba(34, 197, 94, 0.08)',
-                    tension: 0.35,
-                    borderWidth: 2.5,
-                    fill: true,
-                    pointRadius: 0,
-                    pointHoverRadius: 5,
-                },
-                {
-                    label: 'Orders',
-                    data: ordersData,
-                    borderColor: ordersColor,
-                    backgroundColor: 'rgba(236, 72, 153, 0.08)',
-                    tension: 0.35,
-                    borderWidth: 2.5,
-                    fill: true,
-                    pointRadius: 0,
-                    pointHoverRadius: 5,
-                    yAxisID: 'y1',
-                },
-            ],
-        };
+        // Return Recharts-compatible data format
+        return labels.map((label, i) => ({
+            name: label,
+            sales: salesData[i],
+            profit: profitData[i],
+            orders: ordersData[i],
+        }));
     }, [fromDate, toDate, dashboardMetrics]);
-
-    // Bug fix #10: Memoized chart options to prevent Chart.js from re-rendering
-    // on every parent render. Also moved getChartTitle() into the memoized chartTitle.
-    const chartOptions: ChartOptions<'line'> = useMemo(() => ({
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
-            mode: 'index' as const,
-            intersect: false,
-        },
-        plugins: {
-            legend: {
-                position: 'top' as const,
-                align: 'end' as const,
-                labels: {
-                    padding: 16,
-                    font: {
-                        size: 12,
-                        family: "'Inter', sans-serif",
-                        weight: '500',
-                    },
-                    usePointStyle: true,
-                    pointStyle: 'circle',
-                },
-            },
-            title: {
-                display: false,
-            },
-            tooltip: {
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                titleColor: '#1a202c',
-                titleFont: {
-                    size: 13,
-                    weight: '600',
-                    family: "'Inter', sans-serif",
-                },
-                bodyColor: '#475569',
-                bodyFont: {
-                    size: 12,
-                    family: "'Inter', sans-serif",
-                },
-                borderColor: 'rgba(0, 0, 0, 0.06)',
-                borderWidth: 1,
-                padding: 12,
-                cornerRadius: 8,
-                boxPadding: 6,
-                usePointStyle: true,
-                callbacks: {
-                    label: function (context) {
-                        let label = context.dataset.label || '';
-                        if (label) {
-                            label += ': ';
-                        }
-                        if (context.parsed.y !== null) {
-                            if (context.dataset.label === 'Orders') {
-                                label += context.parsed.y.toLocaleString();
-                            } else {
-                                label += '$' + context.parsed.y.toLocaleString();
-                            }
-                        }
-                        return label;
-                    }
-                }
-            }
-        },
-        scales: {
-            x: {
-                display: true,
-                grid: {
-                    display: false,
-                },
-                border: {
-                    display: false,
-                },
-                ticks: {
-                    font: {
-                        size: 11,
-                        family: "'Inter', sans-serif",
-                    },
-                    color: '#94a3b8',
-                    maxRotation: 35,
-                    minRotation: 0,
-                    padding: 8,
-                },
-            },
-            y: {
-                type: 'linear' as const,
-                display: true,
-                position: 'left' as const,
-                beginAtZero: true,
-                border: {
-                    display: false,
-                },
-                grid: {
-                    color: 'rgba(0, 0, 0, 0.05)',
-                    drawTicks: false,
-                },
-                ticks: {
-                    font: {
-                        size: 11,
-                        family: "'Inter', sans-serif",
-                    },
-                    color: '#94a3b8',
-                    padding: 8,
-                    callback: function (value) {
-                        return '$' + Number(value).toLocaleString();
-                    }
-                },
-            },
-            y1: {
-                type: 'linear' as const,
-                display: true,
-                position: 'right' as const,
-                beginAtZero: true,
-                border: {
-                    display: false,
-                },
-                grid: {
-                    display: false,
-                },
-                ticks: {
-                    font: {
-                        size: 11,
-                        family: "'Inter', sans-serif",
-                    },
-                    color: '#94a3b8',
-                    padding: 8,
-                    callback: function (value) {
-                        return Number(value).toLocaleString();
-                    }
-                },
-            },
-        },
-        animation: {
-            duration: 1000,
-            easing: 'easeOutQuart' as const,
-        },
-    }), []);
 
     const renderCard = (card: {
         id: string;
@@ -574,7 +385,127 @@ const Home = () => {
                     </div>
 
                     <section className={styles['graph-container']} aria-label="Performance chart">
-                        <Line data={chartData} options={chartOptions} />
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={chartData}>
+                                <defs>
+                                    <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="#6366f1" stopOpacity={0.12} />
+                                        <stop offset="100%" stopColor="#6366f1" stopOpacity={0.02} />
+                                    </linearGradient>
+                                    <linearGradient id="profitGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="#22c55e" stopOpacity={0.12} />
+                                        <stop offset="100%" stopColor="#22c55e" stopOpacity={0.02} />
+                                    </linearGradient>
+                                    <linearGradient id="ordersGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="#ec4899" stopOpacity={0.12} />
+                                        <stop offset="100%" stopColor="#ec4899" stopOpacity={0.02} />
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" vertical={false} />
+                                <XAxis
+                                    dataKey="name"
+                                    axisLine={false}
+                                    tickLine={false}
+                                    tick={{ fontSize: 11, fontFamily: "'Inter', sans-serif", fill: '#94a3b8' }}
+                                    tickMargin={8}
+                                    angle={0}
+                                    minTickGap={40}
+                                />
+                                <YAxis
+                                    yAxisId="left"
+                                    orientation="left"
+                                    axisLine={false}
+                                    tickLine={false}
+                                    tick={{ fontSize: 11, fontFamily: "'Inter', sans-serif", fill: '#94a3b8' }}
+                                    tickMargin={8}
+                                    tickFormatter={(value: number) => `$${value.toLocaleString()}`}
+                                    domain={[0, 'auto']}
+                                />
+                                <YAxis
+                                    yAxisId="right"
+                                    orientation="right"
+                                    axisLine={false}
+                                    tickLine={false}
+                                    tick={{ fontSize: 11, fontFamily: "'Inter', sans-serif", fill: '#94a3b8' }}
+                                    tickMargin={8}
+                                    tickFormatter={(value: number) => value.toLocaleString()}
+                                    domain={[0, 'auto']}
+                                />
+                                <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                        border: '1px solid rgba(0, 0, 0, 0.06)',
+                                        borderRadius: 8,
+                                        padding: '12px',
+                                        fontSize: 12,
+                                        fontFamily: "'Inter', sans-serif",
+                                    }}
+                                    labelStyle={{
+                                        color: '#1a202c',
+                                        fontWeight: 600,
+                                        fontSize: 13,
+                                        marginBottom: 4,
+                                    }}
+                                    formatter={(value: number, name: string) => {
+                                        if (name === 'orders') {
+                                            return [value.toLocaleString(), 'Orders'];
+                                        }
+                                        const label = name === 'sales' ? 'Sales ($)' : 'Profit ($)';
+                                        return [`$${value.toLocaleString()}`, label];
+                                    }}
+                                />
+                                <Legend
+                                    verticalAlign="top"
+                                    align="right"
+                                    iconType="circle"
+                                    wrapperStyle={{
+                                        paddingBottom: 8,
+                                        fontSize: 12,
+                                        fontFamily: "'Inter', sans-serif",
+                                        fontWeight: 500,
+                                    }}
+                                />
+                                <Area
+                                    yAxisId="left"
+                                    type="monotone"
+                                    dataKey="sales"
+                                    name="Sales ($)"
+                                    stroke="#6366f1"
+                                    strokeWidth={2.5}
+                                    fill="url(#salesGrad)"
+                                    dot={false}
+                                    activeDot={{ r: 5, fill: '#6366f1' }}
+                                    animationDuration={1000}
+                                    animationEasing="ease-out"
+                                />
+                                <Area
+                                    yAxisId="left"
+                                    type="monotone"
+                                    dataKey="profit"
+                                    name="Profit ($)"
+                                    stroke="#22c55e"
+                                    strokeWidth={2.5}
+                                    fill="url(#profitGrad)"
+                                    dot={false}
+                                    activeDot={{ r: 5, fill: '#22c55e' }}
+                                    animationDuration={1000}
+                                    animationEasing="ease-out"
+                                />
+                                <Area
+                                    yAxisId="right"
+                                    type="monotone"
+                                    dataKey="orders"
+                                    name="Orders"
+                                    stroke="#ec4899"
+                                    strokeWidth={2.5}
+                                    fill="url(#ordersGrad)"
+                                    dot={false}
+                                    activeDot={{ r: 5, fill: '#ec4899' }}
+                                    animationDuration={1000}
+                                    animationEasing="ease-out"
+                                />
+                            </AreaChart>
+                        </ResponsiveContainer>
                     </section>
                 </div>
             </div>
