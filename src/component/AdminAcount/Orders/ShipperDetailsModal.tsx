@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
 import styles from './ShipperDetailsModal.module.css';
-import { FaTruck, FaXmark, FaPhone, FaEnvelope, FaBox, FaCalendarAlt, FaMapMarkerAlt, FaCheck, FaHourglass, FaShippingFast } from 'react-icons/fa6';
+import { FaTruck, FaXmark, FaPhone, FaEnvelope, FaBox, FaCalendarDays, FaLocationDot, FaCheck, FaHourglass, FaTruckFast } from 'react-icons/fa6';
 
 interface ShipmentProduct {
     productId: string;
@@ -56,7 +56,7 @@ interface ShipperDetailsModalProps {
 const statusIcons: Record<string, React.ReactNode> = {
     'assigned': <FaHourglass size={12} />,
     'picked_up': <FaBox size={12} />,
-    'in_transit': <FaShippingFast size={12} />,
+    'in_transit': <FaTruckFast size={12} />,
     'delivered': <FaCheck size={12} />
 };
 
@@ -151,7 +151,7 @@ const ShipperDetailsModal = ({
                                     </span>
                                     {data.shipper.address.county && (
                                         <span className={styles['shipper-contact']}>
-                                            <FaMapMarkerAlt size={11} />
+                                            <FaLocationDot size={11} />
                                             {data.shipper.address.county}, {data.shipper.address.state} - {data.shipper.address.pincode}
                                         </span>
                                     )}
@@ -195,13 +195,13 @@ const ShipperDetailsModal = ({
                                                     </div>
                                                     <div className={styles['shipment-dates']}>
                                                         <span className={styles['date-item']}>
-                                                            <FaCalendarAlt size={10} />
+                                                            <FaCalendarDays size={10} />
                                                             Assigned: {new Date(shipment.assignedAt).toLocaleDateString()}
                                                             {' '}{new Date(shipment.assignedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                         </span>
                                                         {shipment.shippedAt && (
                                                             <span className={styles['date-item']}>
-                                                                <FaShippingFast size={10} />
+                                                                <FaTruckFast size={10} />
                                                                 Shipped: {new Date(shipment.shippedAt).toLocaleDateString()}
                                                                 {' '}{new Date(shipment.shippedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                             </span>

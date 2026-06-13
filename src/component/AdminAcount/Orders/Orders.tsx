@@ -5,7 +5,7 @@ import styles from './Orders.module.css';
 import { useAdminStateContext } from '../AdminStateContext';
 import ShipperAssignmentModal from './ShipperAssignmentModal';
 import ShipperDetailsModal from './ShipperDetailsModal';
-import { FaStore, FaTruck, FaEye, FaBox, FaFilter, FaSyncAlt, FaClipboardList, FaExclamationTriangle, FaCheckCircle, FaHourglass, FaShippingFast } from 'react-icons/fa6';
+import { FaStore, FaTruck, FaEye, FaBox, FaFilter, FaArrowRotateRight, FaClipboardList, FaTriangleExclamation, FaCircleCheck, FaHourglass, FaTruckFast } from 'react-icons/fa6';
 
 interface OrderProduct {
     product: {
@@ -304,10 +304,10 @@ const Orders = () => {
     const getStatusIcon = (status: OrderAssignment['status']) => {
         switch (status) {
             case 'pending': return <FaHourglass size={12} />;
-            case 'accepted': return <FaCheckCircle size={12} />;
-            case 'processing': return <FaSyncAlt size={12} />;
-            case 'ready_to_ship': return <FaShippingFast size={12} />;
-            case 'rejected': return <FaExclamationTriangle size={12} />;
+            case 'accepted': return <FaCircleCheck size={12} />;
+            case 'processing': return <FaArrowRotateRight size={12} />;
+            case 'ready_to_ship': return <FaTruckFast size={12} />;
+            case 'rejected': return <FaTriangleExclamation size={12} />;
             default: return null;
         }
     };
@@ -340,7 +340,7 @@ const Orders = () => {
                     onClick={() => { setLoading(true); fetchSellerOrders(); }}
                     title="Refresh orders"
                 >
-                    <FaSyncAlt size={14} />
+                    <FaArrowRotateRight size={14} />
                     Refresh
                 </button>
             </div>
@@ -487,7 +487,7 @@ const Orders = () => {
                 {/* Partial Fulfillment Warning */}
                 {order.isPartialFulfillment && (
                     <div className={styles['partial-warning']}>
-                        <FaExclamationTriangle size={14} />
+                        <FaTriangleExclamation size={14} />
                         <span>This is a partial fulfillment order</span>
                     </div>
                 )}
@@ -574,7 +574,7 @@ const Orders = () => {
                             className={`${styles['action-btn']} ${styles['accept-btn']}`}
                             onClick={() => handleStatusUpdate(order._id, 'accepted')}
                         >
-                            <FaCheckCircle size={14} />
+                            <FaCircleCheck size={14} />
                             Accept Order
                         </button>
                         <button
@@ -584,7 +584,7 @@ const Orders = () => {
                                 if (reason) handleRejectOrder(order._id, reason);
                             }}
                         >
-                            <FaExclamationTriangle size={14} />
+                            <FaTriangleExclamation size={14} />
                             Reject Order
                         </button>
                     </div>
@@ -596,7 +596,7 @@ const Orders = () => {
                             className={`${styles['action-btn']} ${styles['processing-btn']}`}
                             onClick={() => handleStatusUpdate(order._id, 'processing')}
                         >
-                            <FaSyncAlt size={14} />
+                            <FaArrowRotateRight size={14} />
                             Mark as Processing
                         </button>
                     </div>
@@ -608,7 +608,7 @@ const Orders = () => {
                             className={`${styles['action-btn']} ${styles['ready-btn']}`}
                             onClick={() => handleStatusUpdate(order._id, 'ready_to_ship')}
                         >
-                            <FaShippingFast size={14} />
+                            <FaTruckFast size={14} />
                             Mark as Ready to Ship
                         </button>
                     </div>
