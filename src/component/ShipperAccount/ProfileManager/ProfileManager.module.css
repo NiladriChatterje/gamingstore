@@ -1,0 +1,316 @@
+.card {
+    width: 100%;
+    max-width: 560px;
+    max-height: 68dvh;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    padding: 24px 28px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+}
+
+.card-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.card-header p {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin: 4px 0 0;
+    line-height: 1.5;
+}
+
+.card-body {
+    padding: 24px 28px;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+/* ========== Form ========== */
+#form-container {
+    width: 100%;
+}
+
+.field-group {
+    margin-bottom: 20px;
+}
+
+.field-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #94a3b8;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    transition: all 0.2s ease;
+}
+
+.input-wrapper:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.input-wrapper:focus-within {
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+}
+
+.input-wrapper.disabled {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.06);
+    opacity: 0.6;
+}
+
+.input-icon {
+    color: #64748b;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.input-wrapper input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #f1f5f9;
+    padding: 0;
+    min-width: 0;
+}
+
+.input-wrapper input::placeholder {
+    color: #64748b;
+    font-weight: 400;
+}
+
+.input-wrapper input:disabled {
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* ========== Phone Input (country code) ========== */
+.phone-country-code {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+
+.phone-country-code:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.country-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 20;
+    min-width: 120px;
+    background: #2a2740;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.country-dropdown dl {
+    padding: 8px 14px;
+    margin: 0;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: #e2e8f0;
+}
+
+.country-dropdown dl:hover {
+    background: #818cf8;
+    color: white;
+}
+
+.country-dropdown.hidden {
+    display: none;
+}
+
+/* ========== Verify OTP ========== */
+.verify-btn {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #818cf8;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+}
+
+.verify-btn:hover {
+    background: rgba(129, 140, 248, 0.1);
+    color: #a5b4fc;
+}
+
+.verify-btn-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 6px;
+}
+
+/* ========== Address Section ========== */
+.address-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.address-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin: 0 0 16px;
+}
+
+.address-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.address-grid .field-group:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+}
+
+.fetch-address-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1.5px dashed #818cf8;
+    border-radius: 10px;
+    background: rgba(129, 140, 248, 0.05);
+    color: #818cf8;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin-bottom: 16px;
+    grid-column: 1 / -1;
+}
+
+.fetch-address-btn:hover {
+    background: rgba(129, 140, 248, 0.1);
+    border-color: #a5b4fc;
+}
+
+.fetch-address-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    border-color: #475569;
+    color: #64748b;
+    background: rgba(71, 85, 105, 0.06);
+}
+
+/* ========== Action Buttons ========== */
+.card-footer {
+    padding: 16px 28px 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.edit-btn {
+    background: rgba(255, 255, 255, 0.06);
+    color: #cbd5e1;
+}
+
+.edit-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #f1f5f9;
+}
+
+.save-btn {
+    background: #818cf8;
+    color: #0f172a;
+    box-shadow: 0 1px 3px rgba(129, 140, 248, 0.3);
+}
+
+.save-btn:hover:not(:disabled) {
+    background: #a5b4fc;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(129, 140, 248, 0.35);
+}
+
+.save-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.save-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ========== Responsive ========== */
+@media screen and (max-width: 640px) {
+    .card-body {
+        padding: 20px 16px;
+    }
+
+    .card-header {
+        padding: 20px 16px 14px;
+    }
+
+    .card-footer {
+        padding: 14px 16px 20px;
+    }
+
+    .address-grid {
+        grid-template-columns: 1fr;
+    }
+}

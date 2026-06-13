@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import styles from "./ShipperSidebar.module.css";
-import { MdDashboard, MdLocalShipping, MdCheckCircle } from "react-icons/md";
+import { MdDashboard, MdLocalShipping, MdCheckCircle, MdSettings } from "react-icons/md";
 import { IoLogOutOutline } from "react-icons/io5";
 
 interface ShipperSidebarProps {
@@ -13,6 +13,7 @@ const navItems = [
   { icon: MdDashboard, label: "Dashboard", link: "/shipper" },
   { icon: MdLocalShipping, label: "In-Transit", link: "/shipper/in-transit" },
   { icon: MdCheckCircle, label: "Delivered", link: "/shipper/delivered" },
+  { icon: MdSettings, label: "Profile", link: "/shipper/profile" },
 ];
 
 const ShipperSidebar = ({ isOpen, onClose, stats }: ShipperSidebarProps) => {

@@ -1,0 +1,57 @@
+#phone-number-verification-modal {
+    overflow: clip;
+    border-radius: 6px;
+    border: 0.8px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 2px 10px -5px rgba(0, 0, 0, 0.5);
+    background: #1e1c29;
+}
+
+#phone-number-verification-modal::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.otp-block {
+    transition: all;
+    transition-duration: 100ms;
+    color: transparent;
+    text-shadow: 0 0 0 #e2e8f0;
+    width: 20px;
+    border-radius: 5px;
+    text-align: center;
+    border: 2.5px solid #6366f1;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+#verify {
+    border-style: none;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 700;
+    background-color: #4f46e5;
+}
+
+.otp-block:focus {
+    box-shadow: 0 0 2px 3px rgba(129, 140, 248, 0.4);
+    outline: none;
+}
+
+/* Chrome, Safari, Edge, Opera */
+.otp-block::-webkit-outer-spin-button,
+.otp-block::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+.otp-block[type=number] {
+    appearance: textfield;
+}
+
+#otp-block-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}

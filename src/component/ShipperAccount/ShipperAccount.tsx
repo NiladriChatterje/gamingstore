@@ -10,6 +10,7 @@ import DeliveredOrders from "./DeliveredOrders/DeliveredOrders.tsx";
 import InTransitOrders from "./InTransitOrders/InTransitOrders.tsx";
 import OrderDetailsPage from "./OrderDetailsPage/OrderDetailsPage.tsx";
 import ShipperLogin from "./ShipperLogin/ShipperLogin.tsx";
+import ProfileManager from "./ProfileManager/ProfileManager.tsx";
 import { useStateContext } from "../../StateContext.tsx";
 
 interface DashboardStats {
@@ -110,6 +111,7 @@ const ShipperAccount = () => {
           <Route path="/shipper/in-transit" element={<InTransitOrders />} />
           <Route path="/shipper/delivered" element={<DeliveredOrders />} />
           <Route path="/shipper/all-orders" element={<ShipperDashboard />} />
+          <Route path="/shipper/profile" element={<ProfileManager />} />
           <Route path="/shipper/orders/:orderId" element={<OrderDetailsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
