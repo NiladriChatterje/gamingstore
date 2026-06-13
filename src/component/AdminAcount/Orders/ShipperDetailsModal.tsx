@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
 import styles from './ShipperDetailsModal.module.css';
-import { FaTruck, FaTimes, FaPhone, FaEnvelope, FaBox, FaCalendarAlt, FaMapMarkerAlt, FaCheck, FaHourglass, FaShippingFast } from 'react-icons/fa6';
+import { FaTruck, FaXmark, FaPhone, FaEnvelope, FaBox, FaCalendarAlt, FaMapMarkerAlt, FaCheck, FaHourglass, FaShippingFast } from 'react-icons/fa6';
 
 interface ShipmentProduct {
     productId: string;
@@ -120,7 +120,7 @@ const ShipperDetailsModal = ({
                         <h2>Shipper Details — Fraud Trace</h2>
                     </div>
                     <button className={styles['close-btn']} onClick={onClose}>
-                        <FaTimes size={18} />
+                        <FaXmark size={18} />
                     </button>
                 </div>
 

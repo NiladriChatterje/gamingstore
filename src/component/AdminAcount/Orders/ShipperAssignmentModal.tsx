@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
 import styles from './ShipperAssignmentModal.module.css';
-import { FaTruck, FaTimes, FaPhone, FaEnvelope, FaBox, FaCheck } from 'react-icons/fa6';
+import { FaTruck, FaXmark, FaPhone, FaEnvelope, FaBox, FaCheck } from 'react-icons/fa6';
 
 interface Shipper {
     id: string;
@@ -141,7 +141,7 @@ const ShipperAssignmentModal = ({
                         <h2>Assign Shipper</h2>
                     </div>
                     <button className={styles['close-btn']} onClick={onClose}>
-                        <FaTimes size={18} />
+                        <FaXmark size={18} />
                     </button>
                 </div>
 
