@@ -125,3 +125,27 @@
     color: rgb(175, 175, 175);
     font-weight: 400;
 }
+
+@media (max-width: 768px) {
+    #form-container {
+        width: 90%;
+        max-width: 400px;
+        padding: 12px;
+    }
+
+    #form-input-field-container {
+        max-height: 50dvh;
+        padding: 3px 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    #form-container {
+        width: 95%;
+        padding: 10px;
+    }
+
+    #form-input-field-container {
+        gap: 10px;
+    }
+}

@@ -231,3 +231,36 @@
   white-space: nowrap;
   flex-shrink: 0;
 }
+
+@media (max-width: 768px) {
+  .dropdown {
+    width: calc(100vw - 32px);
+    right: -8px;
+    max-width: 360px;
+  }
+
+  .notificationItem {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .notifDetails {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .acceptBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .claimedBadge {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .expiredBadge {
+    width: 100%;
+    justify-content: center;
+  }
+}

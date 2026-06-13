@@ -236,3 +236,28 @@
   color: rgb(175, 175, 175);
   font-weight: 400;
 }
+
+@media (max-width: 768px) {
+  #form-input-field-container {
+    padding: 3px 4px;
+    gap: 8px;
+  }
+
+  .image-preview-container {
+    width: 80px;
+    height: 80px;
+  }
+
+  .preview-images {
+    height: 80px;
+    width: 80px;
+  }
+
+  #keyword-list {
+    flex-wrap: wrap;
+  }
+
+  .category-containers {
+    gap: 6px;
+  }
+}

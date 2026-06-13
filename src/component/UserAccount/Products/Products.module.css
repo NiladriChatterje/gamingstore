@@ -112,6 +112,44 @@
   }
 }
 
+@media all and (max-width: 768px) {
+  #category-list {
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  #category-list > span {
+    font-size: 0.7em;
+    padding: 4px 12px;
+  }
+
+  #search-bar {
+    width: 90%;
+    margin-top: 80px;
+  }
+
+  #search-bar > input[type="text"] {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  #pagination {
+    gap: 15px;
+  }
+}
+
+@media all and (max-width: 480px) {
+  #pdt_container {
+    margin-top: 20%;
+  }
+
+  #search-bar {
+    width: 95%;
+    padding: 8px 14px;
+  }
+}
+
 .loader {
   position: relative;
   left: 50%;
