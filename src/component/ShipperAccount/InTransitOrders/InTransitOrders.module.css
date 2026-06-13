@@ -1,174 +1,254 @@
-@font-face {
-    font-family: "Blanka";
-    src: url("/frontend/src/fonts/Blanka-Regular.otf");
+.page {
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.orders-container {
-    padding: 80px 2rem 2rem 2rem;
-    min-height: 100dvh;
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
 }
 
-.orders-title {
-    font-size: 2.5rem;
-    font-family: "Blanka", sans-serif;
-    color: rgb(17, 17, 17);
-    font-weight: 400;
-    margin-bottom: 2rem;
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.orders-content {
-    max-width: 1200px;
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
 }
 
-.orders-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
+.subtitle {
+  font-size: 0.85rem;
+  color: #555555;
+  margin: 0;
 }
 
-.order-card {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 10px 16px;
+  min-width: 260px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-.order-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(30, 28, 41, 0.15);
+.searchBar:focus-within {
+  border-color: #1a1a1a;
+  box-shadow: 0 0 0 3px rgba(30, 28, 41, 0.1);
 }
 
-.order-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+.searchIcon {
+  color: #888888;
+  font-size: 1.1rem;
+  flex-shrink: 0;
 }
 
-.order-header h3 {
-    font-size: 1.3rem;
-    color: rgb(30, 28, 41);
-    margin: 0;
-    font-weight: 600;
+.searchInput {
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 0.9rem;
+  color: #1a1a1a;
+  width: 100%;
 }
 
-.status-badge-transit {
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    background-color: #FF9800;
-    color: white;
+.searchInput::placeholder {  color: #888888; }
+
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
-.order-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    margin-bottom: 1rem;
+.filterBtn {
+  padding: 7px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #555555;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.order-details p {
-    margin: 0;
-    font-size: 0.95rem;
-    color: rgb(34, 34, 34);
+.filterBtn:hover {
+  border-color: #1a1a1a;
 }
 
-.order-details strong {
-    color: rgb(17, 17, 17);
-    font-weight: 600;
+.filterBtnActive {
+  background: #1e1c29;
+  border-color: #1e1c29;
+  color: #ffffff;
 }
 
-.order-actions {
-    display: flex;
-    gap: 0.8rem;
-    margin-top: 1rem;
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.btn-primary {
-    flex: 1;
-    padding: 0.7rem 1rem;
-    background-color: rgb(30, 28, 41);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.orderCard {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.btn-primary:hover {
-    background-color: rgb(35, 23, 14);
+.orderCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
 }
 
-.btn-secondary {
-    flex: 1;
-    padding: 0.7rem 1rem;
-    background-color: transparent;
-    color: rgb(30, 28, 41);
-    border: 2px solid rgb(30, 28, 41);
-    border-radius: 5px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+.orderTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.btn-secondary:hover {
-    background-color: rgb(30, 28, 41);
-    color: white;
+.orderId {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
 }
 
-.empty-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 3rem;
-    background-color: white;
-    border-radius: 8px;
-    border: 2px dashed rgba(0, 0, 0, 0.1);
+.statusBadge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
-.empty-state p {
-    color: rgb(100, 100, 100);
-    font-size: 1.1rem;
-    margin: 0;
+.statusDispatched { background: #fff7ed; color: #c2410c; }
+.statusShipping { background: #eff6ff; color: #1d4ed8; }
+.statusShipped { background: #f0fdf4; color: #15803d; }
+
+.orderBody {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
-@media screen and (max-width: 1024px) {
-    .orders-container {
-        padding-left: 2rem;
-    }
+.detailRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-@media screen and (max-width: 768px) {
-    .orders-container {
-        padding: 80px 1rem 2rem 1rem;
-    }
+.detailLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
 
-    .orders-title {
-        font-size: 2rem;
-    }
+.detailValue {
+  font-size: 0.88rem;
+  color: #374151;
+  font-weight: 500;
+}
 
-    .orders-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
+.orderActions {
+  display: flex;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid #e0e0e0;
+}
 
-    .order-card {
-        padding: 1.2rem;
-    }
+.btnPrimary {
+  flex: 1;
+  padding: 9px 16px;
+  background: #1e1c29;
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
 
-    .order-actions {
-        flex-direction: column;
-    }
+.btnPrimary:hover { background: #2d2b3d; }
 
-    .btn-primary,
-    .btn-secondary {
-        width: 100%;
-    }
+.btnSecondary {
+  flex: 1;
+  padding: 9px 16px;
+  background: transparent;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  color: #555555;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btnSecondary:hover { background: rgba(248, 249, 250, 0.7); border-color: #1a1a1a; }
+
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888888;
+}
+
+.emptyIcon { font-size: 3rem; margin-bottom: 16px; opacity: 0.4; }
+
+.emptyStateTitle { font-size: 1.1rem; font-weight: 600;  color: #555555; margin: 0 0 8px; }
+.emptyStateText { font-size: 0.9rem; margin: 0;  color: #888888; }
+
+.loadingContainer { display: flex; flex-direction: column; gap: 14px; }
+
+.skeleton {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.skeletonBar {
+  height: 12px;
+  background: #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeletonBarWide { width: 80%; }
+.skeletonBarMedium { width: 50%; }
+.skeletonBarNarrow { width: 30%; }
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+@media (max-width: 768px) {
+  .page { padding: 20px 16px; }
+  .header { flex-direction: column; align-items: stretch; }
+  .searchBar { min-width: 0; width: 100%; }
+  .orderBody { grid-template-columns: 1fr; gap: 8px; }
+  .orderActions { flex-direction: column; }
+  .title { font-size: 1.4rem; }
 }

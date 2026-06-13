@@ -1,123 +1,167 @@
-@font-face {
-    font-family: "Blanka";
-    src: url("/frontend/src/fonts/Blanka-Regular.otf");
+.page {
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.orders-container {
-    padding: 80px 2rem 2rem 2rem;
-    min-height: 100dvh;
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
 }
 
-.orders-title {
-    font-size: 2.5rem;
-    font-family: "Blanka", sans-serif;
-    color: rgb(17, 17, 17);
-    font-weight: 400;
-    margin-bottom: 2rem;
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.orders-content {
-    max-width: 1200px;
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
 }
 
-.orders-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
+.subtitle {
+  font-size: 0.85rem;
+  color: #555555;
+  margin: 0;
 }
 
-.order-card {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 10px 16px;
+  min-width: 260px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-.order-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(30, 28, 41, 0.15);
+.searchBar:focus-within { border-color: #1a1a1a; box-shadow: 0 0 0 3px rgba(30, 28, 41, 0.1); }
+
+.searchIcon { color: #888888; font-size: 1.1rem; flex-shrink: 0; }
+
+.searchInput {
+  border: none; outline: none; background: none;
+  font-size: 0.9rem;  color: #1a1a1a; width: 100%;
 }
 
-.order-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+.searchInput::placeholder { color: #888888; }
+
+.ordersList { display: flex; flex-direction: column; gap: 14px; }
+
+.orderCard {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.order-header h3 {
-    font-size: 1.3rem;
-    color: rgb(30, 28, 41);
-    margin: 0;
-    font-weight: 600;
+.orderCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
 }
 
-.status-badge-delivered {
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    background-color: #4CAF50;
-    color: white;
+.orderTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.order-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
+.orderId {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
 }
 
-.order-details p {
-    margin: 0;
-    font-size: 0.95rem;
-    color: rgb(34, 34, 34);
+.statusBadge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  background: #f0fdf4;
+  color: #15803d;
 }
 
-.order-details strong {
-    color: rgb(17, 17, 17);
-    font-weight: 600;
+.orderBody {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 0;
 }
 
-.empty-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 3rem;
-    background-color: white;
-    border-radius: 8px;
-    border: 2px dashed rgba(0, 0, 0, 0.1);
+.detailRow { display: flex; flex-direction: column; gap: 2px; }
+
+.detailLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
-.empty-state p {
-    color: rgb(100, 100, 100);
-    font-size: 1.1rem;
-    margin: 0;
+.detailValue {
+  font-size: 0.88rem;
+  color: #555555;
+  font-weight: 500;
 }
 
-@media screen and (max-width: 1024px) {
-    .orders-container {
-        padding-left: 2rem;
-    }
+.deliveryDate {
+  font-size: 0.78rem;
+  color: #22c55e;
+  font-weight: 500;
+  margin-top: 2px;
 }
 
-@media screen and (max-width: 768px) {
-    .orders-container {
-        padding: 80px 1rem 2rem 1rem;
-    }
+.emptyState { text-align: center; padding: 60px 20px; color: #888888; }
+.emptyIcon { font-size: 3rem; margin-bottom: 16px; opacity: 0.4; }
+.emptyStateTitle { font-size: 1.1rem; font-weight: 600; color: #555555; margin: 0 0 8px; }
+.emptyStateText { font-size: 0.9rem; margin: 0; color: #888888; }
 
-    .orders-title {
-        font-size: 2rem;
-    }
+.loadingContainer { display: flex; flex-direction: column; gap: 14px; }
 
-    .orders-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
+.skeleton {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
 
-    .order-card {
-        padding: 1.2rem;
-    }
+.skeletonBar {
+  height: 12px;
+  background: #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeletonBarWide { width: 80%; }
+.skeletonBarMedium { width: 50%; }
+.skeletonBarNarrow { width: 30%; }
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+@media (max-width: 768px) {
+  .page { padding: 20px 16px; }
+  .header { flex-direction: column; align-items: stretch; }
+  .searchBar { min-width: 0; width: 100%; }
+  .orderBody { grid-template-columns: 1fr; gap: 8px; }
+  .title { font-size: 1.4rem; }
 }

@@ -1,77 +1,74 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
 import styles from "./ShipperSidebar.module.css";
-import { MdDashboard, MdLocalShipping, MdClose, MdMenu } from "react-icons/md";
-import { FaBoxOpen, FaCheckCircle } from "react-icons/fa";
+import { MdDashboard, MdLocalShipping, MdCheckCircle } from "react-icons/md";
+import { IoLogOutOutline } from "react-icons/io5";
 
-const sidebarItems = [
-    {
-        icon: MdDashboard,
-        name: "Dashboard",
-        link: "/shipper"
-    },
-    {
-        icon: MdLocalShipping,
-        name: "In-Transit",
-        link: "/shipper/in-transit"
-    },
-    {
-        icon: FaCheckCircle,
-        name: "Delivered",
-        link: "/shipper/delivered"
-    },
-    {
-        icon: FaBoxOpen,
-        name: "All Orders",
-        link: "/shipper/all-orders"
-    },
+interface ShipperSidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+  stats?: { pending: number; inTransit: number; delivered: number };
+}
+
+const navItems = [
+  { icon: MdDashboard, label: "Dashboard", link: "/shipper" },
+  { icon: MdLocalShipping, label: "In-Transit", link: "/shipper/in-transit" },
+  { icon: MdCheckCircle, label: "Delivered", link: "/shipper/delivered" },
 ];
 
-const ShipperSidebar = () => {
-    const location = useLocation();
-    const [isOpen, setIsOpen] = useState(false);
+const ShipperSidebar = ({ isOpen, onClose, stats }: ShipperSidebarProps) => {
+  const location = useLocation();
 
-    const toggleSidebar = () => {
-        setIsOpen(prev => !prev);
-    };
+  const getBadge = (link: string) => {
+    if (!stats) return undefined;
+    if (link === "/shipper/in-transit") return stats.inTransit;
+    if (link === "/shipper/delivered") return stats.delivered;
+    return undefined;
+  };
 
-    return (
-        <>
-            <button
-                className={`${styles["menu-toggle"]} ${isOpen ? styles["hidden"] : ""}`}
-                onClick={toggleSidebar}
-                aria-label="Open Menu"
-            >
-                <MdMenu />
-            </button>
-
-            <aside className={`${styles["sidebar-container"]} ${isOpen ? styles["open"] : styles["closed"]}`}>
-                <div className={styles["sidebar-header"]}>
-                    <h3>Shipper Portal</h3>
-                    <button
-                        className={styles["close-button"]}
-                        onClick={toggleSidebar}
-                        aria-label="Close Menu"
-                    >
-                        <MdClose />
-                    </button>
-                </div>
-                <nav className={styles["sidebar-nav"]}>
-                    {sidebarItems.map((item, index) => (
-                        <Link
-                            key={index}
-                            to={item.link}
-                            className={`${styles["sidebar-item"]} ${location.pathname === item.link ? styles["active"] : ""
-                                }`}
-                        >
-                            <item.icon className={styles["sidebar-icon"]} />
-                            <span>{item.name}</span>
-                        </Link>
-                    ))}
-                </nav>
-            </aside>
-        </>
-    );
+  return (
+    <>
+      <div
+        className={`${styles.overlay} ${isOpen ? "" : styles.hidden}`}
+        onClick={onClose}
+      />
+      <aside className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
+        <div className={styles.sidebarBrand}>
+          <span className={styles.sidebarBrandAccent}>XV</span>
+          <span>Shipper Portal</span>
+        </div>
+        <nav className={styles.nav}>
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const badge = getBadge(item.link);
+            const isActive =
+              item.link === "/shipper"
+                ? location.pathname === "/shipper"
+                : location.pathname.startsWith(item.link);
+            return (
+              <Link
+                key={item.link}
+                to={item.link}
+                className={`${styles.navItem} ${isActive ? styles.navItemActive : ""}`}
+                onClick={onClose}
+              >
+                <span className={styles.navIcon}><Icon /></span>
+                <span className={styles.navLabel}>{item.label}</span>
+                {badge !== undefined && badge > 0 && (
+                  <span className={styles.navBadge}>{badge}</span>
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+        <div className={styles.sidebarFooter}>
+          <Link to="/" className={styles.footerLink}>
+            <IoLogOutOutline size={18} />
+            Exit Portal
+          </Link>
+        </div>
+      </aside>
+    </>
+  );
 };
 
 export default ShipperSidebar;
