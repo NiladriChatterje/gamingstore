@@ -28,7 +28,7 @@ const ShipperAccount = () => {
                 const token = await getToken();
 
                 try {
-                    const response = await fetch(`http://localhost:5001/fetch-shipper-data/${user.id}`, {
+                    const response = await fetch(`http://localhost:5001/fetch-shipper-data/shipper-${user.id}`, {
                         headers: {
                             "Accept": "application/json",
                             "Authorization": `Bearer ${token}`
@@ -40,7 +40,7 @@ const ShipperAccount = () => {
                     if (data == null) {
                         // Create shipper account if it doesn"t exist
                         const shipperObj = {
-                            _id: user.id,
+                            _id: `shipper-${user.id}`,
                             username: user.firstName,
                             email: user.emailAddresses[0].emailAddress,
                         };
