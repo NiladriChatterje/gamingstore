@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useAuth, useUser } from "@clerk/clerk-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 import NotFound from "../../NotFound.tsx";
 import ShipperNavbar from "./Navbar/ShipperNavbar.tsx";
@@ -19,6 +19,33 @@ interface DashboardStats {
   delivered: number;
 }
 
+interface ShipperData {
+  _id: string;
+  shippername: string;
+  email: string;
+  phone: number;
+  address: {
+    pincode: string;
+    county: string;
+    country: string;
+    state: string;
+  } | null;
+}
+
+/** Determine whether the shipper has completed their full profile */
+function isProfileComplete(data: ShipperData | null): boolean {
+  if (!data) return false;
+  // phone must not be the placeholder 0; address must be fully filled
+  const phoneOk = data.phone !== 0 && data.phone != null;
+  const addressOk =
+    data.address != null &&
+    data.address.pincode?.trim().length > 0 &&
+    data.address.county?.trim().length > 0 &&
+    data.address.country?.trim().length > 0 &&
+    data.address.state?.trim().length > 0;
+  return phoneOk && addressOk;
+}
+
 const ShipperAccount = () => {
   const { user, isSignedIn } = useUser();
   const { getToken } = useAuth();
@@ -26,6 +53,8 @@ const ShipperAccount = () => {
   const { defaultLoginAdminOrUser, setDefaultLoginAdminOrUser } = useStateContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [stats, setStats] = useState<DashboardStats>({ pending: 0, inTransit: 0, delivered: 0 });
+  /** null = not yet determined, true/false = profile complete check result */
+  const [profileComplete, setProfileComplete] = useState<boolean | null>(null);
 
   const isLoginPage = location.pathname === "/shipper/login";
 
@@ -52,39 +81,51 @@ const ShipperAccount = () => {
     return () => clearInterval(interval);
   }, [isSignedIn, user, getToken, isLoginPage]);
 
+  // Check shipper existence + profile completeness
+  const checkShipperProfile = useCallback(async () => {
+    if (!isSignedIn || !user) return;
+    const token = await getToken();
+    try {
+      const response = await fetch(`http://localhost:5001/fetch-shipper-data/shipper-${user.id}`, {
+        headers: { Accept: "application/json", Authorization: `Bearer ${token}` }
+      });
+      const data: ShipperData | null = await response.json();
+
+      if (data == null) {
+        // First-time sign-in: create a temporary shipper entry
+        const shipperObj = {
+          _id: `shipper-${user.id}`,
+          username: user.firstName,
+          email: user.emailAddresses[0].emailAddress,
+        };
+        try {
+          const createResponse = await fetch(`http://localhost:5001/create-shipper/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            body: JSON.stringify(shipperObj)
+          });
+          if (!createResponse.ok) toast.error("Failed to create shipper account");
+        } catch (err) {
+          console.log("Failed creating shipper account!");
+          toast.error("Something went wrong! shipper-account-creation-failed");
+        }
+        // New shipper — profile is definitely incomplete
+        setProfileComplete(false);
+      } else {
+        setProfileComplete(isProfileComplete(data));
+      }
+    } catch (err) {
+      console.error("Error fetching shipper data:", err);
+      // Fallback: treat as incomplete so the user gets routed to the profile page
+      setProfileComplete(false);
+    }
+  }, [isSignedIn, user, getToken]);
+
   useEffect(() => {
     if (isSignedIn && user != null && defaultLoginAdminOrUser === "shipper") {
-      (async () => {
-        const token = await getToken();
-        try {
-          const response = await fetch(`http://localhost:5001/fetch-shipper-data/shipper-${user.id}`, {
-            headers: { Accept: "application/json", Authorization: `Bearer ${token}` }
-          });
-          const data = await response.json();
-          if (data == null) {
-            const shipperObj = {
-              _id: `shipper-${user.id}`,
-              username: user.firstName,
-              email: user.emailAddresses[0].emailAddress,
-            };
-            try {
-              const createResponse = await fetch(`http://localhost:5001/create-shipper/`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-                body: JSON.stringify(shipperObj)
-              });
-              if (!createResponse.ok) toast.error("Failed to create shipper account");
-            } catch (err) {
-              console.log("Failed creating shipper account!");
-              toast.error("Something went wrong! shipper-account-creation-failed");
-            }
-          }
-        } catch (err) {
-          console.error("Error fetching shipper data:", err);
-        }
-      })();
+      checkShipperProfile();
     }
-  }, [isSignedIn, user]);
+  }, [isSignedIn, user, defaultLoginAdminOrUser, checkShipperProfile]);
 
   if (!isSignedIn) {
     localStorage.setItem('loginusertype', 'user');
@@ -107,14 +148,78 @@ const ShipperAccount = () => {
         transition: "margin-left 0.3s ease",
       }}>
         <Routes>
-          <Route path="/" element={<ShipperDashboard />} />
-          <Route path="/shipper" element={<ShipperDashboard />} />
           <Route path="/shipper/login" element={<ShipperLogin />} />
-          <Route path="/shipper/in-transit" element={<InTransitOrders />} />
-          <Route path="/shipper/delivered" element={<DeliveredOrders />} />
-          <Route path="/shipper/all-orders" element={<ShipperDashboard />} />
-          <Route path="/shipper/profile" element={<ProfileManager />} />
-          <Route path="/shipper/orders/:orderId" element={<OrderDetailsPage />} />
+
+          {/* When profile completion hasn't been determined yet, show a loading state */}
+          <Route path="/" element={
+            profileComplete === null ? (
+              <div style={{ padding: "40px", textAlign: "center", color: "#aaa" }}>
+                <p>Checking profile...</p>
+              </div>
+            ) : profileComplete ? (
+              <ShipperDashboard />
+            ) : (
+              <Navigate to="/shipper/profile" replace />
+            )
+          } />
+          <Route path="/shipper" element={
+            profileComplete === null ? (
+              <div style={{ padding: "40px", textAlign: "center", color: "#aaa" }}>
+                <p>Checking profile...</p>
+              </div>
+            ) : profileComplete ? (
+              <ShipperDashboard />
+            ) : (
+              <Navigate to="/shipper/profile" replace />
+            )
+          } />
+
+          {/* Profile always accessible regardless of completion status */}
+          <Route path="/shipper/profile" element={
+            profileComplete === false ? (
+              <div>
+                <div style={{
+                  background: "linear-gradient(135deg, #ff6b35, #f7931e)",
+                  color: "#fff",
+                  padding: "14px 24px",
+                  margin: "16px",
+                  borderRadius: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  fontSize: "15px",
+                  fontWeight: 500,
+                  boxShadow: "0 4px 12px rgba(255, 107, 53, 0.3)"
+                }}>
+                  <span style={{ fontSize: "20px" }}>⚠️</span>
+                  <span>
+                    Please complete your profile to access the full shipper portal.
+                    Fill in all required fields and save.
+                  </span>
+                </div>
+                <ProfileManager onProfileSaved={() => {
+                  // Re-check profile after save
+                  checkShipperProfile();
+                }} />
+              </div>
+            ) : (
+              <ProfileManager onProfileSaved={checkShipperProfile} />
+            )
+          } />
+
+          {/* Protected routes — require complete profile */}
+          <Route path="/shipper/in-transit" element={
+            profileComplete ? <InTransitOrders /> : <Navigate to="/shipper/profile" replace />
+          } />
+          <Route path="/shipper/delivered" element={
+            profileComplete ? <DeliveredOrders /> : <Navigate to="/shipper/profile" replace />
+          } />
+          <Route path="/shipper/all-orders" element={
+            profileComplete ? <ShipperDashboard /> : <Navigate to="/shipper/profile" replace />
+          } />
+          <Route path="/shipper/orders/:orderId" element={
+            profileComplete ? <OrderDetailsPage /> : <Navigate to="/shipper/profile" replace />
+          } />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

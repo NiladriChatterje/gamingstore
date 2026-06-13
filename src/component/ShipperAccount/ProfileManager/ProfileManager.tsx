@@ -11,7 +11,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import OTPModal from "./OTPModal";
 
-const ProfileManager = () => {
+const ProfileManager = ({ onProfileSaved }: { onProfileSaved?: () => void }) => {
   const { user } = useUser();
   const { getToken } = useAuth();
 
@@ -26,6 +26,8 @@ const ProfileManager = () => {
   const [toggleCountryCode, setToggleCountryCode] = useState(false);
   const [fetchingAddress, setFetchingAddress] = useState(false);
   const [geoPrefilled, setGeoPrefilled] = useState(false);
+  const [geoLat, setGeoLat] = useState<number | null>(null);
+  const [geoLng, setGeoLng] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
   const [OTP, setOTP] = useState<number>(0);
@@ -99,6 +101,9 @@ const ProfileManager = () => {
       });
 
       const { latitude, longitude } = position.coords;
+      // Store the coordinates so they get sent with the profile update
+      setGeoLat(latitude);
+      setGeoLng(longitude);
 
       const response = await fetch(
         `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${import.meta.env.VITE_GEOAPIFY_API}`,
@@ -183,6 +188,7 @@ const ProfileManager = () => {
           shippername,
           email,
           phone: Number(phone),
+          geoPoint: geoLat != null && geoLng != null ? { lat: geoLat, lng: geoLng } : undefined,
           address: {
             pincode,
             county,
@@ -197,6 +203,7 @@ const ProfileManager = () => {
       if (response.ok) {
         setDisable(true);
         toast.success("Profile updated successfully!");
+        onProfileSaved?.();
         return Promise.resolve();
       } else {
         toast.error(result.error || "Failed to update profile");
