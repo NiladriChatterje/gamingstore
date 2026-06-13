@@ -1,15 +1,13 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { SignIn, useUser } from "@clerk/clerk-react";
+import { SignIn, useUser, useAuth } from "@clerk/clerk-react";
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
 import { divIcon, LatLngBoundsExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
+import toast from "react-hot-toast";
 import styles from "./OrderDetailsPage.module.css";
 import { OrderType } from "@declarations/OrderType";
-import { UserType } from "@declarations/UserType";
 import { FaArrowsRotate } from "react-icons/fa6";
-
-
 
 // Custom marker icons using divIcon for better React compatibility
 const shipperIcon = divIcon({
@@ -65,54 +63,79 @@ const deliveryIcon = divIcon({
 const OrderDetailsPage = () => {
     const { orderId } = useParams<{ orderId: string }>();
     const navigate = useNavigate();
-    const { isSignedIn } = useUser();
+    const { isSignedIn, user } = useUser();
 
     const [orderDetails, setOrderDetails] = useState<OrderType | null>(null);
-    const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>({ lat: 22.634117693411923, lng: 88.48388276892908 });
+    const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(null);
     const [routeCoordinates, setRouteCoordinates] = useState<[number, number][]>([]);
     const [loading, setLoading] = useState(true);
     const [locationError, setLocationError] = useState<string | null>(null);
+    const [markingDelivered, setMarkingDelivered] = useState(false);
     const locationWatchIdRef = useRef<number | null>(null);
+    const locationUpdateIntervalRef = useRef<number | null>(null);
+    const { getToken } = useAuth();
 
-    // Mock data - Replace with actual API call
+    // Fetch real order data from backend
     useEffect(() => {
-        // Simulate fetching order details
-        const mockOrderData: OrderType = {
-            _id: orderId || "2001",
-            customer: {
-                _id: "user123",
-                username: "Alice Johnson",
-                email: "alice@example.com",
-                geoPoint: {
-                    lat: 22.6236,
-                    lng: 88.4410
-                },
-                phone: "+1234567890",
-                address: {
-                    pincode: "110001",
-                    county: "New Delhi",
-                    country: "India",
-                    state: "Delhi"
-                },
-                cart: []
-            } as UserType,
-            product: [],
-            quantity: 5,
-            transactionId: "TXN123456",
-            orderId: orderId || "2001",
-            paymentSignature: "SIG123456",
-            amount: 2500,
-            status: "shipping",
-            createdAt: "2025-10-15T10:30:00Z",
-            expectedDelivery: "Oct 20, 2025"
+        const fetchOrderDetails = async () => {
+            try {
+                const token = await getToken();
+                const response = await fetch(`http://localhost:5004/fetch-user-order/${orderId}`, {
+                    headers: {
+                        "Accept": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data: OrderType = await response.json();
+                    setOrderDetails(data);
+                } else {
+                    console.error('Failed to fetch order details, status:', response.status);
+                    setOrderDetails(null);
+                }
+            } catch (err) {
+                console.error('Error fetching order details:', err);
+                toast.error('Failed to load order details');
+                setOrderDetails(null);
+            } finally {
+                setLoading(false);
+            }
         };
 
-        setOrderDetails(mockOrderData);
-        setLoading(false);
-    }, [orderId]);
+        if (orderId) {
+            fetchOrderDetails();
+        } else {
+            setLoading(false);
+        }
+    }, [orderId, getToken]);
+
+    // Function to send location update to backend
+    const sendLocationUpdate = useCallback(async (lat: number, lng: number) => {
+        if (!user) return;
+        
+        const token = await getToken();
+        const shipperId = `shipper-${user.id}`;
+        try {
+            await fetch('http://localhost:5004/update-shipper-location', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    shipperId,
+                    location: { lat, lng }
+                })
+            });
+        } catch (err) {
+            console.error('Error sending location update:', err);
+        }
+    }, [user, getToken]);
 
     // Function to start watching location
-    const startLocationWatch = () => {
+    const startLocationWatch = useCallback(() => {
         if (!navigator.geolocation) {
             setLocationError("Geolocation is not supported by your browser");
             return;
@@ -123,81 +146,77 @@ const OrderDetailsPage = () => {
             navigator.geolocation.clearWatch(locationWatchIdRef.current);
             locationWatchIdRef.current = null;
         }
+        if (locationUpdateIntervalRef.current !== null) {
+            clearInterval(locationUpdateIntervalRef.current);
+            locationUpdateIntervalRef.current = null;
+        }
 
         setLocationError(null);
-        console.log("Requesting location access...");
 
         // First, try to get current position to establish initial location
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                console.log("Got initial position:", position.coords);
                 const { latitude, longitude } = position.coords;
-                setCurrentLocation({
-                    lat: latitude,
-                    lng: longitude
-                });
+                setCurrentLocation({ lat: latitude, lng: longitude });
                 setLocationError(null);
+                
+                // Send initial location to backend
+                sendLocationUpdate(latitude, longitude);
 
                 // Now start watching for continuous updates
                 const watchId = navigator.geolocation.watchPosition(
                     (position) => {
-                        console.log("Position update:", position.coords);
                         const { latitude, longitude } = position.coords;
-                        setCurrentLocation({
-                            lat: latitude,
-                            lng: longitude
-                        });
+                        setCurrentLocation({ lat: latitude, lng: longitude });
                         setLocationError(null);
                     },
                     (error) => {
                         console.error("Watch position error:", error);
                         switch (error.code) {
                             case error.PERMISSION_DENIED:
-                                setLocationError("Location permission denied. Please enable location access in your browser settings.");
+                                setLocationError("Location permission denied.");
                                 break;
                             case error.POSITION_UNAVAILABLE:
-                                setLocationError("Location information unavailable. Please check your device settings.");
+                                setLocationError("Location unavailable.");
                                 break;
                             case error.TIMEOUT:
-                                setLocationError("Location request timed out. Please try again.");
+                                setLocationError("Location request timed out.");
                                 break;
                             default:
-                                setLocationError(`Error getting location: ${error.message}`);
+                                setLocationError(`Error: ${error.message}`);
                         }
                     },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 30000,
-                        maximumAge: 5000
-                    }
+                    { enableHighAccuracy: true, timeout: 30000, maximumAge: 5000 }
                 );
-
                 locationWatchIdRef.current = watchId;
-                console.log("Started watching position with ID:", watchId);
+
+                // Send location updates to backend every 30 seconds
+                locationUpdateIntervalRef.current = window.setInterval(() => {
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => sendLocationUpdate(pos.coords.latitude, pos.coords.longitude),
+                        () => {},
+                        { enableHighAccuracy: true, timeout: 15000 }
+                    );
+                }, 30000);
             },
             (error) => {
-                console.error("Initial position error:", error);
                 switch (error.code) {
                     case error.PERMISSION_DENIED:
-                        setLocationError("Location permission denied. Please enable location access in your browser settings.");
+                        setLocationError("Location permission denied.");
                         break;
                     case error.POSITION_UNAVAILABLE:
-                        setLocationError("Location information unavailable. Please check your device settings.");
+                        setLocationError("Location unavailable.");
                         break;
                     case error.TIMEOUT:
-                        setLocationError("Location request timed out. Please try again.");
+                        setLocationError("Location request timed out.");
                         break;
                     default:
-                        setLocationError(`Error getting location: ${error.message}`);
+                        setLocationError(`Error: ${error.message}`);
                 }
             },
-            {
-                enableHighAccuracy: true,
-                timeout: 30000,
-                maximumAge: 5000
-            }
+            { enableHighAccuracy: true, timeout: 30000, maximumAge: 5000 }
         );
-    };
+    }, [sendLocationUpdate]);
 
     // Watch shipper's real-time GPS location
     useEffect(() => {
@@ -205,18 +224,20 @@ const OrderDetailsPage = () => {
 
         return () => {
             if (locationWatchIdRef.current !== null) {
-                console.log("Cleaning up watch position:", locationWatchIdRef.current);
                 navigator.geolocation.clearWatch(locationWatchIdRef.current);
                 locationWatchIdRef.current = null;
             }
+            if (locationUpdateIntervalRef.current !== null) {
+                clearInterval(locationUpdateIntervalRef.current);
+                locationUpdateIntervalRef.current = null;
+            }
         };
-    }, []);
+    }, [startLocationWatch]);
 
     // Fetch route coordinates from OSRM routing service
     useEffect(() => {
         const fetchRoute = async () => {
-            if (!currentLocation || !orderDetails?.customer.geoPoint) {
-                console.log('Missing location data:', { currentLocation, orderDetails: orderDetails?.customer.geoPoint });
+            if (!currentLocation || !orderDetails?.customer?.geoPoint) {
                 return;
             }
 
@@ -224,39 +245,27 @@ const OrderDetailsPage = () => {
                 const start = `${currentLocation.lng},${currentLocation.lat}`;
                 const end = `${orderDetails.customer.geoPoint.lng},${orderDetails.customer.geoPoint.lat}`;
 
-                console.log('Fetching route from:', start, 'to:', end);
-
-                // Using OSRM public API for routing
                 const response = await fetch(
                     `https://router.project-osrm.org/route/v1/driving/${start};${end}?overview=full&geometries=geojson`
                 );
 
-                if (!response.ok) {
-                    console.error('Failed to fetch route, status:', response.status);
-                    return;
-                }
+                if (!response.ok) return;
 
                 const data = await response.json();
-                console.log('OSRM response:', data);
 
                 if (data.routes && data.routes.length > 0) {
-                    // Convert coordinates from [lng, lat] to [lat, lng] for Leaflet
                     const coordinates = data.routes[0].geometry.coordinates.map(
                         (coord: [number, number]) => [coord[1], coord[0]] as [number, number]
                     );
-                    console.log('Route coordinates count:', coordinates.length);
                     setRouteCoordinates(coordinates);
-                } else {
-                    console.error('No routes found in OSRM response');
                 }
             } catch (error) {
                 console.error('Error fetching route:', error);
-                // Fallback to straight line if routing fails
+                // Fallback to straight line
                 const fallbackRoute = [
                     [currentLocation.lat, currentLocation.lng],
                     [orderDetails.customer.geoPoint.lat, orderDetails.customer.geoPoint.lng]
                 ];
-                console.log('Using fallback straight line route:', fallbackRoute);
                 setRouteCoordinates(fallbackRoute as [number, number][]);
             }
         };
@@ -264,15 +273,53 @@ const OrderDetailsPage = () => {
         fetchRoute();
     }, [currentLocation, orderDetails]);
 
-    // Debug: Log routeCoordinates whenever it changes
-    useEffect(() => {
-        console.log('Route coordinates updated:', {
-            count: routeCoordinates.length,
-            coordinates: routeCoordinates.slice(0, 3), // Log first 3 points
-            currentLocation,
-            destination: orderDetails?.customer.geoPoint
-        });
-    }, [routeCoordinates, currentLocation, orderDetails]);
+    // Handle Mark as Delivered
+    const handleMarkAsDelivered = async () => {
+        if (!orderId) return;
+        
+        setMarkingDelivered(true);
+        try {
+            const token = await getToken();
+            const response = await fetch('http://localhost:5004/update-order-status', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    orderId,
+                    status: 'shipped'
+                })
+            });
+
+            if (response.ok) {
+                toast.success('Order marked as delivered!');
+                navigate('/shipper/delivered');
+            } else {
+                const data = await response.json();
+                toast.error(data.error || 'Failed to mark as delivered');
+            }
+        } catch (err) {
+            console.error('Error marking as delivered:', err);
+            toast.error('Something went wrong. Please try again.');
+        } finally {
+            setMarkingDelivered(false);
+        }
+    };
+
+    if (!isSignedIn) {
+        return (
+            <section
+                style={{
+                    width: '100%', height: '90dvh',
+                    display: 'flex', justifyContent: 'center', alignItems: 'center'
+                }}
+            >
+                <SignIn redirectUrl={'/shipper/in-transit'} />
+            </section>
+        );
+    }
 
     if (loading) {
         return (
@@ -295,19 +342,7 @@ const OrderDetailsPage = () => {
     }
 
     const { customer } = orderDetails;
-    const destination = customer.geoPoint;
-
-    if (!isSignedIn)
-        return (
-            <section
-                style={{
-                    width: '100%', height: '90dvh',
-                    display: 'flex', justifyContent: 'center', alignItems: 'center'
-                }}
-            >
-                <SignIn redirectUrl={'/shipper/in-transit'} />
-            </section>
-        );
+    const destination = customer?.geoPoint;
 
     return (
         <div className={styles["details-container"]}>
@@ -355,12 +390,9 @@ const OrderDetailsPage = () => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            transition: 'background-color 0.2s'
                         }}
                     >
-                        <FaArrowsRotate
-                            size={25}
-                        />
+                        <FaArrowsRotate size={25} />
                     </button>
                 </div>
             ) : !currentLocation && (
@@ -382,101 +414,80 @@ const OrderDetailsPage = () => {
             )}
 
             {/* Real-time Map Section */}
-            <div className={styles["map-section"]}>
-                <div className={`${styles["map-container"]} ${styles["glowing-route-container"]}`}>
-                    <MapContainer
-                        center={currentLocation ? [currentLocation.lat, currentLocation.lng] : [destination.lat, destination.lng]}
-                        zoom={12}
-                        className={styles["map"]}
-                        style={{ height: "100%", width: "100%" }}
-                        bounds={routeCoordinates.length > 0 ? routeCoordinates as LatLngBoundsExpression : undefined}
-                    >
-                        <TileLayer
-                            // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}.png"
-                        />
+            {destination && (
+                <div className={styles["map-section"]}>
+                    <div className={`${styles["map-container"]} ${styles["glowing-route-container"]}`}>
+                        <MapContainer
+                            center={
+                                currentLocation
+                                    ? [currentLocation.lat, currentLocation.lng]
+                                    : [destination.lat, destination.lng]
+                            }
+                            zoom={12}
+                            className={styles["map"]}
+                            style={{ height: "100%", width: "100%" }}
+                            bounds={routeCoordinates.length > 0 ? routeCoordinates as LatLngBoundsExpression : undefined}
+                        >
+                            <TileLayer url="https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}.png" />
 
-                        {/* Current delivery location marker */}
-                        {currentLocation && (
+                            {currentLocation && (
+                                <Marker
+                                    position={[currentLocation.lat, currentLocation.lng]}
+                                    icon={shipperIcon}
+                                >
+                                    <Popup>
+                                        <strong>Current Location</strong>
+                                        <br />
+                                        Delivery in progress
+                                    </Popup>
+                                </Marker>
+                            )}
+
                             <Marker
-                                position={[currentLocation.lat, currentLocation.lng]}
-                                icon={shipperIcon}
+                                position={[destination.lat, destination.lng]}
+                                icon={deliveryIcon}
                             >
                                 <Popup>
-                                    <strong>Current Location</strong>
+                                    <strong>Destination</strong>
                                     <br />
-                                    Delivery in progress
+                                    {customer?.username}
+                                    <br />
+                                    {customer?.address?.county}, {customer?.address?.state}
                                 </Popup>
                             </Marker>
-                        )}
 
-                        {/* Destination marker */}
-                        <Marker
-                            position={[destination.lat, destination.lng]}
-                            icon={deliveryIcon}
-                        >
-                            <Popup>
-                                <strong>Destination</strong>
-                                <br />
-                                {customer.username}
-                                <br />
-                                {customer.address.county}, {customer.address.state}
-                            </Popup>
-                        </Marker>
-
-                        {/* Route line following actual roads with glow effect */}
-                        {routeCoordinates.length > 0 ? (
-                            <>
-                                {/* Outer glow layer */}
-                                <Polyline
-                                    positions={routeCoordinates}
-                                    pathOptions={{
-                                        color: "#ff8c42",
-                                        weight: 2,
-                                        opacity: 0.3
-                                    }}
-                                />
-                                {/* Middle glow layer */}
-                                <Polyline
-                                    positions={routeCoordinates}
-                                    pathOptions={{
-                                        color: "#ff8c42",
-                                        weight: 4,
-                                        opacity: 0.6
-                                    }}
-                                />
-                                {/* Main line */}
-                                <Polyline
-                                    positions={routeCoordinates}
-                                    pathOptions={{
-                                        color: "#ffb84dff",
-                                        weight: 0.5,
-                                        opacity: 1
-                                    }}
-                                />
-                            </>
-                        ) : (
-                            <div style={{
-                                position: 'absolute',
-                                top: 10,
-                                left: 10,
-                                background: 'rgba(255, 255, 255, 0.9)',
-                                padding: '8px 12px',
-                                borderRadius: '4px',
-                                zIndex: 1000,
-                                fontSize: '12px',
-                                color: '#666'
-                            }}>
-                                Loading route...
-                            </div>
-                        )}
-                    </MapContainer>
+                            {routeCoordinates.length > 0 ? (
+                                <>
+                                    <Polyline
+                                        positions={routeCoordinates}
+                                        pathOptions={{ color: "#ff8c42", weight: 2, opacity: 0.3 }}
+                                    />
+                                    <Polyline
+                                        positions={routeCoordinates}
+                                        pathOptions={{ color: "#ff8c42", weight: 4, opacity: 0.6 }}
+                                    />
+                                    <Polyline
+                                        positions={routeCoordinates}
+                                        pathOptions={{ color: "#ffb84dff", weight: 0.5, opacity: 1 }}
+                                    />
+                                </>
+                            ) : (
+                                <div style={{
+                                    position: 'absolute', top: 10, left: 10,
+                                    background: 'rgba(255, 255, 255, 0.9)',
+                                    padding: '8px 12px', borderRadius: '4px',
+                                    zIndex: 1000, fontSize: '12px', color: '#666'
+                                }}>
+                                    Loading route...
+                                </div>
+                            )}
+                        </MapContainer>
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Order Information Grid */}
             <div className={styles["info-grid"]}>
-                {/* Order Details Card */}
                 <div className={styles["info-card"]}>
                     <h2>Order Information</h2>
                     <div className={styles["info-content"]}>
@@ -502,75 +513,72 @@ const OrderDetailsPage = () => {
                         </div>
                         <div className={styles["info-row"]}>
                             <span className={styles["label"]}>Amount:</span>
-                            <span className={styles["value"]}>₹{orderDetails.amount.toLocaleString()}</span>
-                        </div>
-                        <div className={styles["info-row"]}>
-                            <span className={styles["label"]}>Expected Delivery:</span>
-                            <span className={styles["value"]}>{orderDetails.expectedDelivery}</span>
+                            <span className={styles["value"]}>₹{orderDetails.amount?.toLocaleString()}</span>
                         </div>
                     </div>
                 </div>
 
-                {/* Customer Details Card */}
-                <div className={styles["info-card"]}>
-                    <h2>Customer Information</h2>
-                    <div className={styles["info-content"]}>
-                        <div className={styles["info-row"]}>
-                            <span className={styles["label"]}>Name:</span>
-                            <span className={styles["value"]}>{customer.username}</span>
-                        </div>
-                        <div className={styles["info-row"]}>
-                            <span className={styles["label"]}>Email:</span>
-                            <span className={styles["value"]}>{customer.email}</span>
-                        </div>
-                        <div className={styles["info-row"]}>
-                            <span className={styles["label"]}>Phone:</span>
-                            <span className={styles["value"]}>{customer.phone || "N/A"}</span>
-                        </div>
-                        <div className={styles["info-row"]}>
-                            <span className={styles["label"]}>Address:</span>
-                            <span className={styles["value"]}>
-                                {customer.address.county}, {customer.address.state}
-                                <br />
-                                {customer.address.country} - {customer.address.pincode}
-                            </span>
-                        </div>
-                        <div className={styles["info-row"]}>
-                            <span className={styles["label"]}>Coordinates:</span>
-                            <span className={styles["value"]}>
-                                {customer.geoPoint.lat.toFixed(4)}, {customer.geoPoint.lng.toFixed(4)}
-                            </span>
+                {customer && (
+                    <div className={styles["info-card"]}>
+                        <h2>Customer Information</h2>
+                        <div className={styles["info-content"]}>
+                            <div className={styles["info-row"]}>
+                                <span className={styles["label"]}>Name:</span>
+                                <span className={styles["value"]}>{customer.username}</span>
+                            </div>
+                            <div className={styles["info-row"]}>
+                                <span className={styles["label"]}>Email:</span>
+                                <span className={styles["value"]}>{customer.email}</span>
+                            </div>
+                            <div className={styles["info-row"]}>
+                                <span className={styles["label"]}>Phone:</span>
+                                <span className={styles["value"]}>{customer.phone || "N/A"}</span>
+                            </div>
+                            {customer.address && (
+                                <div className={styles["info-row"]}>
+                                    <span className={styles["label"]}>Address:</span>
+                                    <span className={styles["value"]}>
+                                        {customer.address.county}, {customer.address.state}
+                                        <br />
+                                        {customer.address.country} - {customer.address.pincode}
+                                    </span>
+                                </div>
+                            )}
+                            {customer.geoPoint && (
+                                <div className={styles["info-row"]}>
+                                    <span className={styles["label"]}>Coordinates:</span>
+                                    <span className={styles["value"]}>
+                                        {customer.geoPoint.lat.toFixed(4)}, {customer.geoPoint.lng.toFixed(4)}
+                                    </span>
+                                </div>
+                            )}
                         </div>
                     </div>
-                </div>
+                )}
             </div>
 
             {/* Action Buttons */}
             <div className={styles["action-buttons"]}>
                 <button
                     className={`${styles["action-button"]} ${styles["delivered"]}`}
-                    onClick={() => {
-                        // Add delivery confirmation logic here
-                        alert("Order marked as delivered!");
-                        navigate("/shipper/in-transit");
-                    }}
+                    onClick={handleMarkAsDelivered}
+                    disabled={markingDelivered}
+                    style={markingDelivered ? { opacity: 0.7, cursor: 'not-allowed' } : {}}
                 >
-                    Mark as Delivered
+                    {markingDelivered ? 'Marking...' : 'Mark as Delivered'}
                 </button>
-                <button
-                    className={`${styles["action-button"]} ${styles["contact"]}`}
-                    onClick={() => {
-                        // Add customer contact logic here
-                        window.location.href = `tel:${customer.phone}`;
-                    }}
-                >
-                    Contact Customer
-                </button>
+                {customer?.phone && (
+                    <button
+                        className={`${styles["action-button"]} ${styles["contact"]}`}
+                        onClick={() => { window.location.href = `tel:${customer.phone}`; }}
+                    >
+                        Contact Customer
+                    </button>
+                )}
                 <button
                     className={`${styles["action-button"]} ${styles["report"]}`}
                     onClick={() => {
-                        // Add issue reporting logic here
-                        alert("Issue reporting functionality coming soon!");
+                        toast.error("Issue reporting coming soon!");
                     }}
                 >
                     Report Issue

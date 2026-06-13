@@ -70,8 +70,9 @@ const ShipperAccount = () => {
         }
     }, [isSignedIn, user]);
 
-    if (!isSignedIn)
-        <Navigate to="/shipper/login" replace />;
+    if (!isSignedIn) {
+        return <Navigate to="/shipper/login" replace />;
+    }
 
     return (
         <>
