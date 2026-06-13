@@ -1,6 +1,7 @@
 import { GiHamburgerMenu } from "react-icons/gi";
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/clerk-react";
 import styles from "./ShipperNavbar.module.css";
+import ShipperNotificationBell from "./ShipperNotificationBell";
 
 interface ShipperNavbarProps {
   onToggleSidebar?: () => void;
@@ -23,6 +24,7 @@ const ShipperNavbar = ({ onToggleSidebar }: ShipperNavbarProps) => {
           </SignInButton>
         </SignedOut>
         <SignedIn>
+          <ShipperNotificationBell />
           <div className={styles.userBtn}>
             <span>{user?.firstName || "Shipper"}</span>
             <UserButton />
