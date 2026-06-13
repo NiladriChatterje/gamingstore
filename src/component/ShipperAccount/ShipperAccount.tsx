@@ -23,7 +23,7 @@ const ShipperAccount = () => {
   const { user, isSignedIn } = useUser();
   const { getToken } = useAuth();
   const location = useLocation();
-  const { defaultLoginAdminOrUser } = useStateContext();
+  const { defaultLoginAdminOrUser, setDefaultLoginAdminOrUser } = useStateContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [stats, setStats] = useState<DashboardStats>({ pending: 0, inTransit: 0, delivered: 0 });
 
@@ -87,7 +87,9 @@ const ShipperAccount = () => {
   }, [isSignedIn, user]);
 
   if (!isSignedIn) {
-    return <Navigate to="/shipper/login" replace />;
+    localStorage.setItem('loginusertype', 'user');
+    setDefaultLoginAdminOrUser?.('user');
+    return <Navigate to="/" replace />;
   }
 
   return (
