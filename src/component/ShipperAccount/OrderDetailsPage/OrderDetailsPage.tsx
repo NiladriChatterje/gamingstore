@@ -90,15 +90,52 @@ const OrderDetailsPage = () => {
     }
   }, [user, getToken]);
 
+  // WebSocket connection for live location broadcasting
+  const wsRef = useRef<WebSocket | null>(null);
+
+  const connectWebSocket = useCallback((orderId: string, shipperId: string) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) return;
+    try {
+      const ws = new WebSocket('ws://localhost:4000/ws');
+      ws.onopen = () => {
+        console.log('[WS] Shipper connected to live location service');
+        ws.send(JSON.stringify({ type: 'shipper:register', shipperId, orderId }));
+      };
+      ws.onerror = (err) => console.error('[WS] Error:', err);
+      ws.onclose = () => console.log('[WS] Shipper disconnected');
+      wsRef.current = ws;
+    } catch (err) {
+      console.error('[WS] Failed to connect:', err);
+    }
+  }, []);
+
+  const sendLocationViaWebSocket = useCallback((shipperId: string, orderId: string, lat: number, lng: number) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({
+        type: 'shipper:location-update',
+        shipperId,
+        orderId,
+        lat,
+        lng,
+      }));
+    }
+  }, []);
+
   const startLocationTracking = useCallback(() => {
     if (!navigator.geolocation) {
       setLocationError("Geolocation not supported by your browser");
       return;
     }
+    if (!orderId) return;
     if (locationWatchIdRef.current !== null) navigator.geolocation.clearWatch(locationWatchIdRef.current);
     if (locationUpdateIntervalRef.current !== null) clearInterval(locationUpdateIntervalRef.current);
     setLocationError(null);
     setLocationActive(false);
+
+    const shipperId = `shipper-${user?.id}`;
+
+    // Open WebSocket connection for live location
+    connectWebSocket(orderId, shipperId);
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -107,12 +144,15 @@ const OrderDetailsPage = () => {
         setLocationActive(true);
         setLocationError(null);
         sendLocationUpdate(latitude, longitude);
+        sendLocationViaWebSocket(shipperId, orderId, latitude, longitude);
 
         const watchId = navigator.geolocation.watchPosition(
           (pos) => {
-            setCurrentLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+            const { latitude, longitude } = pos.coords;
+            setCurrentLocation({ lat: latitude, lng: longitude });
             setLocationActive(true);
             setLocationError(null);
+            sendLocationViaWebSocket(shipperId, orderId!, latitude, longitude);
           },
           (err) => {
             setLocationError(err.code === err.PERMISSION_DENIED ? "Location permission denied." : "Unable to get precise location.");
@@ -122,7 +162,11 @@ const OrderDetailsPage = () => {
         locationWatchIdRef.current = watchId;
         locationUpdateIntervalRef.current = window.setInterval(() => {
           navigator.geolocation.getCurrentPosition(
-            (pos) => sendLocationUpdate(pos.coords.latitude, pos.coords.longitude),
+            (pos) => {
+              const { latitude, longitude } = pos.coords;
+              sendLocationUpdate(latitude, longitude);
+              sendLocationViaWebSocket(shipperId, orderId!, latitude, longitude);
+            },
             () => {},
             { enableHighAccuracy: true, timeout: 15000 }
           );
@@ -140,6 +184,11 @@ const OrderDetailsPage = () => {
     return () => {
       if (locationWatchIdRef.current !== null) navigator.geolocation.clearWatch(locationWatchIdRef.current);
       if (locationUpdateIntervalRef.current !== null) clearInterval(locationUpdateIntervalRef.current);
+      // Close WebSocket connection
+      if (wsRef.current) {
+        wsRef.current.close();
+        wsRef.current = null;
+      }
     };
   }, [startLocationTracking]);
 

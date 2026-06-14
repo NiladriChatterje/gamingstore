@@ -2,12 +2,14 @@ import { useUser, SignIn, useAuth } from '@clerk/clerk-react'
 import styles from './Delivery.module.css'
 import { useEffect, useState } from 'react';
 import DeliveryItem from './DeliveryItem';
+import LiveTrackingMap from '../LiveTracking/LiveTrackingMap';
 import { OrderType } from '@/declarations/OrderType';
 import { useUserStateContext } from '../UserStateContext';
 
 const Delivery = () => {
     const [deliveryOrders, setDeliveryOrders] = useState<OrderType[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [trackingOrder, setTrackingOrder] = useState<OrderType | null>(null);
     const { userData } = useUserStateContext();
     const { isSignedIn } = useUser();
     const { getToken } = useAuth();
@@ -75,6 +77,35 @@ const Delivery = () => {
 
     return (
         <div id={styles['delivery-container']}>
+            {/* Live Tracking Section — shown when an in-transit order is selected */}
+            {trackingOrder && (
+                <div style={{ marginBottom: 16 }}>
+                    <div style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        width: '55%', margin: '0 auto 8px'
+                    }}>
+                        <span style={{ fontWeight: 600, fontSize: 14, color: '#1e1c29' }}>
+                            Tracking: Order #{trackingOrder.orderId}
+                        </span>
+                        <button
+                            onClick={() => setTrackingOrder(null)}
+                            style={{
+                                background: 'none', border: '1px solid #ddd', borderRadius: 6,
+                                padding: '4px 12px', cursor: 'pointer', fontSize: 12, color: '#666'
+                            }}
+                        >
+                            Close Tracking
+                        </button>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <LiveTrackingMap
+                            orderId={trackingOrder.orderId}
+                            customerLocation={trackingOrder.customer?.geoPoint ?? undefined}
+                        />
+                    </div>
+                </div>
+            )}
+
             {/* In Transit Orders Section */}
             <fieldset className={styles['fieldset-style']}>
                 <legend>
@@ -89,7 +120,15 @@ const Delivery = () => {
                 >
                     {inTransitOrders.length > 0 ? (
                         inTransitOrders.map((item, i) => {
-                            return <DeliveryItem key={item?._id ?? i} item={item} />
+                            return (
+                                <div
+                                    key={item?._id ?? i}
+                                    onClick={() => setTrackingOrder(item)}
+                                    style={{ cursor: 'pointer', width: '100%' }}
+                                >
+                                    <DeliveryItem item={item} />
+                                </div>
+                            )
                         })
                     ) : (
                         <div className={styles['no-orders']}>
