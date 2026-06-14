@@ -26,6 +26,7 @@ const ProfileManager = ({ onProfileSaved }: { onProfileSaved?: () => void }) => 
   const [toggleCountryCode, setToggleCountryCode] = useState(false);
   const [fetchingAddress, setFetchingAddress] = useState(false);
   const [geoPrefilled, setGeoPrefilled] = useState(false);
+  const [hasExistingProfile, setHasExistingProfile] = useState(false);
   const [geoLat, setGeoLat] = useState<number | null>(null);
   const [geoLng, setGeoLng] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -57,6 +58,15 @@ const ProfileManager = ({ onProfileSaved }: { onProfileSaved?: () => void }) => 
             setCounty(data.address?.county || "");
             setCountry(data.address?.country || "");
             setState(data.address?.state || "");
+            // Determine if a full profile already exists (no need for geolocation fetch)
+            const profileExists =
+              data.phone != null && data.phone !== 0 &&
+              data.address != null &&
+              data.address.pincode?.trim().length > 0 &&
+              data.address.county?.trim().length > 0 &&
+              data.address.country?.trim().length > 0 &&
+              data.address.state?.trim().length > 0;
+            setHasExistingProfile(profileExists);
           } else {
             // No profile yet — prefill from Clerk
             setShippername(user.firstName || "");
@@ -105,29 +115,45 @@ const ProfileManager = ({ onProfileSaved }: { onProfileSaved?: () => void }) => 
       setGeoLat(latitude);
       setGeoLng(longitude);
 
-      const response = await fetch(
-        `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${import.meta.env.VITE_GEOAPIFY_API}`,
-        { headers: { Accept: "application/json" } }
-      );
+      // Retry reverse geocoding up to 3 times on failure
+      const MAX_RETRIES = 3;
+      for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        try {
+          const response = await fetch(
+            `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${import.meta.env.VITE_GEOAPIFY_API}`,
+            { headers: { Accept: "application/json" } }
+          );
 
-      if (!response.ok) {
-        throw new Error(`Geoapify returned ${response.status}`);
+          if (!response.ok) {
+            throw new Error(`Geoapify returned ${response.status}`);
+          }
+
+          const { features } = await response.json();
+
+          if (!features?.length) {
+            toast.error("No address found for your current location. Please enter it manually.");
+            return;
+          }
+
+          const props = features[0].properties;
+          setpinCode(props.postcode ?? "");
+          setCounty(props.county ?? "");
+          setState(props.state ?? "");
+          setCountry(props.country ?? "");
+          setGeoPrefilled(true);
+          toast.success("Address fields filled from your location!");
+          return; // Success — exit the retry loop
+        } catch (geoCatch: any) {
+          if (attempt < MAX_RETRIES) {
+            console.log(`[ShipperProfileManager] reverse geocoding attempt ${attempt}/${MAX_RETRIES} failed, retrying...`);
+            // Wait 1.5s before the next retry
+            await new Promise(resolve => setTimeout(resolve, 1500));
+          } else {
+            // All retries exhausted — throw so the outer catch handles it
+            throw geoCatch;
+          }
+        }
       }
-
-      const { features } = await response.json();
-
-      if (!features?.length) {
-        toast.error("No address found for your current location. Please enter it manually.");
-        return;
-      }
-
-      const props = features[0].properties;
-      setpinCode(props.postcode ?? "");
-      setCounty(props.county ?? "");
-      setState(props.state ?? "");
-      setCountry(props.country ?? "");
-      setGeoPrefilled(true);
-      toast.success("Address fields filled from your location!");
     } catch (err: any) {
       if (err instanceof GeolocationPositionError) {
         switch (err.code) {
@@ -146,7 +172,7 @@ const ProfileManager = ({ onProfileSaved }: { onProfileSaved?: () => void }) => 
       } else if (err instanceof TypeError || err.message?.includes("fetch")) {
         toast.error("Failed to fetch address details. Check your internet connection.");
       } else {
-        console.log("[ShipperProfileManager] reverse geocoding failed:", err);
+        console.log("[ShipperProfileManager] reverse geocoding failed after 3 attempts:", err);
         toast.error("Could not fetch address details. Please enter them manually.");
       }
     } finally {
@@ -328,7 +354,7 @@ const ProfileManager = ({ onProfileSaved }: { onProfileSaved?: () => void }) => 
           <div className={styles["address-section"]}>
             <h3 className={styles["address-title"]}>Address</h3>
 
-            {!disable && (
+            {!disable && !hasExistingProfile && (
               <button
                 type="button"
                 className={styles["fetch-address-btn"]}
